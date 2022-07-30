@@ -7,7 +7,7 @@ import {
 } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {navigationRef, useBackButtonHandler} from './NavigationUtilities';
-import {WelcomeScreen} from '@Screens/Welcome/Welcome';
+import {WelcomeScreen} from '@Screens/index';
 export type NavigatorParamList = {
   // 🔥 Your screens go here
   welcome: undefined;
