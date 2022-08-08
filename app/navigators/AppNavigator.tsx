@@ -1,11 +1,11 @@
 import React from 'react';
 import { useColorScheme } from 'react-native';
 
+import { linking } from '@Configs/index';
 import { LoginScreen } from '@Screens/index';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import linking from '../linking';
 import { navigationRef, useBackButtonHandler } from './NavigationUtilities';
 
 export type NavigatorParamList = {
