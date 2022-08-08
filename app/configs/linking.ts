@@ -3,7 +3,7 @@ const config = {
     Login: {
       path: 'login/:params',
       parse: {
-        name: (params: any) => `${params}`,
+        name: (params: string) => `${params}`,
       },
     },
   },
