@@ -21,7 +21,8 @@
       "*": ["app/*"],
       "@Navigators/*": ["app/navigators/*"],
       "@Screens/*": ["app/screens/*"],
-      "@Themes/ *": ["app/themes/*"],
+      "@Themes/*": ["app/themes/*"],
+      "@Configs/*": ["app/configs/*"]
     }
   },
   "include": ["app"]

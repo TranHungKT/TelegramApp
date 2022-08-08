@@ -9,14 +9,9 @@
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* TelegramTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* TelegramTests.m */; };
 		0C80B921A6F3F58F76C31292 /* libPods-Telegram.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-Telegram.a */; };
-		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
-		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		2C96128428928B87001398BE /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2C96128128928B87001398BE /* Feather.ttf */; };
-		2C96128528928B87001398BE /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2C96128228928B87001398BE /* MaterialIcons.ttf */; };
-		2C96128628928B87001398BE /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2C96128328928B87001398BE /* AntDesign.ttf */; };
+		2CD7052228968CF7005AB9F9 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
+		2CD7052328968CFA005AB9F9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-Telegram-TelegramTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-Telegram-TelegramTests.a */; };
-		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -259,11 +254,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C96128528928B87001398BE /* MaterialIcons.ttf in Resources */,
-				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
-				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				2C96128428928B87001398BE /* Feather.ttf in Resources */,
-				2C96128628928B87001398BE /* AntDesign.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -432,8 +422,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
-				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				2CD7052328968CFA005AB9F9 /* main.m in Sources */,
+				2CD7052228968CF7005AB9F9 /* AppDelegate.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,16 +1,15 @@
 import React from 'react';
-import {useColorScheme} from 'react-native';
-import {
-  NavigationContainer,
-  DefaultTheme,
-  DarkTheme,
-} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {navigationRef, useBackButtonHandler} from './NavigationUtilities';
-import {WelcomeScreen} from '@Screens/index';
+import { useColorScheme } from 'react-native';
+
+import { linking } from '@Configs/index';
+import { LoginScreen } from '@Screens/index';
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+import { navigationRef, useBackButtonHandler } from './NavigationUtilities';
+
 export type NavigatorParamList = {
-  // 🔥 Your screens go here
-  welcome: undefined;
+  LoginScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<NavigatorParamList>();
@@ -21,14 +20,14 @@ const AppStack = () => {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName="welcome">
-      <Stack.Screen name="welcome" component={WelcomeScreen} />
+      initialRouteName="LoginScreen"
+    >
+      <Stack.Screen name="LoginScreen" component={LoginScreen} />
     </Stack.Navigator>
   );
 };
 
-interface NavigationProps
-  extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
+interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
 
 export const AppNavigator = (props: NavigationProps) => {
   const colorScheme = useColorScheme();
@@ -38,7 +37,9 @@ export const AppNavigator = (props: NavigationProps) => {
     <NavigationContainer
       ref={navigationRef}
       theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
-      {...props}>
+      linking={linking}
+      {...props}
+    >
       <AppStack />
     </NavigationContainer>
   );

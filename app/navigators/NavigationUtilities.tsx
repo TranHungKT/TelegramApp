@@ -1,15 +1,15 @@
+import { useRef, useEffect } from 'react';
+import { BackHandler } from 'react-native';
+
 import {
   createNavigationContainerRef,
   NavigationState,
   PartialState,
 } from '@react-navigation/native';
-import {useRef, useEffect} from 'react';
-import {BackHandler} from 'react-native';
+
 export const navigationRef = createNavigationContainerRef();
 
-export const getActiveRouteName = (
-  state: NavigationState | PartialState<NavigationState>,
-): any => {
+export const getActiveRouteName = (state: NavigationState | PartialState<NavigationState>): any => {
   const route = state.routes[state.index || 0];
 
   if (!route.state) {
@@ -19,9 +19,7 @@ export const getActiveRouteName = (
   return getActiveRouteName(route.state);
 };
 
-export const useBackButtonHandler = (
-  canExit: (routeName: string) => boolean,
-) => {
+export const useBackButtonHandler = (canExit: (routeName: string) => boolean) => {
   const canExitRef = useRef(canExit);
 
   useEffect(() => {
@@ -52,7 +50,6 @@ export const useBackButtonHandler = (
 
     BackHandler.addEventListener('hardwareBackPress', onBackPress);
 
-    return () =>
-      BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
   }, []);
 };

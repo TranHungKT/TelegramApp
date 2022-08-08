@@ -10,6 +10,7 @@ module.exports = {
           '@Navigator': './app/navigators',
           '@Screens': './app/screens',
           '@Themes': './app/themes',
+          '@Configs': './app/configs',
         },
       },
     ],
