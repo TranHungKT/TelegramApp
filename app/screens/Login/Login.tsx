@@ -3,10 +3,13 @@ import { useEffect, useCallback } from 'react';
 import { View, Linking, Alert, Image, SafeAreaView } from 'react-native';
 import { Button } from 'react-native-paper';
 import { URLSearchParams } from 'react-native-url-polyfill';
+import { useSelector } from 'react-redux';
 
 import { useAppDispatch } from '@Stores/index';
-import { userActions } from '@Stores/user';
+import { userActions, userDataSelector } from '@Stores/user';
 import { IMAGES } from '@Themes/images';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { styles } from './LoginStyles';
 
@@ -18,10 +21,12 @@ const ALERT_OPEN_URL = 'Can not open this url';
 
 export const LoginScreen = () => {
   const dispatch = useAppDispatch();
+  const userData = useSelector(userDataSelector);
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
   const handleSaveUserDataToRedux = useCallback(
-    (userData: UserData) => {
-      dispatch(userActions.setUserData(userData));
+    (data: UserData) => {
+      dispatch(userActions.setUserData(data));
     },
     [dispatch],
   );
@@ -30,7 +35,7 @@ export const LoginScreen = () => {
     (url: string) => {
       const userParams = new URLSearchParams(url);
 
-      let userData: UserData = {
+      let data: UserData = {
         firstName: '',
         lastName: '',
         email: '',
@@ -38,10 +43,10 @@ export const LoginScreen = () => {
         id: '',
       };
       for (const userInfo of userParams) {
-        userData[userInfo[0] as keyof UserData] = userInfo[1];
+        data[userInfo[0] as keyof UserData] = userInfo[1];
       }
 
-      handleSaveUserDataToRedux(userData);
+      handleSaveUserDataToRedux(data);
     },
     [handleSaveUserDataToRedux],
   );
@@ -63,6 +68,12 @@ export const LoginScreen = () => {
       Linking.removeAllListeners(URL_TYPE);
     };
   }, [decodeCallbackUrl]);
+
+  useEffect(() => {
+    if (userData.id) {
+      navigation.navigate('HomeScreen');
+    }
+  }, [navigation, userData]);
 
   return (
     <SafeAreaView style={styles.container}>

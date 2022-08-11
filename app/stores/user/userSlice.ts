@@ -3,11 +3,11 @@ import { UserData } from 'models';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface UserState {
-  user: UserData;
+  userData: UserData;
 }
 
 const initialState: UserState = {
-  user: {
+  userData: {
     firstName: '',
     lastName: '',
     id: '',
@@ -21,7 +21,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUserData(state, action: PayloadAction<UserData>) {
-      state.user = action.payload;
+      state.userData = action.payload;
     },
   },
 });
