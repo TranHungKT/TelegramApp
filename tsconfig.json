@@ -23,7 +23,8 @@
       "@Screens/*": ["app/screens/*"],
       "@Themes/*": ["app/themes/*"],
       "@Configs/*": ["app/configs/*"],
-      "@Stores/*": ["app/stores/*"]
+      "@Stores/*": ["app/stores/*"],
+      "@Models/*": ["app/models/*"]
     }
   },
   "include": ["app"]
