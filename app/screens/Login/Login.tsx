@@ -5,6 +5,7 @@ import { Button } from 'react-native-paper';
 import { URLSearchParams } from 'react-native-url-polyfill';
 import { useSelector } from 'react-redux';
 
+import { NavigatorParamList } from '@Navigators/index';
 import { useAppDispatch } from '@Stores/index';
 import { userActions, userDataSelector } from '@Stores/user';
 import { IMAGES } from '@Themes/images';
@@ -22,7 +23,7 @@ const ALERT_OPEN_URL = 'Can not open this url';
 export const LoginScreen = () => {
   const dispatch = useAppDispatch();
   const userData = useSelector(userDataSelector);
-  const navigation = useNavigation<NativeStackNavigationProp<any>>();
+  const navigation = useNavigation<NativeStackNavigationProp<NavigatorParamList, 'LoginScreen'>>();
 
   const handleSaveUserDataToRedux = useCallback(
     (data: UserData) => {
