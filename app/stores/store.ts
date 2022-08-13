@@ -20,6 +20,5 @@ export const createStore = (preloadedState?: Partial<RootState>) =>
 
 export const store = createStore();
 
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch;
-export const useAppDispatch = () => useDispatch<AppDispatch>(); // Export a hook that can be reused to resolve types
+export const useAppDispatch = () => useDispatch<AppDispatch>();

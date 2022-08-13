@@ -1,32 +1,26 @@
-import { UserData } from 'models';
+import { User } from 'models';
 
+import { DEFAULT_USER_DATA } from '@Constants/index';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface UserState {
-  userData: UserData;
+  userData: User;
 }
 
 const initialState: UserState = {
-  userData: {
-    firstName: '',
-    lastName: '',
-    id: '',
-    email: '',
-    accessToken: '',
-  },
+  userData: DEFAULT_USER_DATA,
 };
 
 export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUserData(state, action: PayloadAction<UserData>) {
+    setUserData(state, action: PayloadAction<User>) {
       state.userData = action.payload;
     },
   },
 });
 
-// Action creators are generated for each case reducer function
 export const userActions = userSlice.actions;
 
 export const userReducer = userSlice.reducer;

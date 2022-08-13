@@ -1,10 +1,11 @@
-import { UserData } from 'models';
+import { User } from 'models';
 import { useEffect, useCallback } from 'react';
 import { View, Linking, Alert, Image, SafeAreaView } from 'react-native';
 import { Button } from 'react-native-paper';
-import { URLSearchParams } from 'react-native-url-polyfill';
+import { URLSearchParams, URL } from 'react-native-url-polyfill';
 import { useSelector } from 'react-redux';
 
+import { DEFAULT_USER_DATA } from '@Constants/index';
 import { NavigatorParamList } from '@Navigators/index';
 import { useAppDispatch } from '@Stores/index';
 import { userActions, userDataSelector } from '@Stores/user';
@@ -26,7 +27,7 @@ export const LoginScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<NavigatorParamList, 'LoginScreen'>>();
 
   const handleSaveUserDataToRedux = useCallback(
-    (data: UserData) => {
+    (data: User) => {
       dispatch(userActions.setUserData(data));
     },
     [dispatch],
@@ -34,17 +35,14 @@ export const LoginScreen = () => {
 
   const decodeCallbackUrl = useCallback(
     (url: string) => {
-      const userParams = new URLSearchParams(url);
-
-      let data: UserData = {
-        firstName: '',
-        lastName: '',
-        email: '',
-        accessToken: '',
-        id: '',
+      const callbackURL = new URL(url);
+      const userParams = new URLSearchParams(callbackURL.search);
+      let data: User = {
+        ...DEFAULT_USER_DATA,
       };
+
       for (const userInfo of userParams) {
-        data[userInfo[0] as keyof UserData] = userInfo[1];
+        data[userInfo[0] as keyof User] = userInfo[1];
       }
 
       handleSaveUserDataToRedux(data);

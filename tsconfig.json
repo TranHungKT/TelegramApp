@@ -24,7 +24,8 @@
       "@Themes/*": ["app/themes/*"],
       "@Configs/*": ["app/configs/*"],
       "@Stores/*": ["app/stores/*"],
-      "@Models/*": ["app/models/*"]
+      "@Models/*": ["app/models/*"],
+      "@Constants/*": ["app/constants/*"]
     }
   },
   "include": ["app"]
