@@ -2,7 +2,7 @@ import React from 'react';
 import { useColorScheme } from 'react-native';
 
 import { linking } from '@Configs/index';
-import { LoginScreen } from '@Screens/index';
+import { LoginScreen, HomeScreen } from '@Screens/index';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -10,6 +10,7 @@ import { navigationRef, useBackButtonHandler } from './NavigationUtilities';
 
 export type NavigatorParamList = {
   LoginScreen: undefined;
+  HomeScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<NavigatorParamList>();
@@ -23,6 +24,7 @@ const AppStack = () => {
       initialRouteName="LoginScreen"
     >
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
+      <Stack.Screen name="HomeScreen" component={HomeScreen} />
     </Stack.Navigator>
   );
 };

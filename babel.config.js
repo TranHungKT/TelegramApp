@@ -11,6 +11,8 @@ module.exports = {
           '@Screens': './app/screens',
           '@Themes': './app/themes',
           '@Configs': './app/configs',
+          '@Stores': './app/stores',
+          '@Constants': './app/constants',
         },
       },
     ],

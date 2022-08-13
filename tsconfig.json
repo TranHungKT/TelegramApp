@@ -22,7 +22,10 @@
       "@Navigators/*": ["app/navigators/*"],
       "@Screens/*": ["app/screens/*"],
       "@Themes/*": ["app/themes/*"],
-      "@Configs/*": ["app/configs/*"]
+      "@Configs/*": ["app/configs/*"],
+      "@Stores/*": ["app/stores/*"],
+      "@Models/*": ["app/models/*"],
+      "@Constants/*": ["app/constants/*"]
     }
   },
   "include": ["app"]
