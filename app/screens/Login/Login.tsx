@@ -42,6 +42,7 @@ export const LoginScreen = () => {
       };
 
       for (const userInfo of userParams) {
+        console.log(userInfo);
         data[userInfo[0] as keyof User] = userInfo[1];
       }
 
