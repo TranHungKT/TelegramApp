@@ -35,7 +35,7 @@ const MainBottomTab = () => {
       />
       <MainBottomTabStack.Screen
         name="ImportantMessageScreen"
-        component={LoginScreen}
+        component={HomeScreen}
         options={{
           tabBarLabel: 'Important',
           tabBarIcon: () => <></>,
@@ -74,10 +74,10 @@ const AppStack = () => {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName="MainBottomTab"
+      initialRouteName="LoginScreen"
     >
-      <Stack.Screen name="MainBottomTab" component={MainBottomTab} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
+      <Stack.Screen name="MainBottomTab" component={MainBottomTab} />
     </Stack.Navigator>
   );
 };
