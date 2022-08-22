@@ -71,7 +71,7 @@ export const LoginScreen = () => {
 
   useEffect(() => {
     if (userData.id) {
-      navigation.navigate('HomeScreen');
+      navigation.navigate('MainBottomTab');
     }
   }, [navigation, userData]);
 
