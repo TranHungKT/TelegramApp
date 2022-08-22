@@ -1,6 +1,6 @@
 import { StyleSheet, ViewStyle } from 'react-native';
 
-import { spacing } from '@Themes/index';
+import { paddingHorizontalSpace } from '@Themes/index';
 
 interface Style {
   container: ViewStyle;
@@ -11,7 +11,7 @@ export const styles = StyleSheet.create<Style>({
     flexDirection: 'row',
     position: 'absolute',
     top: 100,
-    left: spacing.large,
+    left: paddingHorizontalSpace,
     width: '100%',
     alignContent: 'center',
     alignSelf: 'center',

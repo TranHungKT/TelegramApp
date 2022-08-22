@@ -42,7 +42,6 @@ export const LoginScreen = () => {
       };
 
       for (const userInfo of userParams) {
-        console.log(userInfo);
         data[userInfo[0] as keyof User] = userInfo[1];
       }
 
@@ -71,7 +70,7 @@ export const LoginScreen = () => {
 
   useEffect(() => {
     if (userData.id) {
-      navigation.navigate('MainBottomTab');
+      navigation.navigate('MainTobTab');
     }
   }, [navigation, userData]);
 

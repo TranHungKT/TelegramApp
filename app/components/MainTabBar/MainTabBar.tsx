@@ -10,6 +10,7 @@ export const MainTabBar = ({ state, descriptors, navigation }: BottomTabBarProps
     <ScrollView style={styles.container} horizontal showsHorizontalScrollIndicator={false}>
       {state.routes.map((route, index) => (
         <TabBarButton
+          key={route.key}
           route={route}
           options={descriptors[route.key].options}
           navigation={navigation}

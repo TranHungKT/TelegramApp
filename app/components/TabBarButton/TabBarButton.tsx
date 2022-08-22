@@ -28,29 +28,15 @@ export const TabBarButton = (props: TabBarButtonProps) => {
   };
 
   const handlePressButton = () => {
-    const event = navigation.emit({
-      type: 'tabPress',
-      target: route.key,
-      canPreventDefault: true,
-    });
-
-    if (!isFocused && !event.defaultPrevented) {
+    if (!isFocused) {
       navigation.navigate({ name: route.name, merge: true, params: undefined });
     }
-  };
-
-  const handleLongPressButton = () => {
-    navigation.emit({
-      type: 'tabLongPress',
-      target: route.key,
-    });
   };
 
   return (
     <Button
       mode="text"
       onPress={handlePressButton}
-      onLongPress={handleLongPressButton}
       style={[styles.container, isFocused ? styles.buttonWhenFocused : styles.buttonWhenNotFocused]}
       color={isFocused ? palette.blue : palette.white}
     >

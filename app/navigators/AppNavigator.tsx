@@ -1,13 +1,13 @@
 import React from 'react';
 import { useColorScheme } from 'react-native';
 
+import { MainTabBar } from '@Components/index';
 import { linking } from '@Configs/index';
 import { LoginScreen, HomeScreen } from '@Screens/index';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { MainTabBar } from '../components/MainTabBar/MainTabBar';
 import { navigationRef, useBackButtonHandler } from './NavigationUtilities';
 
 export type MainNavigatorParamList = {
@@ -17,53 +17,49 @@ export type MainNavigatorParamList = {
   ReadMessageScreen: undefined;
 };
 
-const MainBottomTabStack = createBottomTabNavigator<MainNavigatorParamList>();
+const MainTobTabStack = createBottomTabNavigator<MainNavigatorParamList>();
 
-const MainBottomTab = () => {
+const MainTobTab = () => {
   return (
-    <MainBottomTabStack.Navigator
-      screenOptions={{ headerShown: false }}
+    <MainTobTabStack.Navigator
+      screenOptions={{ headerShown: false, tabBarIcon: () => <></> }}
       tabBar={(props) => <MainTabBar {...props} />}
     >
-      <MainBottomTabStack.Screen
+      <MainTobTabStack.Screen
         name="AllMessageScreen"
         component={HomeScreen}
         options={{
           tabBarLabel: 'All',
-          tabBarIcon: () => <></>,
         }}
       />
-      <MainBottomTabStack.Screen
+      <MainTobTabStack.Screen
         name="ImportantMessageScreen"
         component={HomeScreen}
         options={{
           tabBarLabel: 'Important',
-          tabBarIcon: () => <></>,
         }}
       />
-      <MainBottomTabStack.Screen
+      <MainTobTabStack.Screen
         name="UnreadMessageScreen"
         component={HomeScreen}
         options={{
           tabBarLabel: 'Unread',
-          tabBarIcon: () => <></>,
         }}
       />
-      <MainBottomTabStack.Screen
+      <MainTobTabStack.Screen
         name="ReadMessageScreen"
         component={HomeScreen}
         options={{
           tabBarLabel: 'Read',
-          tabBarIcon: () => <></>,
         }}
       />
-    </MainBottomTabStack.Navigator>
+    </MainTobTabStack.Navigator>
   );
 };
 
 export type NavigatorParamList = {
   LoginScreen: undefined;
-  MainBottomTab: undefined;
+  MainTobTab: undefined;
 };
 
 const Stack = createNativeStackNavigator<NavigatorParamList>();
@@ -77,7 +73,7 @@ const AppStack = () => {
       initialRouteName="LoginScreen"
     >
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
-      <Stack.Screen name="MainBottomTab" component={MainBottomTab} />
+      <Stack.Screen name="MainTobTab" component={MainTobTab} />
     </Stack.Navigator>
   );
 };

@@ -13,6 +13,7 @@ module.exports = {
           '@Configs': './app/configs',
           '@Stores': './app/stores',
           '@Constants': './app/constants',
+          '@Components': './app/components',
         },
       },
     ],
