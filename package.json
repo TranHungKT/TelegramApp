@@ -13,10 +13,12 @@
     "eslint:ci": "eslint \"app/**/*.spec.{ts,tsx,js,jsx}\""
   },
   "dependencies": {
+    "@react-navigation/bottom-tabs": "^6.3.2",
     "@react-navigation/native": "^6.0.11",
     "@react-navigation/native-stack": "^6.7.0",
     "@reduxjs/toolkit": "1.8.1",
     "@tanstack/react-query": "^4.0.10",
+    "@types/react-native-vector-icons": "^6.4.11",
     "react": "18.0.0",
     "react-native": "0.69.2",
     "react-native-paper": "^4.12.4",

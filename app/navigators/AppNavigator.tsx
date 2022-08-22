@@ -1,16 +1,65 @@
 import React from 'react';
 import { useColorScheme } from 'react-native';
 
+import { MainTabBar } from '@Components/index';
 import { linking } from '@Configs/index';
 import { LoginScreen, HomeScreen } from '@Screens/index';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { navigationRef, useBackButtonHandler } from './NavigationUtilities';
 
+export type MainNavigatorParamList = {
+  AllMessageScreen: undefined;
+  ImportantMessageScreen: undefined;
+  UnreadMessageScreen: undefined;
+  ReadMessageScreen: undefined;
+};
+
+const MainTobTabStack = createBottomTabNavigator<MainNavigatorParamList>();
+
+const MainTobTab = () => {
+  return (
+    <MainTobTabStack.Navigator
+      screenOptions={{ headerShown: false, tabBarIcon: () => <></> }}
+      tabBar={(props) => <MainTabBar {...props} />}
+    >
+      <MainTobTabStack.Screen
+        name="AllMessageScreen"
+        component={HomeScreen}
+        options={{
+          tabBarLabel: 'All',
+        }}
+      />
+      <MainTobTabStack.Screen
+        name="ImportantMessageScreen"
+        component={HomeScreen}
+        options={{
+          tabBarLabel: 'Important',
+        }}
+      />
+      <MainTobTabStack.Screen
+        name="UnreadMessageScreen"
+        component={HomeScreen}
+        options={{
+          tabBarLabel: 'Unread',
+        }}
+      />
+      <MainTobTabStack.Screen
+        name="ReadMessageScreen"
+        component={HomeScreen}
+        options={{
+          tabBarLabel: 'Read',
+        }}
+      />
+    </MainTobTabStack.Navigator>
+  );
+};
+
 export type NavigatorParamList = {
   LoginScreen: undefined;
-  HomeScreen: undefined;
+  MainTobTab: undefined;
 };
 
 const Stack = createNativeStackNavigator<NavigatorParamList>();
@@ -24,7 +73,7 @@ const AppStack = () => {
       initialRouteName="LoginScreen"
     >
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
-      <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen name="MainTobTab" component={MainTobTab} />
     </Stack.Navigator>
   );
 };

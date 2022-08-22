@@ -25,7 +25,8 @@
       "@Configs/*": ["app/configs/*"],
       "@Stores/*": ["app/stores/*"],
       "@Models/*": ["app/models/*"],
-      "@Constants/*": ["app/constants/*"]
+      "@Constants/*": ["app/constants/*"],
+      "@Components/*": ["app/components/*"]
     }
   },
   "include": ["app"]

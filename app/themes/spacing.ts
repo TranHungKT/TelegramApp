@@ -8,3 +8,5 @@ export const spacing = {
   huge: 48,
   massive: 64,
 };
+
+export const paddingHorizontalSpace = 20;
