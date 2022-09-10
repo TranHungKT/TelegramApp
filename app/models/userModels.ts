@@ -4,4 +4,10 @@ export interface User {
   firstName: string;
   lastName: string;
   accessToken: string;
+  refreshToken: string;
+}
+
+export enum UserStatus {
+  OFFLINE = 'OFFLINE',
+  ONLINE = 'ONLINE',
 }

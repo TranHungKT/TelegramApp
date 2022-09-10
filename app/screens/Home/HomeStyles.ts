@@ -6,6 +6,7 @@ import { paddingHorizontalSpace } from '@Themes/index';
 interface Styles {
   safeArea: ViewStyle;
   container: ViewStyle;
+  content: ViewStyle;
 }
 
 export const styles = StyleSheet.create<Styles>({
@@ -14,5 +15,8 @@ export const styles = StyleSheet.create<Styles>({
   },
   container: {
     paddingHorizontal: paddingHorizontalSpace,
+  },
+  content: {
+    marginTop: 60,
   },
 });
