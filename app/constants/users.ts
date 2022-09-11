@@ -5,6 +5,5 @@ export const DEFAULT_USER_DATA: User = {
   lastName: '',
   email: '',
   accessToken: '',
-  refreshToken: ' ',
   id: '',
 };

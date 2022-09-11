@@ -19,7 +19,7 @@ export interface Member {
 }
 
 export interface Chat {
-  id: string;
+  _id: string;
   content: string;
   contentType: string; // TODO: CHECK TYPE OF FILE, URL?
   sentTime: string;
