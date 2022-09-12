@@ -12,7 +12,7 @@ interface GroupContainerProps {
 
 export const GroupContainer = (props: GroupContainerProps) => {
   const { group } = props;
-  const { members } = props.group;
+  const { members } = group;
 
   const userId = useSelector(userIdSelector);
 
