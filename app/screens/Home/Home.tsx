@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
 import { SafeAreaView, View } from 'react-native';
-import { ActivityIndicator, Snackbar } from 'react-native-paper';
+import { ActivityIndicator } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
+import { SnackBarError } from '@Components/index';
 import { Group } from '@Models/index';
 import { userTokenSelector } from '@Stores/user';
 import { useQuery } from '@tanstack/react-query';
@@ -18,43 +18,34 @@ export const HomeScreen = () => {
 
   const { data, isFetching, error } = useQuery(['todos', token], () => fetchListGroups(token));
 
-  const [isVisibleError, setIsVisibleError] = useState(false);
-
-  const onDismissSnackBar = () => setIsVisibleError(false);
-
-  useEffect(() => {
-    if (error) {
-      setIsVisibleError(true);
+  const renderComponent = () => {
+    if (isFetching) {
+      return <ActivityIndicator animating={true} style={styles.activityIndicator} />;
     }
-  }, [error]);
+
+    if (error) {
+      return <SnackBarError isError />;
+    }
+
+    if (data?.list.length === 0) {
+      return <EmptyListOfGroups />;
+    }
+
+    return (
+      <View style={styles.content}>
+        {data?.list.map((group: Group) => (
+          <GroupContainer group={group} key={group._id} />
+        ))}
+      </View>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <Header />
 
-        {isFetching ? (
-          <ActivityIndicator animating={true} style={styles.activityIndicator} />
-        ) : (
-          <View style={styles.content}>
-            {data?.list.map((group: Group) => (
-              <GroupContainer group={group} key={group._id} />
-            ))}
-          </View>
-        )}
-
-        <EmptyListOfGroups isEmpty={data?.list.length === 0} />
-
-        <Snackbar
-          visible={isVisibleError}
-          onDismiss={onDismissSnackBar}
-          action={{
-            label: 'Undo',
-            onPress: onDismissSnackBar,
-          }}
-        >
-          Something went wrong
-        </Snackbar>
+        {renderComponent()}
       </View>
     </SafeAreaView>
   );
