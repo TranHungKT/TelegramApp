@@ -1,6 +1,5 @@
-import { User } from 'models';
-
 import { DEFAULT_USER_DATA } from '@Constants/index';
+import { User } from '@Models/index';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface UserState {
