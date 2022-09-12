@@ -1,4 +1,4 @@
 export { MainTabBar } from './MainTabBar';
 export { TabBarButton } from './TabBarButton';
-export { EmptyContent } from './EmptyContent';
+export { EmptyOrErrorContent } from './EmptyOrErrorContent';
 export { SnackBarError } from './SnackBarError';

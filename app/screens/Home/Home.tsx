@@ -2,7 +2,6 @@ import { SafeAreaView, View } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
-import { SnackBarError } from '@Components/index';
 import { Group } from '@Models/index';
 import { userTokenSelector } from '@Stores/user';
 import { useQuery } from '@tanstack/react-query';
@@ -11,6 +10,7 @@ import { fetchListGroups } from '../../services/groupServices';
 import { styles } from './HomeStyles';
 import { Header } from './components';
 import { EmptyListOfGroups } from './components/EmptyListOfGroups';
+import { ErrorGetList } from './components/ErrorGetList';
 import { GroupContainer } from './containers/GroupContainer';
 
 export const HomeScreen = () => {
@@ -24,7 +24,7 @@ export const HomeScreen = () => {
     }
 
     if (error) {
-      return <SnackBarError isError />;
+      return <ErrorGetList />;
     }
 
     if (data?.list.length === 0) {

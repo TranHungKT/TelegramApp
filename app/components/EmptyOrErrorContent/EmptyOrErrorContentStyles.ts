@@ -30,5 +30,6 @@ export const styles = StyleSheet.create<Styles>({
     textAlign: 'center',
     fontSize: sizes.medium,
     color: palette.blue,
+    marginTop: 10,
   },
 });
