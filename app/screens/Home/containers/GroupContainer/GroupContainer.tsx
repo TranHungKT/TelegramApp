@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import { IMAGES } from 'themes';
 
 import { Group as IGroup } from '@Models/index';
 import { userIdSelector } from '@Stores/user';
@@ -27,7 +28,10 @@ export const GroupContainer = (props: GroupContainerProps) => {
   };
 
   const getAvatarUrl = () => {
-    return members.filter((member) => member._id !== userId)[0].avatarUrl;
+    if (members.length === 2) {
+      return members.filter((member) => member._id !== userId)[0].avatarUrl;
+    }
+    return IMAGES.Group;
   };
 
   return <Group group={{ ...group, name: generateGroupName() }} avatarUrl={getAvatarUrl()} />;

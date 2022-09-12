@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { View } from 'react-native';
+import { View, ImageSourcePropType } from 'react-native';
 import { Text, Avatar } from 'react-native-paper';
 
 import { Group as IGroup } from '@Models/index';
@@ -8,17 +8,22 @@ import { styles } from './GroupStyles';
 
 interface GroupProps {
   group: IGroup;
-  avatarUrl: string;
+  avatarUrl: ImageSourcePropType | string;
 }
 
 export const Group = (props: GroupProps) => {
   const { group, avatarUrl } = props;
   const { _id, name, lastUpdatedAt } = group;
 
+  const is2Members = () => group.members.length === 2;
+
   return (
     <View key={_id} style={styles.container}>
       <>
-        <Avatar.Image source={{ uri: avatarUrl }} style={styles.avatar} />
+        <Avatar.Image
+          source={is2Members() ? { uri: avatarUrl as string } : (avatarUrl as ImageSourcePropType)}
+          style={styles.avatar}
+        />
         <View style={styles.groupView}>
           <Text numberOfLines={1} style={styles.groupName}>
             {name}
