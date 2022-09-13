@@ -1,8 +1,13 @@
+import { useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { IMAGES } from 'themes';
 
 import { Group as IGroup } from '@Models/index';
+import { AllGroupChatNavigationParamList } from '@Navigators/index';
+import { WebSocketContext } from '@Providers/index';
 import { userIdSelector } from '@Stores/user';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { Group } from '../../components/Group';
 
@@ -15,6 +20,14 @@ export const GroupContainer = (props: GroupContainerProps) => {
   const { members } = group;
 
   const userId = useSelector(userIdSelector);
+  const navigation =
+    useNavigation<NativeStackNavigationProp<AllGroupChatNavigationParamList, 'HomeScreen'>>();
+  const socket = useContext(WebSocketContext);
+
+  const handleClickGroup = () => {
+    navigation.navigate('ChatScreen');
+    socket.emit('join-room', group._id);
+  };
 
   const generateGroupName = () => {
     let name = '';
@@ -34,5 +47,11 @@ export const GroupContainer = (props: GroupContainerProps) => {
     return IMAGES.Group;
   };
 
-  return <Group group={{ ...group, name: generateGroupName() }} avatarUrl={getAvatarUrl()} />;
+  return (
+    <Group
+      group={{ ...group, name: generateGroupName() }}
+      avatarUrl={getAvatarUrl()}
+      onClickGroup={handleClickGroup}
+    />
+  );
 };

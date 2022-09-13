@@ -3,15 +3,31 @@ import { useColorScheme } from 'react-native';
 
 import { MainTabBar } from '@Components/index';
 import { linking } from '@Configs/index';
-import { LoginScreen, HomeScreen } from '@Screens/index';
+import { LoginScreen, HomeScreen, ChatScreen } from '@Screens/index';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { navigationRef, useBackButtonHandler } from './NavigationUtilities';
 
-export type MainNavigatorParamList = {
+export type AllGroupChatNavigationParamList = {
   AllMessageScreen: undefined;
+  ChatScreen: undefined;
+};
+
+const AllGroupChatStack = createNativeStackNavigator<AllGroupChatNavigationParamList>();
+
+const AllGroupChat = () => {
+  return (
+    <AllGroupChatStack.Navigator screenOptions={{ headerShown: false }}>
+      <AllGroupChatStack.Screen name="AllMessageScreen" component={MainTobTab} />
+      <AllGroupChatStack.Screen name="ChatScreen" component={ChatScreen} />
+    </AllGroupChatStack.Navigator>
+  );
+};
+
+export type MainNavigatorParamList = {
+  HomeScreen: undefined;
   ImportantMessageScreen: undefined;
   UnreadMessageScreen: undefined;
   ReadMessageScreen: undefined;
@@ -26,7 +42,7 @@ const MainTobTab = () => {
       tabBar={(props) => <MainTabBar {...props} />}
     >
       <MainTobTabStack.Screen
-        name="AllMessageScreen"
+        name="HomeScreen"
         component={HomeScreen}
         options={{
           tabBarLabel: 'All',
@@ -73,7 +89,7 @@ const AppStack = () => {
       initialRouteName="LoginScreen"
     >
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
-      <Stack.Screen name="MainTobTab" component={MainTobTab} />
+      <Stack.Screen name="MainTobTab" component={AllGroupChat} />
     </Stack.Navigator>
   );
 };

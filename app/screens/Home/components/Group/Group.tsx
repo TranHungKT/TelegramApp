@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { View, ImageSourcePropType } from 'react-native';
+import { View, ImageSourcePropType, TouchableOpacity } from 'react-native';
 import { Text, Avatar } from 'react-native-paper';
 
 import { Group as IGroup } from '@Models/index';
@@ -9,16 +9,17 @@ import { styles } from './GroupStyles';
 interface GroupProps {
   group: IGroup;
   avatarUrl: ImageSourcePropType | string;
+  onClickGroup: () => void;
 }
 
 export const Group = (props: GroupProps) => {
-  const { group, avatarUrl } = props;
+  const { group, avatarUrl, onClickGroup } = props;
   const { _id, name, lastUpdatedAt } = group;
 
   const is2Members = () => group.members.length === 2;
 
   return (
-    <View key={_id} style={styles.container}>
+    <TouchableOpacity key={_id} style={styles.container} onPress={onClickGroup}>
       <>
         <Avatar.Image
           source={is2Members() ? { uri: avatarUrl as string } : (avatarUrl as ImageSourcePropType)}
@@ -37,6 +38,6 @@ export const Group = (props: GroupProps) => {
           <Text style={styles.lastUpdatedTime}>{moment(lastUpdatedAt).format('HH:MM')}</Text>
         </View>
       </>
-    </View>
+    </TouchableOpacity>
   );
 };
