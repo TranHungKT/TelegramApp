@@ -26,7 +26,8 @@
       "@Stores/*": ["app/stores/*"],
       "@Models/*": ["app/models/*"],
       "@Constants/*": ["app/constants/*"],
-      "@Components/*": ["app/components/*"]
+      "@Components/*": ["app/components/*"],
+      "@Providers/*": ["app/providers/*"]
     }
   },
   "include": ["app"]

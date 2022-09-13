@@ -14,6 +14,7 @@ module.exports = {
           '@Stores': './app/stores',
           '@Constants': './app/constants',
           '@Components': './app/components',
+          '@Providers': './app/providers',
         },
       },
     ],
