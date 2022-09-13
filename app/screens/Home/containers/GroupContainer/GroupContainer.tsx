@@ -21,7 +21,7 @@ export const GroupContainer = (props: GroupContainerProps) => {
 
   const userId = useSelector(userIdSelector);
   const navigation =
-    useNavigation<NativeStackNavigationProp<AllGroupChatNavigationParamList, 'HomeScreen'>>();
+    useNavigation<NativeStackNavigationProp<AllGroupChatNavigationParamList, 'AllMessageScreen'>>();
   const socket = useContext(WebSocketContext);
 
   const handleClickGroup = () => {
