@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { IMAGES } from 'themes';
 
+import { SOCKET_EVENTS } from '@Constants/index';
 import { Group as IGroup } from '@Models/index';
 import { AllGroupChatNavigationParamList } from '@Navigators/index';
 import { WebSocketContext } from '@Providers/index';
@@ -47,7 +48,7 @@ export const GroupContainer = (props: GroupContainerProps) => {
 
   const handleClickGroup = () => {
     navigation.navigate('ChatScreen');
-    socket.emit('join-room', group._id);
+    socket.emit(SOCKET_EVENTS.JOIN_ROOM, group._id);
 
     dispatch(
       groupsActions.setCurrentGroup({
