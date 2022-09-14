@@ -1,8 +1,11 @@
+import { useEffect } from 'react';
 import { SafeAreaView, View } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
 import { Group } from '@Models/index';
+import { groupsActions } from '@Stores/groups';
+import { useAppDispatch } from '@Stores/index';
 import { userTokenSelector } from '@Stores/user';
 import { useQuery } from '@tanstack/react-query';
 
@@ -15,6 +18,7 @@ import { GroupContainer } from './containers/GroupContainer';
 
 export const HomeScreen = () => {
   const token = useSelector(userTokenSelector);
+  const dispatch = useAppDispatch();
 
   const { data, isFetching, error } = useQuery(['todos', token], () => fetchListGroups(token));
 
@@ -39,6 +43,12 @@ export const HomeScreen = () => {
       </View>
     );
   };
+
+  useEffect(() => {
+    if (data) {
+      dispatch(groupsActions.setGroups(data));
+    }
+  }, [data, dispatch]);
 
   return (
     <SafeAreaView style={styles.safeArea}>

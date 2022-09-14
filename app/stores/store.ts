@@ -3,10 +3,12 @@ import createDebugger from 'redux-flipper';
 
 import { configureStore, StateFromReducersMapObject } from '@reduxjs/toolkit';
 
+import { groupsReducer } from './groups';
 import { userReducer } from './user';
 
 export const reducer = {
   user: userReducer,
+  groups: groupsReducer,
 };
 
 export type RootState = StateFromReducersMapObject<typeof reducer>;

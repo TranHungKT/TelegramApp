@@ -5,6 +5,8 @@ import { IMAGES } from 'themes';
 import { Group as IGroup } from '@Models/index';
 import { AllGroupChatNavigationParamList } from '@Navigators/index';
 import { WebSocketContext } from '@Providers/index';
+import { groupsActions } from '@Stores/groups';
+import { useAppDispatch } from '@Stores/index';
 import { userIdSelector } from '@Stores/user';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -18,16 +20,12 @@ interface GroupContainerProps {
 export const GroupContainer = (props: GroupContainerProps) => {
   const { group } = props;
   const { members } = group;
+  const dispatch = useAppDispatch();
 
   const userId = useSelector(userIdSelector);
   const navigation =
     useNavigation<NativeStackNavigationProp<AllGroupChatNavigationParamList, 'AllMessageScreen'>>();
   const socket = useContext(WebSocketContext);
-
-  const handleClickGroup = () => {
-    navigation.navigate('ChatScreen');
-    socket.emit('join-room', group._id);
-  };
 
   const generateGroupName = () => {
     let name = '';
@@ -47,10 +45,22 @@ export const GroupContainer = (props: GroupContainerProps) => {
     return IMAGES.Group;
   };
 
+  const handleClickGroup = () => {
+    navigation.navigate('ChatScreen');
+    socket.emit('join-room', group._id);
+
+    dispatch(
+      groupsActions.setCurrentGroup({
+        ...group,
+        name: generateGroupName(),
+        groupAvatar: getAvatarUrl(),
+      }),
+    );
+  };
+
   return (
     <Group
-      group={{ ...group, name: generateGroupName() }}
-      avatarUrl={getAvatarUrl()}
+      group={{ ...group, name: generateGroupName(), groupAvatar: getAvatarUrl() }}
       onClickGroup={handleClickGroup}
     />
   );
