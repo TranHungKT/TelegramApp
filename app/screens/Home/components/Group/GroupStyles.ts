@@ -19,7 +19,7 @@ export const styles = StyleSheet.create<Styles>({
   },
 
   groupView: {
-    flex: 6,
+    flex: 8,
     paddingTop: 5,
     paddingBottom: 5,
   },
@@ -31,7 +31,6 @@ export const styles = StyleSheet.create<Styles>({
 
   avatar: {
     marginRight: spacing.mediumPlus,
-    // flex: 2,
     backgroundColor: palette.white,
     width: 82,
     height: 82,

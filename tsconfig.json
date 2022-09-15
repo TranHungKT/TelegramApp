@@ -27,7 +27,8 @@
       "@Models/*": ["app/models/*"],
       "@Constants/*": ["app/constants/*"],
       "@Components/*": ["app/components/*"],
-      "@Providers/*": ["app/providers/*"]
+      "@Providers/*": ["app/providers/*"],
+      "@Utils/*": ["app/utils/*"]
     }
   },
   "include": ["app"]

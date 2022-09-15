@@ -1,6 +1,7 @@
 import moment from 'moment';
-import { View, ImageSourcePropType, TouchableOpacity, Image } from 'react-native';
+import { View, TouchableOpacity, Image } from 'react-native';
 import { Text } from 'react-native-paper';
+import { getImageSource } from 'utils';
 
 import { Group as IGroup } from '@Models/index';
 
@@ -15,16 +16,15 @@ export const Group = (props: GroupProps) => {
   const { group, onClickGroup } = props;
   const { _id, name, lastUpdatedAt, groupAvatar } = group;
 
-  const is2Members = () => group.members.length === 2;
+  const isMoreThan2Member = () => group.members.length > 2;
 
   return (
     <TouchableOpacity key={_id} style={styles.container} onPress={onClickGroup}>
       <>
         <Image
-          source={
-            is2Members() ? { uri: groupAvatar as string } : (groupAvatar as ImageSourcePropType)
-          }
+          source={getImageSource(groupAvatar, isMoreThan2Member())}
           style={styles.avatar}
+          resizeMode="contain"
         />
         <View style={styles.groupView}>
           <Text numberOfLines={1} style={styles.groupName}>

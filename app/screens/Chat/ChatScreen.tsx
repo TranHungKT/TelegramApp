@@ -9,15 +9,17 @@ import { Header } from './components/Header';
 export const ChatScreen = () => {
   const currentGroup = useSelector(currentGroupSelector);
 
-  console.log(currentGroup);
-
   if (!currentGroup) {
     return <></>;
   }
-
+  console.log(currentGroup.groupAvatar);
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Header name={currentGroup.name} groupAvatar={currentGroup.groupAvatar as string} />
+      <Header
+        name={currentGroup.name}
+        groupAvatar={currentGroup.groupAvatar}
+        totalMembers={currentGroup.members.length}
+      />
     </SafeAreaView>
   );
 };
