@@ -6,4 +6,5 @@ export const DEFAULT_USER_DATA: User = {
   email: '',
   accessToken: '',
   id: '',
+  avatarUrl: '',
 };

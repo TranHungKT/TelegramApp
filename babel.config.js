@@ -16,6 +16,7 @@ module.exports = {
           '@Components': './app/components',
           '@Providers': './app/providers',
           '@Utils': './app/utils',
+          '@Services': './app/services',
         },
       },
     ],

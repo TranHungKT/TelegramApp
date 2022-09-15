@@ -5,6 +5,7 @@ import { IMAGES } from 'themes';
 
 import { ACCESS_TOKEN_KEY } from '@Constants/index';
 import { NavigatorParamList } from '@Navigators/index';
+import { fetchUserData } from '@Services/index';
 import { useAppDispatch } from '@Stores/index';
 import { userActions } from '@Stores/user';
 import { getAsyncStorageData } from '@Utils/index';
@@ -12,7 +13,6 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useQuery } from '@tanstack/react-query';
 
-import { fetchUserData } from '../../services/userServices';
 import { styles } from './SplashScreenStyles';
 
 export const SplashScreen = () => {

@@ -4,12 +4,12 @@ import { ActivityIndicator } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
 import { Group } from '@Models/index';
+import { fetchListGroups } from '@Services/index';
 import { groupsActions } from '@Stores/groups';
 import { useAppDispatch } from '@Stores/index';
 import { userTokenSelector } from '@Stores/user';
 import { useQuery } from '@tanstack/react-query';
 
-import { fetchListGroups } from '../../services/groupServices';
 import { styles } from './HomeStyles';
 import { Header } from './components';
 import { EmptyListOfGroups } from './components/EmptyListOfGroups';
