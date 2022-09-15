@@ -4,6 +4,7 @@ export interface User {
   firstName: string;
   lastName: string;
   accessToken: string;
+  avatarUrl: string;
 }
 
 export enum UserStatus {

@@ -5,11 +5,12 @@ import { Button } from 'react-native-paper';
 import { URLSearchParams, URL } from 'react-native-url-polyfill';
 import { useSelector } from 'react-redux';
 
-import { DEFAULT_USER_DATA } from '@Constants/index';
+import { DEFAULT_USER_DATA, ACCESS_TOKEN_KEY } from '@Constants/index';
 import { NavigatorParamList } from '@Navigators/index';
 import { useAppDispatch } from '@Stores/index';
 import { userActions, userDataSelector } from '@Stores/user';
 import { IMAGES } from '@Themes/images';
+import { setAsyncStorageData } from '@Utils/index';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -44,6 +45,8 @@ export const LoginScreen = () => {
       for (const userInfo of userParams) {
         data[userInfo[0] as keyof User] = userInfo[1];
       }
+
+      setAsyncStorageData({ key: ACCESS_TOKEN_KEY, data: data.accessToken });
 
       handleSaveUserDataToRedux(data);
     },
