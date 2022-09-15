@@ -1,8 +1,16 @@
+import { useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { IMAGES } from 'themes';
 
+import { SOCKET_EVENTS } from '@Constants/index';
 import { Group as IGroup } from '@Models/index';
+import { AllGroupChatNavigationParamList } from '@Navigators/index';
+import { WebSocketContext } from '@Providers/index';
+import { groupsActions } from '@Stores/groups';
+import { useAppDispatch } from '@Stores/index';
 import { userIdSelector } from '@Stores/user';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { Group } from '../../components/Group';
 
@@ -13,8 +21,12 @@ interface GroupContainerProps {
 export const GroupContainer = (props: GroupContainerProps) => {
   const { group } = props;
   const { members } = group;
+  const dispatch = useAppDispatch();
 
   const userId = useSelector(userIdSelector);
+  const navigation =
+    useNavigation<NativeStackNavigationProp<AllGroupChatNavigationParamList, 'AllMessageScreen'>>();
+  const socket = useContext(WebSocketContext);
 
   const generateGroupName = () => {
     let name = '';
@@ -34,5 +46,23 @@ export const GroupContainer = (props: GroupContainerProps) => {
     return IMAGES.Group;
   };
 
-  return <Group group={{ ...group, name: generateGroupName() }} avatarUrl={getAvatarUrl()} />;
+  const handleClickGroup = () => {
+    navigation.navigate('ChatScreen');
+    socket.emit(SOCKET_EVENTS.JOIN_ROOM, group._id);
+
+    dispatch(
+      groupsActions.setCurrentGroup({
+        ...group,
+        name: generateGroupName(),
+        groupAvatar: getAvatarUrl(),
+      }),
+    );
+  };
+
+  return (
+    <Group
+      group={{ ...group, name: generateGroupName(), groupAvatar: getAvatarUrl() }}
+      onClickGroup={handleClickGroup}
+    />
+  );
 };

@@ -1,4 +1,4 @@
-import { StyleSheet, TextStyle, ViewStyle } from 'react-native';
+import { StyleSheet, TextStyle, ViewStyle, ImageStyle } from 'react-native';
 import { palette, sizes, spacing } from 'themes';
 
 interface Styles {
@@ -6,7 +6,7 @@ interface Styles {
   groupView: ViewStyle;
   groupName: TextStyle;
   chat: TextStyle;
-  avatar: ViewStyle;
+  avatar: ImageStyle;
   rightCol: ViewStyle;
   lastUpdatedTime: TextStyle;
 }
@@ -15,10 +15,11 @@ export const styles = StyleSheet.create<Styles>({
   container: {
     flexDirection: 'row',
     marginBottom: spacing.large,
+    alignItems: 'center',
   },
 
   groupView: {
-    flex: 6,
+    flex: 8,
     paddingTop: 5,
     paddingBottom: 5,
   },
@@ -30,9 +31,10 @@ export const styles = StyleSheet.create<Styles>({
 
   avatar: {
     marginRight: spacing.mediumPlus,
-    flex: 2,
     backgroundColor: palette.white,
-    resizeMode: 'contain',
+    width: 82,
+    height: 82,
+    borderRadius: 23,
   },
 
   rightCol: {

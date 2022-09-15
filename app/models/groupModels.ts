@@ -1,3 +1,5 @@
+import { ImageSourcePropType } from 'react-native';
+
 import { UserStatus } from './userModels';
 
 export interface Group {
@@ -7,6 +9,7 @@ export interface Group {
   chats: Chat[];
   typeOfGroup: TypeOfGroup;
   lastUpdatedAt: string;
+  groupAvatar: ImageSourcePropType | string;
 }
 
 export interface Member {

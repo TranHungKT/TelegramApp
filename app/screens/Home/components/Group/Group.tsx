@@ -1,6 +1,7 @@
 import moment from 'moment';
-import { View, ImageSourcePropType } from 'react-native';
-import { Text, Avatar } from 'react-native-paper';
+import { View, TouchableOpacity, Image } from 'react-native';
+import { Text } from 'react-native-paper';
+import { getImageSource } from 'utils';
 
 import { Group as IGroup } from '@Models/index';
 
@@ -8,21 +9,22 @@ import { styles } from './GroupStyles';
 
 interface GroupProps {
   group: IGroup;
-  avatarUrl: ImageSourcePropType | string;
+  onClickGroup: () => void;
 }
 
 export const Group = (props: GroupProps) => {
-  const { group, avatarUrl } = props;
-  const { _id, name, lastUpdatedAt } = group;
+  const { group, onClickGroup } = props;
+  const { _id, name, lastUpdatedAt, groupAvatar } = group;
 
-  const is2Members = () => group.members.length === 2;
+  const isMoreThan2Member = () => group.members.length > 2;
 
   return (
-    <View key={_id} style={styles.container}>
+    <TouchableOpacity key={_id} style={styles.container} onPress={onClickGroup}>
       <>
-        <Avatar.Image
-          source={is2Members() ? { uri: avatarUrl as string } : (avatarUrl as ImageSourcePropType)}
+        <Image
+          source={getImageSource(groupAvatar, isMoreThan2Member())}
           style={styles.avatar}
+          resizeMode="contain"
         />
         <View style={styles.groupView}>
           <Text numberOfLines={1} style={styles.groupName}>
@@ -37,6 +39,6 @@ export const Group = (props: GroupProps) => {
           <Text style={styles.lastUpdatedTime}>{moment(lastUpdatedAt).format('HH:MM')}</Text>
         </View>
       </>
-    </View>
+    </TouchableOpacity>
   );
 };
