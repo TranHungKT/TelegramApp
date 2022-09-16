@@ -1,18 +1,20 @@
 import { User } from 'models';
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { View, Linking, Alert, Image, SafeAreaView } from 'react-native';
 import { Button } from 'react-native-paper';
 import { URLSearchParams, URL } from 'react-native-url-polyfill';
 import { useSelector } from 'react-redux';
 
-import { DEFAULT_USER_DATA, ACCESS_TOKEN_KEY } from '@Constants/index';
+import { ACCESS_TOKEN_KEY } from '@Constants/index';
 import { NavigatorParamList } from '@Navigators/index';
+import { fetchUserData } from '@Services/index';
 import { useAppDispatch } from '@Stores/index';
 import { userActions, userDataSelector } from '@Stores/user';
 import { IMAGES } from '@Themes/images';
 import { setAsyncStorageData } from '@Utils/index';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useQuery } from '@tanstack/react-query';
 
 import { styles } from './LoginStyles';
 
@@ -26,6 +28,7 @@ export const LoginScreen = () => {
   const dispatch = useAppDispatch();
   const userData = useSelector(userDataSelector);
   const navigation = useNavigation<NativeStackNavigationProp<NavigatorParamList, 'LoginScreen'>>();
+  const [accessToken, setAccessToken] = useState('');
 
   const handleSaveUserDataToRedux = useCallback(
     (data: User) => {
@@ -34,24 +37,21 @@ export const LoginScreen = () => {
     [dispatch],
   );
 
-  const decodeCallbackUrl = useCallback(
-    (url: string) => {
-      const callbackURL = new URL(url);
-      const userParams = new URLSearchParams(callbackURL.search);
-      let data: User = {
-        ...DEFAULT_USER_DATA,
-      };
-
-      for (const userInfo of userParams) {
-        data[userInfo[0] as keyof User] = userInfo[1];
-      }
-
-      setAsyncStorageData({ key: ACCESS_TOKEN_KEY, data: data.accessToken });
-
-      handleSaveUserDataToRedux(data);
-    },
-    [handleSaveUserDataToRedux],
+  const { data } = useQuery(
+    ['getUserData', accessToken],
+    () => fetchUserData(accessToken as string),
+    { enabled: accessToken ? true : false },
   );
+
+  const decodeCallbackUrl = useCallback((url: string) => {
+    const callbackURL = new URL(url);
+    const userParams = new URLSearchParams(callbackURL.search);
+
+    for (const userInfo of userParams) {
+      setAccessToken(userInfo[1]);
+      setAsyncStorageData({ key: ACCESS_TOKEN_KEY, data: userInfo[1] });
+    }
+  }, []);
 
   const openUrl = async () => {
     const isSupportedURL = await Linking.canOpenURL(AUTH_URL);
@@ -70,6 +70,10 @@ export const LoginScreen = () => {
       Linking.removeAllListeners(URL_TYPE);
     };
   }, [decodeCallbackUrl]);
+
+  useEffect(() => {
+    data && handleSaveUserDataToRedux({ ...data, accessToken });
+  }, [accessToken, data, handleSaveUserDataToRedux]);
 
   useEffect(() => {
     if (userData.id) {

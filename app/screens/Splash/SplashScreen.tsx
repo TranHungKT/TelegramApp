@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Image, View } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
+import { useSelector } from 'react-redux';
 import { IMAGES } from 'themes';
 
 import { ACCESS_TOKEN_KEY } from '@Constants/index';
 import { NavigatorParamList } from '@Navigators/index';
 import { fetchUserData } from '@Services/index';
 import { useAppDispatch } from '@Stores/index';
-import { userActions } from '@Stores/user';
+import { userActions, userIdSelector } from '@Stores/user';
 import { getAsyncStorageData } from '@Utils/index';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -16,10 +17,12 @@ import { useQuery } from '@tanstack/react-query';
 import { styles } from './SplashScreenStyles';
 
 export const SplashScreen = () => {
-  const [accessToken, setAccesToken] = useState<string | null | undefined>(undefined);
+  const [accessToken, setAccessToken] = useState<string | null | undefined>(undefined);
 
   const navigation = useNavigation<NativeStackNavigationProp<NavigatorParamList, 'SplashSreen'>>();
   const dispatch = useAppDispatch();
+
+  const userId = useSelector(userIdSelector);
 
   const { data } = useQuery(
     ['getUserData', accessToken],
@@ -31,7 +34,7 @@ export const SplashScreen = () => {
     const getAccessToken = async () => {
       const token = await getAsyncStorageData(ACCESS_TOKEN_KEY);
       if (token) {
-        setAccesToken(JSON.parse(token));
+        setAccessToken(JSON.parse(token));
       }
     };
 
@@ -41,12 +44,17 @@ export const SplashScreen = () => {
   useEffect(() => {
     if (accessToken && data) {
       dispatch(userActions.setUserData({ ...data, accessToken }));
-      return navigation.navigate('MainTobTab');
     }
     if (accessToken === null) {
       return navigation.navigate('LoginScreen');
     }
   }, [accessToken, navigation, data, dispatch]);
+
+  useEffect(() => {
+    if (userId) {
+      return navigation.navigate('MainTobTab');
+    }
+  }, [navigation, userId]);
 
   return (
     <View style={styles.container}>
