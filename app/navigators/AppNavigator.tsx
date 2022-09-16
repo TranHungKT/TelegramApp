@@ -3,7 +3,7 @@ import { useColorScheme } from 'react-native';
 
 import { MainTabBar } from '@Components/index';
 import { linking } from '@Configs/index';
-import { LoginScreen, HomeScreen, ChatScreen } from '@Screens/index';
+import { LoginScreen, HomeScreen, ChatScreen, SplashScreen } from '@Screens/index';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -76,6 +76,7 @@ const MainTobTab = () => {
 export type NavigatorParamList = {
   LoginScreen: undefined;
   MainTobTab: undefined;
+  SplashSreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<NavigatorParamList>();
@@ -86,8 +87,9 @@ const AppStack = () => {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName="LoginScreen"
+      initialRouteName="SplashSreen"
     >
+      <Stack.Screen name="SplashSreen" component={SplashScreen} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="MainTobTab" component={AllGroupChat} />
     </Stack.Navigator>

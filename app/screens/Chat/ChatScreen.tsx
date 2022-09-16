@@ -12,7 +12,7 @@ export const ChatScreen = () => {
   if (!currentGroup) {
     return <></>;
   }
-  console.log(currentGroup.groupAvatar);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header
