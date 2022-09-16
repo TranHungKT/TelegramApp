@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import { Image, View } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import { useSelector } from 'react-redux';
-import { IMAGES } from 'themes';
 
+import { EmptyOrErrorContent } from '@Components/index';
 import { ACCESS_TOKEN_KEY } from '@Constants/index';
 import { NavigatorParamList } from '@Navigators/index';
 import { fetchUserData } from '@Services/index';
 import { useAppDispatch } from '@Stores/index';
 import { userActions, userIdSelector } from '@Stores/user';
+import { IMAGES } from '@Themes/index';
 import { getAsyncStorageData } from '@Utils/index';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -24,7 +25,7 @@ export const SplashScreen = () => {
 
   const userId = useSelector(userIdSelector);
 
-  const { data } = useQuery(
+  const { data, error } = useQuery(
     ['getUserData', accessToken],
     () => fetchUserData(accessToken as string),
     { enabled: accessToken ? true : false },
@@ -55,6 +56,16 @@ export const SplashScreen = () => {
       return navigation.navigate('MainTobTab');
     }
   }, [navigation, userId]);
+
+  if (error) {
+    return (
+      <EmptyOrErrorContent
+        source={IMAGES.Error}
+        title="Something went wrong"
+        subTitle="Please try again later"
+      />
+    );
+  }
 
   return (
     <View style={styles.container}>
