@@ -1,33 +1,27 @@
 import { ImageSourcePropType } from 'react-native';
 
-import { UserStatus } from './userModels';
+import { User } from './userModels';
 
 export interface Group {
   _id: string;
   name: string;
   members: Member[];
-  chats: Chat[];
+  messages: Message[];
   typeOfGroup: TypeOfGroup;
   lastUpdatedAt: string;
   groupAvatar: ImageSourcePropType | string;
 }
 
-export interface Member {
-  _id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  avatarUrl: string;
-  status: UserStatus;
-}
+export type Member = Omit<User, 'accessToken'>;
 
-export interface Chat {
+export interface Message {
   _id: string;
-  content: string;
-  contentType: string; // TODO: CHECK TYPE OF FILE, URL?
-  sentTime: string;
-  sentBy: string;
-  readBy: string[];
+  text: string;
+  createdAt: string;
+  user: Member;
+  sent: boolean;
+  received: boolean;
+  pending: boolean;
 }
 
 export enum TypeOfGroup {

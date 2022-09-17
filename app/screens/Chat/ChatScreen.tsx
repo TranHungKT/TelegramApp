@@ -5,6 +5,7 @@ import { currentGroupSelector } from '@Stores/groups';
 
 import { styles } from './ChatScreenStyles';
 import { Header } from './components/Header';
+import { ListChatsContainer } from './containers/ListChatsContainer';
 
 export const ChatScreen = () => {
   const currentGroup = useSelector(currentGroupSelector);
@@ -20,6 +21,7 @@ export const ChatScreen = () => {
         groupAvatar={currentGroup.groupAvatar}
         totalMembers={currentGroup.members.length}
       />
+      <ListChatsContainer />
     </SafeAreaView>
   );
 };
