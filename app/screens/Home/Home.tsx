@@ -3,6 +3,7 @@ import { SafeAreaView, View } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
+import { PAGE_SIZE } from '@Constants/index';
 import { Group } from '@Models/index';
 import { fetchListGroups } from '@Services/index';
 import { groupsActions } from '@Stores/groups';
@@ -21,7 +22,7 @@ export const HomeScreen = () => {
   const dispatch = useAppDispatch();
 
   const { data, isFetching, error } = useQuery(['getListGroups', token], () =>
-    fetchListGroups({ token, pageNumber: 1, pageSize: 10 }),
+    fetchListGroups({ token, pageNumber: 1, pageSize: PAGE_SIZE }),
   );
 
   const renderComponent = () => {

@@ -36,10 +36,10 @@ export const ListChatsContainer = () => {
     (newMess: IChatMessage[] = []) => {
       socket.emit('message', {
         roomId: currentGroup?._id,
-        message: { text: newMess[0].text, user: currentGroup?.members[0]._id },
+        message: { text: newMess[0].text, user: _id },
       });
     },
-    [currentGroup?._id, currentGroup?.members, socket],
+    [_id, currentGroup?._id, socket],
   );
 
   useEffect(() => {
