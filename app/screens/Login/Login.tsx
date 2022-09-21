@@ -9,7 +9,7 @@ import { ACCESS_TOKEN_KEY } from '@Constants/index';
 import { NavigatorParamList } from '@Navigators/index';
 import { fetchUserData } from '@Services/index';
 import { useAppDispatch } from '@Stores/index';
-import { userActions, userDataSelector } from '@Stores/user';
+import { userActions, userIdSelector } from '@Stores/user';
 import { IMAGES } from '@Themes/images';
 import { setAsyncStorageData } from '@Utils/index';
 import { useNavigation } from '@react-navigation/native';
@@ -26,7 +26,7 @@ const ALERT_OPEN_URL = 'Can not open this url';
 
 export const LoginScreen = () => {
   const dispatch = useAppDispatch();
-  const userData = useSelector(userDataSelector);
+  const userId = useSelector(userIdSelector);
   const navigation = useNavigation<NativeStackNavigationProp<NavigatorParamList, 'LoginScreen'>>();
   const [accessToken, setAccessToken] = useState('');
 
@@ -76,10 +76,10 @@ export const LoginScreen = () => {
   }, [accessToken, data, handleSaveUserDataToRedux]);
 
   useEffect(() => {
-    if (userData.id) {
+    if (userId) {
       navigation.navigate('MainTobTab');
     }
-  }, [navigation, userData]);
+  }, [navigation, userId]);
 
   return (
     <SafeAreaView style={styles.container}>

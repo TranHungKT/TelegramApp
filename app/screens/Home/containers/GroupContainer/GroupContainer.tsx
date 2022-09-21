@@ -8,6 +8,7 @@ import { AllGroupChatNavigationParamList } from '@Navigators/index';
 import { WebSocketContext } from '@Providers/index';
 import { groupsActions } from '@Stores/groups';
 import { useAppDispatch } from '@Stores/index';
+import { messagesActions } from '@Stores/messages';
 import { userIdSelector } from '@Stores/user';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -47,7 +48,6 @@ export const GroupContainer = (props: GroupContainerProps) => {
   };
 
   const handleClickGroup = () => {
-    navigation.navigate('ChatScreen');
     socket.emit(SOCKET_EVENTS.JOIN_ROOM, group._id);
 
     dispatch(
@@ -57,6 +57,8 @@ export const GroupContainer = (props: GroupContainerProps) => {
         groupAvatar: getAvatarUrl(),
       }),
     );
+    dispatch(messagesActions.setCurrentGroupId(group._id));
+    navigation.navigate('ChatScreen');
   };
 
   return (
