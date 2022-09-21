@@ -20,7 +20,9 @@ export const HomeScreen = () => {
   const token = useSelector(userTokenSelector);
   const dispatch = useAppDispatch();
 
-  const { data, isFetching, error } = useQuery(['todos', token], () => fetchListGroups(token));
+  const { data, isFetching, error } = useQuery(['getListGroups', token], () =>
+    fetchListGroups({ token, pageNumber: 1, pageSize: 10 }),
+  );
 
   const renderComponent = () => {
     if (isFetching) {

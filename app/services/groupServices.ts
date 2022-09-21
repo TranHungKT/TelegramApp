@@ -1,15 +1,54 @@
 import axios from 'axios';
+import { IMessage } from 'react-native-gifted-chat';
 
 import { BASE_URL } from '@Configs/index';
 import { Group } from '@Models/index';
 
-export const fetchListGroups = async (token: string): Promise<{ list: Group[]; count: number }> => {
+interface GetListPayload {
+  token: string;
+  pageSize: number;
+  pageNumber: number;
+}
+
+interface GetListPayloadWithGroupId extends GetListPayload {
+  groupId?: string;
+}
+
+export const fetchListGroups = async ({
+  pageNumber,
+  pageSize,
+  token,
+}: GetListPayload): Promise<{ list: Group[]; count: number }> => {
   try {
-    const response = await axios.get(`${BASE_URL}get-list-groups?pageNumber=1&pageSize=10`, {
-      headers: {
-        authorization: `Bearer ${token}`,
+    const response = await axios.get(
+      `${BASE_URL}get-list-groups?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+      {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(error as string);
+  }
+};
+
+export const fetchListMessages = async ({
+  token,
+  pageSize,
+  pageNumber,
+  groupId,
+}: GetListPayloadWithGroupId): Promise<{ list: IMessage[]; count: number }> => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}list-message?groupId=${groupId}&pageSize=${pageSize}&pageNumber=${pageNumber}`,
+      {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      },
+    );
     return response.data;
   } catch (error) {
     throw new Error(error as string);
