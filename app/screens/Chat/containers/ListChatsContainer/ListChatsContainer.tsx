@@ -3,11 +3,13 @@ import { GiftedChat, IChatMessage } from 'react-native-gifted-chat';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { PAGE_SIZE } from '@Constants/index';
+import { NewMessage } from '@Models/index';
 import { WebSocketContext } from '@Providers/index';
 import { fetchListMessages } from '@Services/index';
 import { currentGroupSelector } from '@Stores/groups';
 import { messagesActions, getMessagesForGroupSelector } from '@Stores/messages';
 import { userDataSelector } from '@Stores/user';
+import { normalizeMessageFromSocket } from '@Utils/index';
 import { useQuery } from '@tanstack/react-query';
 
 export const ListChatsContainer = () => {
@@ -32,14 +34,35 @@ export const ListChatsContainer = () => {
     { enabled: shouldFetchMessage },
   );
 
-  const handleSendMessage = useCallback(
-    (newMess: IChatMessage[] = []) => {
-      socket.emit('message', {
-        roomId: currentGroup?._id,
-        message: { text: newMess[0].text, user: _id },
-      });
+  const handleAddNewMessageToGroup = useCallback(
+    (newMess: IChatMessage) => {
+      dispatch(messagesActions.addNewMessageToCurrentGroup(newMess));
     },
-    [_id, currentGroup?._id, socket],
+    [dispatch],
+  );
+
+  const appendMessageToGiftedChat = useCallback(
+    (newMess: IChatMessage[]) => GiftedChat.append(groupMessages?.messages, newMess),
+    [groupMessages?.messages],
+  );
+
+  const handleSendMessage = useCallback(
+    (newMessages: IChatMessage[] = []) => {
+      newMessages.forEach((newMessage) => {
+        socket.emit('message', {
+          roomId: currentGroup?._id,
+          message: { text: newMessage.text, user: _id },
+        });
+
+        handleAddNewMessageToGroup({
+          ...newMessage,
+          createdAt: newMessage.createdAt.toString() as any,
+        });
+      });
+
+      appendMessageToGiftedChat(newMessages);
+    },
+    [_id, appendMessageToGiftedChat, currentGroup?._id, handleAddNewMessageToGroup, socket],
   );
 
   useEffect(() => {
@@ -57,6 +80,11 @@ export const ListChatsContainer = () => {
   useEffect(() => {
     setShouldFetchMessage(!groupMessages);
   }, [groupMessages]);
+
+  socket.off('get-message').on('get-message', (payload: NewMessage) => {
+    handleAddNewMessageToGroup(normalizeMessageFromSocket(payload));
+    appendMessageToGiftedChat([payload]);
+  });
 
   return (
     <GiftedChat
