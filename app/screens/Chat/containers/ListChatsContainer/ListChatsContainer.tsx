@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import { GiftedChat, IChatMessage } from 'react-native-gifted-chat';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { PAGE_SIZE } from '@Constants/index';
+import { PAGE_SIZE, SOCKET_EVENTS } from '@Constants/index';
 import { WebSocketContext } from '@Providers/index';
 import { fetchListMessages } from '@Services/index';
 import { currentGroupSelector } from '@Stores/groups';
@@ -47,7 +47,7 @@ export const ListChatsContainer = () => {
   const handleSendMessage = useCallback(
     (newMessages: IChatMessage[] = []) => {
       newMessages.forEach((newMessage) => {
-        socket.emit('message', {
+        socket.emit(SOCKET_EVENTS.SEND_MESSAGE, {
           roomId: currentGroup?._id,
           message: { text: newMessage.text, user: _id },
         });
@@ -79,7 +79,7 @@ export const ListChatsContainer = () => {
     setShouldFetchMessage(!groupMessages);
   }, [groupMessages]);
 
-  socket.off('get-message').on('get-message', (payload: IChatMessage) => {
+  socket.off(SOCKET_EVENTS.GET_MESSAGE).on(SOCKET_EVENTS.GET_MESSAGE, (payload: IChatMessage) => {
     handleAddNewMessageToGroup(payload);
     appendMessageToGiftedChat([payload]);
   });
