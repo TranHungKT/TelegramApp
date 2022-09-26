@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from 'react';
-import { GiftedChat, IChatMessage } from 'react-native-gifted-chat';
+import { GiftedChat, IMessage } from 'react-native-gifted-chat';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { PAGE_SIZE, SOCKET_EVENTS } from '@Constants/index';
@@ -8,6 +8,7 @@ import { fetchListMessages } from '@Services/index';
 import { currentGroupSelector } from '@Stores/groups';
 import { messagesActions, getMessagesForGroupSelector } from '@Stores/messages';
 import { userDataSelector } from '@Stores/user';
+import { generateName } from '@Utils/index';
 import { useQuery } from '@tanstack/react-query';
 
 export const ListChatsContainer = () => {
@@ -33,19 +34,19 @@ export const ListChatsContainer = () => {
   );
 
   const handleAddNewMessageToGroup = useCallback(
-    (newMess: IChatMessage) => {
+    (newMess: IMessage) => {
       dispatch(messagesActions.addNewMessageToCurrentGroup(newMess));
     },
     [dispatch],
   );
 
   const appendMessageToGiftedChat = useCallback(
-    (newMess: IChatMessage[]) => GiftedChat.append(groupMessages?.messages, newMess),
+    (newMess: IMessage[]) => GiftedChat.append(groupMessages?.messages, newMess),
     [groupMessages?.messages],
   );
 
   const handleSendMessage = useCallback(
-    (newMessages: IChatMessage[] = []) => {
+    (newMessages: IMessage[] = []) => {
       newMessages.forEach((newMessage) => {
         socket.emit(SOCKET_EVENTS.SEND_MESSAGE, {
           roomId: currentGroup?._id,
@@ -79,7 +80,7 @@ export const ListChatsContainer = () => {
     setShouldFetchMessage(!groupMessages);
   }, [groupMessages]);
 
-  socket.off(SOCKET_EVENTS.GET_MESSAGE).on(SOCKET_EVENTS.GET_MESSAGE, (payload: IChatMessage) => {
+  socket.off(SOCKET_EVENTS.GET_MESSAGE).on(SOCKET_EVENTS.GET_MESSAGE, (payload: IMessage) => {
     handleAddNewMessageToGroup(payload);
     appendMessageToGiftedChat([payload]);
   });
@@ -90,7 +91,7 @@ export const ListChatsContainer = () => {
       onSend={(newMess) => handleSendMessage(newMess)}
       user={{
         _id,
-        name: `${firstName} ${lastName}`,
+        name: generateName({ firstName, lastName }),
         avatar: avatarUrl,
       }}
     />

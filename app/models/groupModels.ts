@@ -1,4 +1,5 @@
 import { ImageSourcePropType } from 'react-native';
+import { IMessage } from 'react-native-gifted-chat';
 
 import { User } from './userModels';
 
@@ -6,7 +7,7 @@ export interface Group {
   _id: string;
   name: string;
   members: Member[];
-  messages: string[]; // TODO: UPDATE TO LAST MESSAGE
+  lastMessage?: LastMessage;
   typeOfGroup: TypeOfGroup;
   lastUpdatedAt: string;
   groupAvatar: ImageSourcePropType | string;
@@ -19,4 +20,7 @@ export enum TypeOfGroup {
   IMPORTANT = 'IMPORTANT',
   READ = 'READ',
   UNREAD = 'UNREAD',
+}
+export interface LastMessage extends Omit<IMessage, 'user'> {
+  user: string;
 }

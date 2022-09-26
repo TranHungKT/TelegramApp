@@ -5,6 +5,7 @@ import { getImageSource } from 'utils';
 
 import { Group as IGroup } from '@Models/index';
 
+import { LastMessageContainer } from '../../containers/LastMessageContainer';
 import { styles } from './GroupStyles';
 
 interface GroupProps {
@@ -30,9 +31,8 @@ export const Group = (props: GroupProps) => {
           <Text numberOfLines={1} style={styles.groupName}>
             {name}
           </Text>
-          <Text numberOfLines={1} style={styles.chat}>
-            Me: How are you?
-          </Text>
+
+          <LastMessageContainer members={group.members} message={group.lastMessage} />
         </View>
 
         <View style={styles.rightCol}>
