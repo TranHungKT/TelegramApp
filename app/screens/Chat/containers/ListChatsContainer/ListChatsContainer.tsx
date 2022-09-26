@@ -3,13 +3,11 @@ import { GiftedChat, IChatMessage } from 'react-native-gifted-chat';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { PAGE_SIZE } from '@Constants/index';
-import { NewMessage } from '@Models/index';
 import { WebSocketContext } from '@Providers/index';
 import { fetchListMessages } from '@Services/index';
 import { currentGroupSelector } from '@Stores/groups';
 import { messagesActions, getMessagesForGroupSelector } from '@Stores/messages';
 import { userDataSelector } from '@Stores/user';
-import { normalizeMessageFromSocket } from '@Utils/index';
 import { useQuery } from '@tanstack/react-query';
 
 export const ListChatsContainer = () => {
@@ -81,8 +79,8 @@ export const ListChatsContainer = () => {
     setShouldFetchMessage(!groupMessages);
   }, [groupMessages]);
 
-  socket.off('get-message').on('get-message', (payload: NewMessage) => {
-    handleAddNewMessageToGroup(normalizeMessageFromSocket(payload));
+  socket.off('get-message').on('get-message', (payload: IChatMessage) => {
+    handleAddNewMessageToGroup(payload);
     appendMessageToGiftedChat([payload]);
   });
 
