@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import { GiftedChat, IChatMessage } from 'react-native-gifted-chat';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { PAGE_SIZE } from '@Constants/index';
+import { PAGE_SIZE, SOCKET_EVENTS } from '@Constants/index';
 import { WebSocketContext } from '@Providers/index';
 import { fetchListMessages } from '@Services/index';
 import { currentGroupSelector } from '@Stores/groups';
@@ -32,14 +32,35 @@ export const ListChatsContainer = () => {
     { enabled: shouldFetchMessage },
   );
 
-  const handleSendMessage = useCallback(
-    (newMess: IChatMessage[] = []) => {
-      socket.emit('message', {
-        roomId: currentGroup?._id,
-        message: { text: newMess[0].text, user: _id },
-      });
+  const handleAddNewMessageToGroup = useCallback(
+    (newMess: IChatMessage) => {
+      dispatch(messagesActions.addNewMessageToCurrentGroup(newMess));
     },
-    [_id, currentGroup?._id, socket],
+    [dispatch],
+  );
+
+  const appendMessageToGiftedChat = useCallback(
+    (newMess: IChatMessage[]) => GiftedChat.append(groupMessages?.messages, newMess),
+    [groupMessages?.messages],
+  );
+
+  const handleSendMessage = useCallback(
+    (newMessages: IChatMessage[] = []) => {
+      newMessages.forEach((newMessage) => {
+        socket.emit(SOCKET_EVENTS.SEND_MESSAGE, {
+          roomId: currentGroup?._id,
+          message: { text: newMessage.text, user: _id },
+        });
+
+        handleAddNewMessageToGroup({
+          ...newMessage,
+          createdAt: newMessage.createdAt.toString() as any,
+        });
+      });
+
+      appendMessageToGiftedChat(newMessages);
+    },
+    [_id, appendMessageToGiftedChat, currentGroup?._id, handleAddNewMessageToGroup, socket],
   );
 
   useEffect(() => {
@@ -57,6 +78,11 @@ export const ListChatsContainer = () => {
   useEffect(() => {
     setShouldFetchMessage(!groupMessages);
   }, [groupMessages]);
+
+  socket.off(SOCKET_EVENTS.GET_MESSAGE).on(SOCKET_EVENTS.GET_MESSAGE, (payload: IChatMessage) => {
+    handleAddNewMessageToGroup(payload);
+    appendMessageToGiftedChat([payload]);
+  });
 
   return (
     <GiftedChat

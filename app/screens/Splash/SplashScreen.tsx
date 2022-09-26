@@ -18,7 +18,7 @@ import { useQuery } from '@tanstack/react-query';
 import { styles } from './SplashScreenStyles';
 
 export const SplashScreen = () => {
-  const [accessToken, setAccessToken] = useState<string | null | undefined>(undefined);
+  const [accessToken, setAccessToken] = useState<string | null | undefined>(null);
 
   const navigation = useNavigation<NativeStackNavigationProp<NavigatorParamList, 'SplashSreen'>>();
   const dispatch = useAppDispatch();
@@ -41,12 +41,12 @@ export const SplashScreen = () => {
 
     getAccessToken();
   }, []);
-
+  console.log(accessToken);
   useEffect(() => {
     if (accessToken && data) {
       dispatch(userActions.setUserData({ ...data, accessToken }));
     }
-    if (accessToken === null) {
+    if (!accessToken) {
       return navigation.navigate('LoginScreen');
     }
   }, [accessToken, navigation, data, dispatch]);
