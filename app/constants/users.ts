@@ -7,5 +7,5 @@ export const DEFAULT_USER_DATA: User = {
   accessToken: '',
   _id: '',
   avatarUrl: '',
-  status: UserStatus.ONLINE,
+  status: UserStatus.OFFLINE,
 };
