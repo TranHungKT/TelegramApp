@@ -1,0 +1,1 @@
+export { SendMessageContainer } from './SendMessageContainer';

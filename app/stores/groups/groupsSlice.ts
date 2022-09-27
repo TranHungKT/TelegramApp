@@ -1,6 +1,6 @@
 import { normalizeListGroups } from 'utils/groupUtils';
 
-import { GetListGroupResponse, Group } from '@Models/index';
+import { GetListGroupResponse, Group, LastMessage } from '@Models/index';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface GroupState {
@@ -26,6 +26,14 @@ export const groupsSlice = createSlice({
 
     setCurrentGroupId(state, action: PayloadAction<string>) {
       state.currentGroupId = action.payload;
+    },
+
+    setLastMessage(state, action: PayloadAction<LastMessage>) {
+      const currentGroupIndex = state.groups.findIndex(
+        (group) => group._id === state.currentGroupId,
+      );
+
+      state.groups[currentGroupIndex].lastMessage = action.payload;
     },
   },
 });

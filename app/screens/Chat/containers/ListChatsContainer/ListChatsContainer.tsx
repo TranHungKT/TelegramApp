@@ -1,24 +1,22 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
-import { GiftedChat, IMessage } from 'react-native-gifted-chat';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { PAGE_SIZE, SOCKET_EVENTS } from '@Constants/index';
-import { WebSocketContext } from '@Providers/index';
+import { PAGE_SIZE } from '@Constants/index';
 import { fetchListMessages } from '@Services/index';
 import { getCurrentGroupIdSelector } from '@Stores/groups';
 import { messagesActions, getMessagesForGroupSelector } from '@Stores/messages';
 import { userDataSelector } from '@Stores/user';
-import { generateName } from '@Utils/index';
 import { useQuery } from '@tanstack/react-query';
 
+import { SendMessageContainer } from '../SendMessageContainer';
+
 export const ListChatsContainer = () => {
-  const socket = useContext(WebSocketContext);
   const dispatch = useDispatch();
 
   const [shouldFetchMessage, setShouldFetchMessage] = useState(false);
 
   const currentGroupId = useSelector(getCurrentGroupIdSelector);
-  const { accessToken, _id, firstName, lastName, avatarUrl } = useSelector(userDataSelector);
+  const { accessToken } = useSelector(userDataSelector);
   const groupMessages = useSelector(getMessagesForGroupSelector);
 
   const { data } = useQuery(
@@ -31,42 +29,6 @@ export const ListChatsContainer = () => {
         groupId: currentGroupId,
       }),
     { enabled: shouldFetchMessage },
-  );
-
-  const handleAddNewMessageToGroup = useCallback(
-    (newMess: IMessage) => {
-      dispatch(
-        messagesActions.addNewMessageToCurrentGroup({
-          message: newMess,
-          currentGroupId: currentGroupId,
-        }),
-      );
-    },
-    [currentGroupId, dispatch],
-  );
-
-  const appendMessageToGiftedChat = useCallback(
-    (newMess: IMessage[]) => GiftedChat.append(groupMessages?.messages, newMess),
-    [groupMessages?.messages],
-  );
-
-  const handleSendMessage = useCallback(
-    (newMessages: IMessage[] = []) => {
-      newMessages.forEach((newMessage) => {
-        socket.emit(SOCKET_EVENTS.SEND_MESSAGE, {
-          roomId: currentGroupId,
-          message: { text: newMessage.text, user: _id },
-        });
-
-        handleAddNewMessageToGroup({
-          ...newMessage,
-          createdAt: newMessage.createdAt.toString() as any,
-        });
-      });
-
-      appendMessageToGiftedChat(newMessages);
-    },
-    [_id, appendMessageToGiftedChat, currentGroupId, handleAddNewMessageToGroup, socket],
   );
 
   useEffect(() => {
@@ -85,20 +47,5 @@ export const ListChatsContainer = () => {
     setShouldFetchMessage(!groupMessages);
   }, [groupMessages]);
 
-  socket.off(SOCKET_EVENTS.GET_MESSAGE).on(SOCKET_EVENTS.GET_MESSAGE, (payload: IMessage) => {
-    handleAddNewMessageToGroup(payload);
-    appendMessageToGiftedChat([payload]);
-  });
-
-  return (
-    <GiftedChat
-      messages={groupMessages?.messages}
-      onSend={(newMess) => handleSendMessage(newMess)}
-      user={{
-        _id,
-        name: generateName({ firstName, lastName }),
-        avatar: avatarUrl,
-      }}
-    />
-  );
+  return <SendMessageContainer messages={groupMessages?.messages} />;
 };
