@@ -24,3 +24,16 @@ export enum TypeOfGroup {
 export interface LastMessage extends Omit<IMessage, 'user'> {
   user: string;
 }
+
+export interface GroupResponse {
+  _id: string;
+  members: Member[];
+  typeOfGroup: TypeOfGroup;
+  lastUpdatedAt: string;
+  lastMessage: LastMessage;
+}
+
+export interface GetListGroupResponse {
+  count: number;
+  list: GroupResponse[];
+}

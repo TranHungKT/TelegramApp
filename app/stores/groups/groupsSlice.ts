@@ -1,10 +1,12 @@
-import { Group } from '@Models/index';
+import { normalizeListGroups } from 'utils/groupUtils';
+
+import { GetListGroupResponse, Group } from '@Models/index';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface GroupState {
   groups: Group[];
   count: number;
-  currentGroup?: Group;
+  currentGroupId?: string;
 }
 
 const initialState: GroupState = {
@@ -16,13 +18,14 @@ export const groupsSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setGroups(state, action: PayloadAction<{ list: Group[]; count: number }>) {
-      state.groups = action.payload.list;
-      state.count = action.payload.count;
+    setGroups(state, action: PayloadAction<{ data: GetListGroupResponse; userId: string }>) {
+      const { data, userId } = action.payload;
+      state.groups = normalizeListGroups(data.list, userId);
+      state.count = data.count;
     },
 
-    setCurrentGroup(state, action: PayloadAction<Group>) {
-      state.currentGroup = action.payload;
+    setCurrentGroupId(state, action: PayloadAction<string>) {
+      state.currentGroupId = action.payload;
     },
   },
 });

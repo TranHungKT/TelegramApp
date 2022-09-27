@@ -50,13 +50,7 @@ export const GroupContainer = (props: GroupContainerProps) => {
   const handleClickGroup = () => {
     socket.emit(SOCKET_EVENTS.JOIN_ROOM, group._id);
 
-    dispatch(
-      groupsActions.setCurrentGroup({
-        ...group,
-        name: generateGroupName(),
-        groupAvatar: getAvatarUrl(),
-      }),
-    );
+    dispatch(groupsActions.setCurrentGroupId(group._id));
     dispatch(messagesActions.setCurrentGroupId(group._id));
     navigation.navigate('ChatScreen');
   };

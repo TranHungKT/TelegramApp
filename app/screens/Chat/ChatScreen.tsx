@@ -9,7 +9,7 @@ import { ListChatsContainer } from './containers/ListChatsContainer';
 
 export const ChatScreen = () => {
   const currentGroup = useSelector(currentGroupSelector);
-
+  console.log(currentGroup?.name);
   if (!currentGroup) {
     return <></>;
   }
