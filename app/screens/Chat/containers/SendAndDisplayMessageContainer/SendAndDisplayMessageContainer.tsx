@@ -3,6 +3,7 @@ import { GiftedChat, IMessage } from 'react-native-gifted-chat';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { SOCKET_EVENTS } from '@Constants/index';
+import { SOCKET_ERROR_PAYLOAD } from '@Models/index';
 import { WebSocketContext } from '@Providers/index';
 import { getCurrentGroupIdSelector, groupsActions } from '@Stores/groups';
 import { messagesActions } from '@Stores/messages';
@@ -58,6 +59,12 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
     },
     [_id, appendMessageToGiftedChat, currentGroupId, handleAddNewMessageToGroup, socket],
   );
+
+  // THIS IS EXAMPLE ONLY. WILL DECIDE WHICH WAY TO LISTEN MESSAGE LATER
+  // TODO: REMOVE THIS AFTER DECIDE APPROACH TO LISTEN ERROR MESSAGE
+  socket.on(SOCKET_EVENTS.SOCKET_ERROR, (payload: SOCKET_ERROR_PAYLOAD) => {
+    console.log(payload);
+  });
 
   socket.off(SOCKET_EVENTS.GET_MESSAGE).on(SOCKET_EVENTS.GET_MESSAGE, (payload: IMessage) => {
     handleAddNewMessageToGroup(payload);
