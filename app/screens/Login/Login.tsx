@@ -1,4 +1,3 @@
-import { User } from 'models';
 import { useEffect, useCallback, useState } from 'react';
 import { View, Linking, Alert, Image, SafeAreaView } from 'react-native';
 import { Button } from 'react-native-paper';
@@ -6,6 +5,7 @@ import { URLSearchParams, URL } from 'react-native-url-polyfill';
 import { useSelector } from 'react-redux';
 
 import { ACCESS_TOKEN_KEY } from '@Constants/index';
+import { User } from '@Models/index';
 import { NavigatorParamList } from '@Navigators/index';
 import { fetchUserData } from '@Services/index';
 import { useAppDispatch } from '@Stores/index';

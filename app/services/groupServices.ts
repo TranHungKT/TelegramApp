@@ -2,7 +2,7 @@ import axios from 'axios';
 import { IMessage } from 'react-native-gifted-chat';
 
 import { BASE_URL } from '@Configs/index';
-import { Group } from '@Models/index';
+import { GetListGroupResponse } from '@Models/index';
 
 interface GetListPayload {
   token: string;
@@ -18,7 +18,7 @@ export const fetchListGroups = async ({
   pageNumber,
   pageSize,
   token,
-}: GetListPayload): Promise<{ list: Group[]; count: number }> => {
+}: GetListPayload): Promise<GetListGroupResponse> => {
   try {
     const response = await axios.get(
       `${BASE_URL}get-list-groups?pageNumber=${pageNumber}&pageSize=${pageSize}`,

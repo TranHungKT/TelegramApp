@@ -4,11 +4,10 @@ import { ActivityIndicator } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
 import { PAGE_SIZE } from '@Constants/index';
-import { Group } from '@Models/index';
 import { fetchListGroups } from '@Services/index';
-import { groupsActions } from '@Stores/groups';
+import { getGroupsSelector, groupsActions } from '@Stores/groups';
 import { useAppDispatch } from '@Stores/index';
-import { userTokenSelector } from '@Stores/user';
+import { userIdSelector, userTokenSelector } from '@Stores/user';
 import { useQuery } from '@tanstack/react-query';
 
 import { styles } from './HomeStyles';
@@ -19,6 +18,8 @@ import { GroupContainer } from './containers/GroupContainer';
 
 export const HomeScreen = () => {
   const token = useSelector(userTokenSelector);
+  const userId = useSelector(userIdSelector);
+  const groups = useSelector(getGroupsSelector);
   const dispatch = useAppDispatch();
 
   const { data, isFetching, error } = useQuery(['getListGroups', token], () =>
@@ -26,7 +27,7 @@ export const HomeScreen = () => {
   );
 
   const renderComponent = () => {
-    if (isFetching) {
+    if (isFetching || (!!data?.list.length && !groups.length)) {
       return <ActivityIndicator animating={true} style={styles.activityIndicator} />;
     }
 
@@ -34,13 +35,13 @@ export const HomeScreen = () => {
       return <ErrorGetList />;
     }
 
-    if (data?.list.length === 0) {
+    if (!data?.list.length) {
       return <EmptyListOfGroups />;
     }
 
     return (
       <View style={styles.content}>
-        {data?.list.map((group: Group) => (
+        {groups.map((group) => (
           <GroupContainer group={group} key={group._id} />
         ))}
       </View>
@@ -49,9 +50,9 @@ export const HomeScreen = () => {
 
   useEffect(() => {
     if (data) {
-      dispatch(groupsActions.setGroups(data));
+      dispatch(groupsActions.setGroups({ data, userId }));
     }
-  }, [data, dispatch]);
+  }, [data, dispatch, userId]);
 
   return (
     <SafeAreaView style={styles.safeArea}>

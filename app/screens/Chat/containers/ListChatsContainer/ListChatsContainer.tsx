@@ -1,98 +1,51 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
-import { GiftedChat, IChatMessage } from 'react-native-gifted-chat';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { PAGE_SIZE, SOCKET_EVENTS } from '@Constants/index';
-import { WebSocketContext } from '@Providers/index';
+import { PAGE_SIZE } from '@Constants/index';
 import { fetchListMessages } from '@Services/index';
-import { currentGroupSelector } from '@Stores/groups';
+import { getCurrentGroupIdSelector } from '@Stores/groups';
 import { messagesActions, getMessagesForGroupSelector } from '@Stores/messages';
 import { userDataSelector } from '@Stores/user';
 import { useQuery } from '@tanstack/react-query';
 
+import { SendAndDisplayMessageContainer } from '../SendAndDisplayMessageContainer';
+
 export const ListChatsContainer = () => {
-  const socket = useContext(WebSocketContext);
   const dispatch = useDispatch();
 
   const [shouldFetchMessage, setShouldFetchMessage] = useState(false);
 
-  const currentGroup = useSelector(currentGroupSelector);
-  const { accessToken, _id, firstName, lastName, avatarUrl } = useSelector(userDataSelector);
+  const currentGroupId = useSelector(getCurrentGroupIdSelector);
+  const { accessToken } = useSelector(userDataSelector);
   const groupMessages = useSelector(getMessagesForGroupSelector);
 
   const { data } = useQuery(
-    ['getListMessages', accessToken, currentGroup?._id],
+    ['getListMessages', accessToken, currentGroupId],
     () =>
       fetchListMessages({
         token: accessToken,
         pageNumber: 1,
         pageSize: PAGE_SIZE,
-        groupId: currentGroup?._id,
+        groupId: currentGroupId,
       }),
     { enabled: shouldFetchMessage },
   );
 
-  const handleAddNewMessageToGroup = useCallback(
-    (newMess: IChatMessage) => {
-      dispatch(messagesActions.addNewMessageToCurrentGroup(newMess));
-    },
-    [dispatch],
-  );
-
-  const appendMessageToGiftedChat = useCallback(
-    (newMess: IChatMessage[]) => GiftedChat.append(groupMessages?.messages, newMess),
-    [groupMessages?.messages],
-  );
-
-  const handleSendMessage = useCallback(
-    (newMessages: IChatMessage[] = []) => {
-      newMessages.forEach((newMessage) => {
-        socket.emit(SOCKET_EVENTS.SEND_MESSAGE, {
-          roomId: currentGroup?._id,
-          message: { text: newMessage.text, user: _id },
-        });
-
-        handleAddNewMessageToGroup({
-          ...newMessage,
-          createdAt: newMessage.createdAt.toString() as any,
-        });
-      });
-
-      appendMessageToGiftedChat(newMessages);
-    },
-    [_id, appendMessageToGiftedChat, currentGroup?._id, handleAddNewMessageToGroup, socket],
-  );
-
   useEffect(() => {
-    if (data && currentGroup?._id) {
+    if (data && currentGroupId) {
       dispatch(
         messagesActions.setMessages({
           count: data.count,
           list: data.list,
-          groupId: currentGroup?._id,
+          groupId: currentGroupId,
         }),
       );
     }
-  }, [currentGroup?._id, data, dispatch]);
+  }, [currentGroupId, data, dispatch]);
 
   useEffect(() => {
     setShouldFetchMessage(!groupMessages);
   }, [groupMessages]);
 
-  socket.off(SOCKET_EVENTS.GET_MESSAGE).on(SOCKET_EVENTS.GET_MESSAGE, (payload: IChatMessage) => {
-    handleAddNewMessageToGroup(payload);
-    appendMessageToGiftedChat([payload]);
-  });
-
-  return (
-    <GiftedChat
-      messages={groupMessages?.messages}
-      onSend={(newMess) => handleSendMessage(newMess)}
-      user={{
-        _id,
-        name: `${firstName} ${lastName}`,
-        avatar: avatarUrl,
-      }}
-    />
-  );
+  return <SendAndDisplayMessageContainer messages={groupMessages?.messages} />;
 };

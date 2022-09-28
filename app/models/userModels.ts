@@ -5,6 +5,7 @@ export interface User {
   lastName: string;
   accessToken: string;
   avatarUrl: string;
+  status: UserStatus;
 }
 
 export enum UserStatus {

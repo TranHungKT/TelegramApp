@@ -4,7 +4,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface MessagesState {
   groupMessages: { groupId: string; messages: IMessage[]; count: number }[];
-  currentGroupId?: string;
 }
 
 const initialState: MessagesState = {
@@ -36,18 +35,19 @@ export const messagesSlice = createSlice({
       }
     },
 
-    setCurrentGroupId(state, action: PayloadAction<string | undefined>) {
-      state.currentGroupId = action.payload;
-    },
+    addNewMessageToCurrentGroup(
+      state,
+      action: PayloadAction<{ message: IMessage; currentGroupId?: string }>,
+    ) {
+      const { currentGroupId, message } = action.payload;
 
-    addNewMessageToCurrentGroup(state, action: PayloadAction<IMessage>) {
       const groupIndex = state.groupMessages.findIndex(
-        (currentGroup) => currentGroup.groupId === state.currentGroupId,
+        (currentGroup) => currentGroup.groupId === currentGroupId,
       );
 
       if (groupIndex !== -1) {
         state.groupMessages[groupIndex].messages = [
-          action.payload,
+          message,
           ...state.groupMessages[groupIndex].messages,
         ];
         state.groupMessages[groupIndex].count += 1;
