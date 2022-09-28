@@ -18,6 +18,7 @@ const getAvatarUrl = ({ members, userId }: { members: Member[]; userId: string }
   }
   return IMAGES.Group;
 };
+
 export const normalizeListGroups = (groups: GroupResponse[], userId: string): Group[] => {
   return groups.map(
     (group): Group => ({

@@ -9,11 +9,11 @@ import { messagesActions } from '@Stores/messages';
 import { userDataSelector } from '@Stores/user';
 import { generateName } from '@Utils/index';
 
-interface SendMessageContainerProps {
+interface SendAndDisplayMessageContainerProps {
   messages?: IMessage[];
 }
 
-export const SendMessageContainer = (props: SendMessageContainerProps) => {
+export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageContainerProps) => {
   const { messages } = props;
   const socket = useContext(WebSocketContext);
   const dispatch = useDispatch();

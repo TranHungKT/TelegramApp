@@ -8,7 +8,7 @@ import { messagesActions, getMessagesForGroupSelector } from '@Stores/messages';
 import { userDataSelector } from '@Stores/user';
 import { useQuery } from '@tanstack/react-query';
 
-import { SendMessageContainer } from '../SendMessageContainer';
+import { SendAndDisplayMessageContainer } from '../SendAndDisplayMessageContainer';
 
 export const ListChatsContainer = () => {
   const dispatch = useDispatch();
@@ -47,5 +47,5 @@ export const ListChatsContainer = () => {
     setShouldFetchMessage(!groupMessages);
   }, [groupMessages]);
 
-  return <SendMessageContainer messages={groupMessages?.messages} />;
+  return <SendAndDisplayMessageContainer messages={groupMessages?.messages} />;
 };
