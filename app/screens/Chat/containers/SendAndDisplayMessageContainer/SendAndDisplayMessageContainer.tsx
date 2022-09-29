@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import { GiftedChat, IMessage } from 'react-native-gifted-chat';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -60,16 +60,17 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
     [_id, appendMessageToGiftedChat, currentGroupId, handleAddNewMessageToGroup, socket],
   );
 
-  // THIS IS EXAMPLE ONLY. WILL DECIDE WHICH WAY TO LISTEN MESSAGE LATER
-  // TODO: REMOVE THIS AFTER DECIDE APPROACH TO LISTEN ERROR MESSAGE
-  socket.on(SOCKET_EVENTS.SOCKET_ERROR, (payload: SOCKET_ERROR_PAYLOAD) => {
-    console.log(payload);
-  });
+  useEffect(() => {
+    socket.on(SOCKET_EVENTS.SOCKET_ERROR, (payload: SOCKET_ERROR_PAYLOAD) => {
+      console.log(payload);
+    });
 
-  socket.off(SOCKET_EVENTS.GET_MESSAGE).on(SOCKET_EVENTS.GET_MESSAGE, (payload: IMessage) => {
-    handleAddNewMessageToGroup(payload);
-    appendMessageToGiftedChat([payload]);
-  });
+    socket.on(SOCKET_EVENTS.GET_MESSAGE, (payload: IMessage) => {
+      handleAddNewMessageToGroup(payload);
+      appendMessageToGiftedChat([payload]);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [socket]);
 
   return (
     <GiftedChat

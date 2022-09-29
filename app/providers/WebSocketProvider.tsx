@@ -1,15 +1,8 @@
-import { createContext, PropsWithChildren } from 'react';
+import { createContext } from 'react';
 import socketIO, { Socket } from 'socket.io-client';
 
 import { BASE_URL_SOCKET } from '@Configs/index';
 
-const WebSocketContext = createContext<Socket>(null as any);
+export const socket = socketIO(BASE_URL_SOCKET).connect();
 
-export { WebSocketContext };
-
-export default ({ children }: PropsWithChildren<{}>) => {
-  const socket = socketIO(BASE_URL_SOCKET);
-  socket.connect();
-
-  return <WebSocketContext.Provider value={socket}>{children}</WebSocketContext.Provider>;
-};
+export const WebSocketContext = createContext<Socket>(null as any);
