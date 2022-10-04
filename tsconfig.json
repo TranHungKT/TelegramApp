@@ -29,7 +29,8 @@
       "@Components/*": ["app/components/*"],
       "@Providers/*": ["app/providers/*"],
       "@Utils/*": ["app/utils/*"],
-      "@Services/*": ["app/services/*"]
+      "@Services/*": ["app/services/*"],
+      "@Hooks/*": ["app/hooks/*"]
     }
   },
   "include": ["app"]

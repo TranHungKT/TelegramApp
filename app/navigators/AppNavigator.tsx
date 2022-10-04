@@ -3,6 +3,7 @@ import { useColorScheme } from 'react-native';
 
 import { MainTabBar } from '@Components/index';
 import { linking } from '@Configs/index';
+import { useSocket } from '@Hooks/useSocket';
 import { LoginScreen, HomeScreen, ChatScreen, SplashScreen } from '@Screens/index';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
@@ -101,6 +102,7 @@ interface NavigationProps extends Partial<React.ComponentProps<typeof Navigation
 export const AppNavigator = (props: NavigationProps) => {
   const colorScheme = useColorScheme();
   useBackButtonHandler(canExit);
+  useSocket();
 
   return (
     <NavigationContainer

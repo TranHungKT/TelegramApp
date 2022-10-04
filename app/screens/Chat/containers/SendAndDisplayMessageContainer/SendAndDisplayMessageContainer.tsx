@@ -1,8 +1,9 @@
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import { GiftedChat, IMessage } from 'react-native-gifted-chat';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { SOCKET_EVENTS } from '@Constants/index';
+import { SocketErrorPayload } from '@Models/index';
 import { WebSocketContext } from '@Providers/index';
 import { getCurrentGroupIdSelector, groupsActions } from '@Stores/groups';
 import { messagesActions } from '@Stores/messages';
@@ -25,12 +26,17 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
     (newMess: IMessage) => {
       dispatch(
         messagesActions.addNewMessageToCurrentGroup({
-          message: newMess,
-          currentGroupId: currentGroupId,
+          newMessage: newMess,
+          groupId: currentGroupId,
         }),
       );
 
-      dispatch(groupsActions.setLastMessage({ ...newMess, user: newMess.user._id.toString() }));
+      dispatch(
+        groupsActions.setLastMessage({
+          message: { ...newMess, user: newMess.user._id.toString() },
+          groupId: currentGroupId,
+        }),
+      );
     },
     [currentGroupId, dispatch],
   );
@@ -59,10 +65,11 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
     [_id, appendMessageToGiftedChat, currentGroupId, handleAddNewMessageToGroup, socket],
   );
 
-  socket.off(SOCKET_EVENTS.GET_MESSAGE).on(SOCKET_EVENTS.GET_MESSAGE, (payload: IMessage) => {
-    handleAddNewMessageToGroup(payload);
-    appendMessageToGiftedChat([payload]);
-  });
+  useEffect(() => {
+    socket.on(SOCKET_EVENTS.SOCKET_ERROR, (payload: SocketErrorPayload) => {
+      console.error(payload.type);
+    });
+  }, [socket]);
 
   return (
     <GiftedChat
