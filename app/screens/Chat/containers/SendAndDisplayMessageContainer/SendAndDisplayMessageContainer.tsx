@@ -3,7 +3,7 @@ import { GiftedChat, IMessage } from 'react-native-gifted-chat';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { SOCKET_EVENTS } from '@Constants/index';
-import { SOCKET_ERROR_PAYLOAD } from '@Models/index';
+import { SocketErrorPayload } from '@Models/index';
 import { WebSocketContext } from '@Providers/index';
 import { getCurrentGroupIdSelector, groupsActions } from '@Stores/groups';
 import { messagesActions } from '@Stores/messages';
@@ -26,8 +26,8 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
     (newMess: IMessage) => {
       dispatch(
         messagesActions.addNewMessageToCurrentGroup({
-          message: newMess,
-          currentGroupId: currentGroupId,
+          newMessage: newMess,
+          groupId: currentGroupId,
         }),
       );
 
@@ -66,7 +66,7 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
   );
 
   useEffect(() => {
-    socket.on(SOCKET_EVENTS.SOCKET_ERROR, (payload: SOCKET_ERROR_PAYLOAD) => {
+    socket.on(SOCKET_EVENTS.SOCKET_ERROR, (payload: SocketErrorPayload) => {
       console.error(payload.type);
     });
   }, [socket]);

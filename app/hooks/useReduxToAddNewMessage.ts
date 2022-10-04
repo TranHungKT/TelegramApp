@@ -1,5 +1,4 @@
-import { IMessage } from 'react-native-gifted-chat';
-
+import { NewMessageFromSocket } from '@Models/index';
 import { groupsActions } from '@Stores/groups';
 import { useAppDispatch } from '@Stores/index';
 import { messagesActions } from '@Stores/messages';
@@ -7,13 +6,7 @@ import { messagesActions } from '@Stores/messages';
 export const useReduxToAddNewMessage = () => {
   const dispatch = useAppDispatch();
 
-  const handleAddNewMessageToGroup = ({
-    newMessage,
-    groupId,
-  }: {
-    newMessage: IMessage;
-    groupId?: string;
-  }) => {
+  const handleAddNewMessageToGroup = ({ newMessage, groupId }: NewMessageFromSocket) => {
     dispatch(
       groupsActions.setLastMessage({
         message: { ...newMessage, user: newMessage.user._id.toString() },
@@ -23,8 +16,8 @@ export const useReduxToAddNewMessage = () => {
 
     dispatch(
       messagesActions.addNewMessageToCurrentGroup({
-        message: newMessage,
-        currentGroupId: groupId,
+        newMessage,
+        groupId,
       }),
     );
   };

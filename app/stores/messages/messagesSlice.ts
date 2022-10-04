@@ -1,5 +1,6 @@
 import { IMessage } from 'react-native-gifted-chat';
 
+import { NewMessageFromSocket } from '@Models/index';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface MessagesState {
@@ -35,19 +36,16 @@ export const messagesSlice = createSlice({
       }
     },
 
-    addNewMessageToCurrentGroup(
-      state,
-      action: PayloadAction<{ message: IMessage; currentGroupId?: string }>,
-    ) {
-      const { currentGroupId, message } = action.payload;
+    addNewMessageToCurrentGroup(state, action: PayloadAction<NewMessageFromSocket>) {
+      const { groupId, newMessage } = action.payload;
 
       const groupIndex = state.groupMessages.findIndex(
-        (currentGroup) => currentGroup.groupId === currentGroupId,
+        (currentGroup) => currentGroup.groupId === groupId,
       );
 
       if (groupIndex !== -1) {
         state.groupMessages[groupIndex].messages = [
-          message,
+          newMessage,
           ...state.groupMessages[groupIndex].messages,
         ];
         state.groupMessages[groupIndex].count += 1;
