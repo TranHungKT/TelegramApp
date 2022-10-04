@@ -1,11 +1,8 @@
-import { useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { IMAGES } from 'themes';
 
-import { SOCKET_EVENTS } from '@Constants/index';
 import { Group as IGroup } from '@Models/index';
 import { AllGroupChatNavigationParamList } from '@Navigators/index';
-import { WebSocketContext } from '@Providers/index';
 import { groupsActions } from '@Stores/groups';
 import { useAppDispatch } from '@Stores/index';
 import { userIdSelector } from '@Stores/user';
@@ -26,7 +23,6 @@ export const GroupContainer = (props: GroupContainerProps) => {
   const userId = useSelector(userIdSelector);
   const navigation =
     useNavigation<NativeStackNavigationProp<AllGroupChatNavigationParamList, 'AllMessageScreen'>>();
-  const socket = useContext(WebSocketContext);
 
   const generateGroupName = () => {
     let name = '';
@@ -47,8 +43,6 @@ export const GroupContainer = (props: GroupContainerProps) => {
   };
 
   const handleClickGroup = () => {
-    socket.emit(SOCKET_EVENTS.JOIN_ROOM, group._id);
-
     dispatch(groupsActions.setCurrentGroupId(group._id));
     navigation.navigate('ChatScreen');
   };
