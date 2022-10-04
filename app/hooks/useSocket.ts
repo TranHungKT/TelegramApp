@@ -11,7 +11,6 @@ export const useSocket = () => {
 
   useEffect(() => {
     socket.on(SOCKET_EVENTS.GET_MESSAGE, (payload) => {
-      console.log('pyad', payload);
       handleAddNewMessage(payload);
     });
   }, [handleAddNewMessage, socket]);

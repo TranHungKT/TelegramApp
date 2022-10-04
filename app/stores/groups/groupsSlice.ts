@@ -29,7 +29,6 @@ export const groupsSlice = createSlice({
     },
 
     setLastMessage(state, action: PayloadAction<{ message: LastMessage; groupId?: string }>) {
-      console.log('..', action.payload);
       const currentGroupIndex = state.groups.findIndex(
         (group) => group._id === action.payload.groupId,
       );
