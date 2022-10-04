@@ -41,7 +41,7 @@ export const SplashScreen = () => {
 
     getAccessToken();
   }, []);
-  console.log(accessToken);
+
   useEffect(() => {
     if (accessToken && data) {
       dispatch(userActions.setUserData({ ...data, accessToken }));

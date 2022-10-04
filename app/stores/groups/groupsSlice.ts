@@ -28,12 +28,13 @@ export const groupsSlice = createSlice({
       state.currentGroupId = action.payload;
     },
 
-    setLastMessage(state, action: PayloadAction<LastMessage>) {
+    setLastMessage(state, action: PayloadAction<{ message: LastMessage; groupId?: string }>) {
+      console.log('..', action.payload);
       const currentGroupIndex = state.groups.findIndex(
-        (group) => group._id === state.currentGroupId,
+        (group) => group._id === action.payload.groupId,
       );
 
-      state.groups[currentGroupIndex].lastMessage = action.payload;
+      state.groups[currentGroupIndex].lastMessage = action.payload.message;
     },
   },
 });

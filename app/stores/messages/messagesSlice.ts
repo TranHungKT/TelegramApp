@@ -52,6 +52,7 @@ export const messagesSlice = createSlice({
         ];
         state.groupMessages[groupIndex].count += 1;
       }
+      return;
     },
   },
 });

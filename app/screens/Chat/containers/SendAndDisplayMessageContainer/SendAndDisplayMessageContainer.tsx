@@ -31,7 +31,12 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
         }),
       );
 
-      dispatch(groupsActions.setLastMessage({ ...newMess, user: newMess.user._id.toString() }));
+      dispatch(
+        groupsActions.setLastMessage({
+          message: { ...newMess, user: newMess.user._id.toString() },
+          groupId: currentGroupId,
+        }),
+      );
     },
     [currentGroupId, dispatch],
   );

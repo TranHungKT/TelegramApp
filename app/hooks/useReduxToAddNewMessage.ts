@@ -15,13 +15,18 @@ export const useReduxToAddNewMessage = () => {
     groupId?: string;
   }) => {
     dispatch(
+      groupsActions.setLastMessage({
+        message: { ...newMessage, user: newMessage.user._id.toString() },
+        groupId: groupId,
+      }),
+    );
+
+    dispatch(
       messagesActions.addNewMessageToCurrentGroup({
         message: newMessage,
         currentGroupId: groupId,
       }),
     );
-
-    dispatch(groupsActions.setLastMessage({ ...newMessage, user: newMessage.user._id.toString() }));
   };
 
   return handleAddNewMessageToGroup;
