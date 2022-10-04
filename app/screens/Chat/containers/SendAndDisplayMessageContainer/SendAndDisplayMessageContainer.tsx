@@ -64,12 +64,6 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
     socket.on(SOCKET_EVENTS.SOCKET_ERROR, (payload: SOCKET_ERROR_PAYLOAD) => {
       console.error(payload.type);
     });
-
-    socket.on(SOCKET_EVENTS.GET_MESSAGE, (payload: IMessage) => {
-      handleAddNewMessageToGroup(payload);
-      appendMessageToGiftedChat([payload]);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
 
   return (
