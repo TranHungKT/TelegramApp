@@ -1,4 +1,5 @@
 import { useCallback, useContext, useEffect } from 'react';
+import { useState } from 'react';
 import { GiftedChat, IMessage } from 'react-native-gifted-chat';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -10,6 +11,8 @@ import { messagesActions } from '@Stores/messages';
 import { userDataSelector } from '@Stores/user';
 import { generateName } from '@Utils/index';
 
+import { TypingContainer } from '../TypingContainer';
+
 interface SendAndDisplayMessageContainerProps {
   messages?: IMessage[];
 }
@@ -18,9 +21,10 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
   const { messages } = props;
   const socket = useContext(WebSocketContext);
   const dispatch = useDispatch();
-
   const currentGroupId = useSelector(getCurrentGroupIdSelector);
   const { _id, firstName, lastName, avatarUrl } = useSelector(userDataSelector);
+
+  const [isTyping, setIsTyping] = useState(false);
 
   const handleAddNewMessageToGroup = useCallback(
     (newMess: IMessage) => {
@@ -65,9 +69,27 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
     [_id, appendMessageToGiftedChat, currentGroupId, handleAddNewMessageToGroup, socket],
   );
 
+  const handleTextInputChanged = (text: string) => {
+    socket.emit(text ? SOCKET_EVENTS.TYPING : SOCKET_EVENTS.UN_TYPING, {
+      groupId: currentGroupId,
+      user: _id,
+    });
+  };
+
+  const renderFooter = () => {
+    return <TypingContainer groupId={currentGroupId || ''} isTyping={isTyping} />;
+  };
+
   useEffect(() => {
     socket.on(SOCKET_EVENTS.SOCKET_ERROR, (payload: SocketErrorPayload) => {
       console.error(payload.type);
+    });
+    socket.on(SOCKET_EVENTS.TYPING, () => {
+      setIsTyping(true);
+    });
+
+    socket.on(SOCKET_EVENTS.UN_TYPING, () => {
+      setIsTyping(false);
     });
   }, [socket]);
 
@@ -80,6 +102,8 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
         name: generateName({ firstName, lastName }),
         avatar: avatarUrl,
       }}
+      renderFooter={renderFooter}
+      onInputTextChanged={handleTextInputChanged}
     />
   );
 };

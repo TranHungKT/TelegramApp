@@ -12,3 +12,17 @@ export const currentGroupSelector = createSelector(
     return groups.find((group) => group._id === currentGroupId);
   },
 );
+
+export const getIsTypingUserSelector = createSelector(
+  getGroupsSelector,
+  (groups) =>
+    ({ groupId }: { groupId: string }) => {
+      const currentGroupIndex = groups.findIndex((group) => group._id === groupId);
+
+      if (currentGroupIndex === -1) {
+        return [];
+      }
+
+      return groups[currentGroupIndex].usersTyping;
+    },
+);

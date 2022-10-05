@@ -19,6 +19,7 @@ module.exports = {
           '@Services': './app/services',
           '@Models': './app/models',
           '@Hooks': './app/hooks',
+          '@Containers': './app/containers',
         },
       },
     ],

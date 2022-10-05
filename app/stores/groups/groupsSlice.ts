@@ -1,6 +1,6 @@
 import { normalizeListGroups } from 'utils/groupUtils';
 
-import { GetListGroupResponse, Group, LastMessage } from '@Models/index';
+import { GetListGroupResponse, Group, LastMessage, TypingEventPayload } from '@Models/index';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface GroupState {
@@ -33,7 +33,42 @@ export const groupsSlice = createSlice({
         (group) => group._id === action.payload.groupId,
       );
 
-      state.groups[currentGroupIndex].lastMessage = action.payload.message;
+      if (currentGroupIndex !== -1) {
+        state.groups[currentGroupIndex].lastMessage = action.payload.message;
+      }
+    },
+
+    setTypingEvent(state, action: PayloadAction<TypingEventPayload>) {
+      const currentGroupIndex = state.groups.findIndex(
+        (group) => group._id === action.payload.groupId,
+      );
+
+      if (currentGroupIndex !== -1) {
+        const user = state.groups[currentGroupIndex].usersTyping.find(
+          (currentUser) => currentUser._id === action.payload.user._id,
+        );
+
+        if (!user) {
+          state.groups[currentGroupIndex].usersTyping = [
+            ...state.groups[currentGroupIndex].usersTyping,
+            action.payload.user,
+          ];
+        }
+      }
+    },
+
+    unTypingEvent(state, action: PayloadAction<TypingEventPayload>) {
+      const currentGroupIndex = state.groups.findIndex(
+        (group) => group._id === action.payload.groupId,
+      );
+
+      if (currentGroupIndex !== -1) {
+        const index = state.groups[currentGroupIndex].usersTyping.findIndex(
+          (user) => user._id === action.payload.user._id,
+        );
+
+        state.groups[currentGroupIndex].usersTyping.splice(index, 1);
+      }
     },
   },
 });
