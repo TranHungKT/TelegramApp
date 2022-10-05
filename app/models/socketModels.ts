@@ -1,6 +1,4 @@
-import { IMessage } from 'react-native-gifted-chat';
-
-import { Member } from './groupModels';
+import { IMessage, User as IUser } from 'react-native-gifted-chat';
 
 export interface SocketErrorPayload {
   type: string;
@@ -13,6 +11,6 @@ export interface NewMessageFromSocket {
 }
 
 export interface TypingEventPayload {
-  user: Member;
+  user: IUser;
   groupId: string;
 }

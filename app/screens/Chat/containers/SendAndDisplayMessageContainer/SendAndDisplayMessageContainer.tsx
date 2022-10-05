@@ -1,4 +1,3 @@
-import { TypingContainer } from 'containers/TypingContainer';
 import { useCallback, useContext, useEffect } from 'react';
 import { useState } from 'react';
 import { GiftedChat, IMessage } from 'react-native-gifted-chat';
@@ -11,6 +10,8 @@ import { getCurrentGroupIdSelector, groupsActions } from '@Stores/groups';
 import { messagesActions } from '@Stores/messages';
 import { userDataSelector } from '@Stores/user';
 import { generateName } from '@Utils/index';
+
+import { TypingContainer } from '../TypingContainer';
 
 interface SendAndDisplayMessageContainerProps {
   messages?: IMessage[];
@@ -68,6 +69,17 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
     [_id, appendMessageToGiftedChat, currentGroupId, handleAddNewMessageToGroup, socket],
   );
 
+  const handleTextInputChanged = (text: string) => {
+    socket.emit(text ? SOCKET_EVENTS.TYPING : SOCKET_EVENTS.UN_TYPING, {
+      groupId: currentGroupId,
+      user: _id,
+    });
+  };
+
+  const renderFooter = () => {
+    return <TypingContainer groupId={currentGroupId || ''} isTyping={isTyping} />;
+  };
+
   useEffect(() => {
     socket.on(SOCKET_EVENTS.SOCKET_ERROR, (payload: SocketErrorPayload) => {
       console.error(payload.type);
@@ -80,24 +92,6 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
       setIsTyping(false);
     });
   }, [socket]);
-
-  const renderFooter = () => {
-    return <TypingContainer groupId={currentGroupId || ''} isTyping={isTyping} />;
-  };
-
-  const handleTextInputChanged = (text: string) => {
-    if (text) {
-      socket.emit(SOCKET_EVENTS.TYPING, {
-        groupId: currentGroupId,
-        user: _id,
-      });
-    } else {
-      socket.emit(SOCKET_EVENTS.UN_TYPING, {
-        groupId: currentGroupId,
-        user: _id,
-      });
-    }
-  };
 
   return (
     <GiftedChat

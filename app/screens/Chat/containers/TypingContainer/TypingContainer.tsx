@@ -17,8 +17,8 @@ export const TypingContainer = (props: TypingContainerProps) => {
 
   return (
     <>
-      {users.map((user, index) => (
-        <TypingIndicator isTyping={isTyping} key={index} />
+      {users.map((user) => (
+        <TypingIndicator isTyping={isTyping} key={user._id} />
       ))}
     </>
   );
