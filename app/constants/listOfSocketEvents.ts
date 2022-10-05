@@ -5,6 +5,7 @@ export const SOCKET_EVENTS = {
   GET_MESSAGE: 'get-message',
   SOCKET_ERROR: 'socket-error',
   TYPING: 'typing',
+  UN_TYPING: 'un-typing',
 };
 
 export const SOCKET_ERROR_TYPE = {

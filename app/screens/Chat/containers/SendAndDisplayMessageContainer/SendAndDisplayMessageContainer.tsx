@@ -75,6 +75,10 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
     socket.on(SOCKET_EVENTS.TYPING, () => {
       setIsTyping(true);
     });
+
+    socket.on(SOCKET_EVENTS.UN_TYPING, () => {
+      setIsTyping(false);
+    });
   }, [socket]);
 
   const renderFooter = () => {
@@ -87,12 +91,16 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
         groupId: currentGroupId,
         user: _id,
       });
+    } else {
+      socket.emit(SOCKET_EVENTS.UN_TYPING, {
+        groupId: currentGroupId,
+        user: _id,
+      });
     }
   };
 
   return (
     <GiftedChat
-      isTyping={true}
       messages={messages}
       onSend={(newMess) => handleSendMessage(newMess)}
       user={{

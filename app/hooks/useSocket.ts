@@ -10,7 +10,7 @@ import { useReduxToAddNewMessage } from './useReduxToAddNewMessage';
 export const useSocket = () => {
   const socket = useContext(WebSocketContext);
   const handleAddNewMessage = useReduxToAddNewMessage();
-  const [handleTypingEvent] = useReduxForTypingEvent();
+  const [handleTypingEvent, handleUnTypingEvent] = useReduxForTypingEvent();
 
   useEffect(() => {
     socket.on(SOCKET_EVENTS.GET_MESSAGE, (payload: NewMessageFromSocket) => {
@@ -20,7 +20,11 @@ export const useSocket = () => {
     socket.on(SOCKET_EVENTS.TYPING, (payload: TypingEventPayload) => {
       handleTypingEvent(payload);
     });
-  }, [handleAddNewMessage, socket, handleTypingEvent]);
+
+    socket.on(SOCKET_EVENTS.UN_TYPING, (payload: TypingEventPayload) => {
+      handleUnTypingEvent(payload);
+    });
+  }, [handleAddNewMessage, socket, handleTypingEvent, handleUnTypingEvent]);
 
   return socket;
 };

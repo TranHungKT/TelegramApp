@@ -44,10 +44,16 @@ export const groupsSlice = createSlice({
       );
 
       if (currentGroupIndex !== -1) {
-        state.groups[currentGroupIndex].usersTyping = [
-          ...state.groups[currentGroupIndex].usersTyping,
-          action.payload.user,
-        ];
+        const user = state.groups[currentGroupIndex].usersTyping.find(
+          (currentUser) => currentUser._id === action.payload.user._id,
+        );
+
+        if (!user) {
+          state.groups[currentGroupIndex].usersTyping = [
+            ...state.groups[currentGroupIndex].usersTyping,
+            action.payload.user,
+          ];
+        }
       }
     },
 
@@ -58,7 +64,7 @@ export const groupsSlice = createSlice({
 
       if (currentGroupIndex !== -1) {
         const index = state.groups[currentGroupIndex].usersTyping.findIndex(
-          (id) => id === action.payload.user,
+          (user) => user._id === action.payload.user._id,
         );
 
         state.groups[currentGroupIndex].usersTyping.splice(index, 1);
