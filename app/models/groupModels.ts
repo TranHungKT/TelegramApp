@@ -1,5 +1,5 @@
 import { ImageSourcePropType } from 'react-native';
-import { IMessage } from 'react-native-gifted-chat';
+import { IMessage, User as IUser } from 'react-native-gifted-chat';
 
 import { User } from './userModels';
 
@@ -11,6 +11,7 @@ export interface Group {
   typeOfGroup: TypeOfGroup;
   lastUpdatedAt: string;
   groupAvatar: ImageSourcePropType | string;
+  usersTyping: IUser[];
 }
 
 export type Member = Omit<User, 'accessToken'>;

@@ -1,4 +1,6 @@
+import { TypingContainer } from 'containers/TypingContainer';
 import { useCallback, useContext, useEffect } from 'react';
+import { useState } from 'react';
 import { GiftedChat, IMessage } from 'react-native-gifted-chat';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -18,9 +20,10 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
   const { messages } = props;
   const socket = useContext(WebSocketContext);
   const dispatch = useDispatch();
-
   const currentGroupId = useSelector(getCurrentGroupIdSelector);
   const { _id, firstName, lastName, avatarUrl } = useSelector(userDataSelector);
+
+  const [isTyping, setIsTyping] = useState(false);
 
   const handleAddNewMessageToGroup = useCallback(
     (newMess: IMessage) => {
@@ -69,10 +72,27 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
     socket.on(SOCKET_EVENTS.SOCKET_ERROR, (payload: SocketErrorPayload) => {
       console.error(payload.type);
     });
+    socket.on(SOCKET_EVENTS.TYPING, () => {
+      setIsTyping(true);
+    });
   }, [socket]);
+
+  const renderFooter = () => {
+    return <TypingContainer groupId={currentGroupId || ''} isTyping={isTyping} />;
+  };
+
+  const handleTextInputChanged = (text: string) => {
+    if (text) {
+      socket.emit(SOCKET_EVENTS.TYPING, {
+        groupId: currentGroupId,
+        user: _id,
+      });
+    }
+  };
 
   return (
     <GiftedChat
+      isTyping={true}
       messages={messages}
       onSend={(newMess) => handleSendMessage(newMess)}
       user={{
@@ -80,6 +100,8 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
         name: generateName({ firstName, lastName }),
         avatar: avatarUrl,
       }}
+      renderFooter={renderFooter}
+      onInputTextChanged={handleTextInputChanged}
     />
   );
 };

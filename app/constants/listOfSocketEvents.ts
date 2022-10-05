@@ -4,6 +4,7 @@ export const SOCKET_EVENTS = {
   SEND_MESSAGE: 'send-message',
   GET_MESSAGE: 'get-message',
   SOCKET_ERROR: 'socket-error',
+  TYPING: 'typing',
 };
 
 export const SOCKET_ERROR_TYPE = {

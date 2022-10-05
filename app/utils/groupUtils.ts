@@ -25,6 +25,7 @@ export const normalizeListGroups = (groups: GroupResponse[], userId: string): Gr
       ...group,
       name: generateGroupName({ members: group.members, userId }),
       groupAvatar: getAvatarUrl({ members: group.members, userId }),
+      usersTyping: [],
     }),
   );
 };
