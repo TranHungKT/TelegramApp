@@ -9,7 +9,6 @@ export const currentGroupSelector = createSelector(
   getGroupsSelector,
   getCurrentGroupIdSelector,
   (groups, currentGroupId) => {
-    console.log(currentGroupId);
     return currentGroupId ? groups[currentGroupId] : undefined;
   },
 );
