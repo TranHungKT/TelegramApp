@@ -1,4 +1,4 @@
-import { Group, GroupResponse, Member } from '@Models/index';
+import { GroupResponse, Member } from '@Models/index';
 import { IMAGES } from '@Themes/index';
 
 const generateGroupName = ({ members, userId }: { members: Member[]; userId: string }) => {
@@ -19,13 +19,9 @@ const getAvatarUrl = ({ members, userId }: { members: Member[]; userId: string }
   return IMAGES.Group;
 };
 
-export const normalizeListGroups = (groups: GroupResponse[], userId: string): Group[] => {
-  return groups.map(
-    (group): Group => ({
-      ...group,
-      name: generateGroupName({ members: group.members, userId }),
-      groupAvatar: getAvatarUrl({ members: group.members, userId }),
-      usersTyping: [],
-    }),
-  );
-};
+export const normalizeGroup = (group: GroupResponse, userId: string) => ({
+  ...group,
+  name: generateGroupName({ members: group.members, userId }),
+  groupAvatar: getAvatarUrl({ members: group.members, userId }),
+  usersTyping: [],
+});

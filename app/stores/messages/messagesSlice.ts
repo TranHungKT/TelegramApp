@@ -4,11 +4,16 @@ import { NewMessageFromSocket } from '@Models/index';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface MessagesState {
-  groupMessages: { groupId: string; messages: IMessage[]; count: number }[];
+  groupMessages: {
+    [groupId: string]: {
+      messages: IMessage[];
+      count: number;
+    };
+  };
 }
 
 const initialState: MessagesState = {
-  groupMessages: [],
+  groupMessages: {},
 };
 
 export const messagesSlice = createSlice({
@@ -20,35 +25,22 @@ export const messagesSlice = createSlice({
       action: PayloadAction<{ list: IMessage[]; count: number; groupId: string }>,
     ) {
       const { groupId, count, list } = action.payload;
-      const group = state.groupMessages.findIndex(
-        (currentGroup) => currentGroup.groupId === groupId,
-      );
 
-      if (group === -1) {
-        state.groupMessages = [
-          ...state.groupMessages,
-          {
-            groupId,
-            messages: list,
-            count,
-          },
-        ];
-      }
+      state.groupMessages[groupId] = {
+        messages: list,
+        count: count,
+      };
     },
 
     addNewMessageToCurrentGroup(state, action: PayloadAction<NewMessageFromSocket>) {
       const { groupId, newMessage } = action.payload;
 
-      const groupIndex = state.groupMessages.findIndex(
-        (currentGroup) => currentGroup.groupId === groupId,
-      );
-
-      if (groupIndex !== -1) {
-        state.groupMessages[groupIndex].messages = [
+      if (groupId) {
+        state.groupMessages[groupId].messages = [
           newMessage,
-          ...state.groupMessages[groupIndex].messages,
+          ...state.groupMessages[groupId].messages,
         ];
-        state.groupMessages[groupIndex].count += 1;
+        state.groupMessages[groupId].count += 1;
       }
       return;
     },
