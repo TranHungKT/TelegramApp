@@ -1,16 +1,18 @@
-import { normalizeListGroups } from 'utils/groupUtils';
+import { normalizeGroup } from 'utils/groupUtils';
 
 import { GetListGroupResponse, Group, LastMessage, TypingEventPayload } from '@Models/index';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface GroupState {
-  groups: Group[];
+  groups: {
+    [key: string]: Group;
+  };
   count: number;
   currentGroupId?: string;
 }
 
 const initialState: GroupState = {
-  groups: [],
+  groups: {},
   count: 0,
 };
 
@@ -20,7 +22,11 @@ export const groupsSlice = createSlice({
   reducers: {
     setGroups(state, action: PayloadAction<{ data: GetListGroupResponse; userId: string }>) {
       const { data, userId } = action.payload;
-      state.groups = normalizeListGroups(data.list, userId);
+
+      data.list.forEach((groupResponse) => {
+        state.groups[groupResponse._id] = normalizeGroup(groupResponse, userId);
+      });
+
       state.count = data.count;
     },
 
@@ -29,28 +35,23 @@ export const groupsSlice = createSlice({
     },
 
     setLastMessage(state, action: PayloadAction<{ message: LastMessage; groupId?: string }>) {
-      const currentGroupIndex = state.groups.findIndex(
-        (group) => group._id === action.payload.groupId,
-      );
-
-      if (currentGroupIndex !== -1) {
-        state.groups[currentGroupIndex].lastMessage = action.payload.message;
+      const { message, groupId } = action.payload;
+      if (groupId) {
+        state.groups[groupId].lastMessage = message;
       }
     },
 
     setTypingEvent(state, action: PayloadAction<TypingEventPayload>) {
-      const currentGroupIndex = state.groups.findIndex(
-        (group) => group._id === action.payload.groupId,
-      );
+      const { groupId } = action.payload;
 
-      if (currentGroupIndex !== -1) {
-        const user = state.groups[currentGroupIndex].usersTyping.find(
+      if (groupId) {
+        const user = state.groups[groupId].usersTyping.find(
           (currentUser) => currentUser._id === action.payload.user._id,
         );
 
         if (!user) {
-          state.groups[currentGroupIndex].usersTyping = [
-            ...state.groups[currentGroupIndex].usersTyping,
+          state.groups[groupId].usersTyping = [
+            ...state.groups[groupId].usersTyping,
             action.payload.user,
           ];
         }
@@ -58,16 +59,14 @@ export const groupsSlice = createSlice({
     },
 
     unTypingEvent(state, action: PayloadAction<TypingEventPayload>) {
-      const currentGroupIndex = state.groups.findIndex(
-        (group) => group._id === action.payload.groupId,
-      );
+      const { groupId } = action.payload;
 
-      if (currentGroupIndex !== -1) {
-        const index = state.groups[currentGroupIndex].usersTyping.findIndex(
+      if (groupId) {
+        const index = state.groups[groupId].usersTyping.findIndex(
           (user) => user._id === action.payload.user._id,
         );
 
-        state.groups[currentGroupIndex].usersTyping.splice(index, 1);
+        state.groups[groupId].usersTyping.splice(index, 1);
       }
     },
   },

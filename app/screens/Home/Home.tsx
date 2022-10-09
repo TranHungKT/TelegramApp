@@ -1,3 +1,4 @@
+import isEmpty from 'lodash/isEmpty';
 import { useContext, useEffect } from 'react';
 import { SafeAreaView, View } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
@@ -29,7 +30,7 @@ export const HomeScreen = () => {
   );
 
   const renderComponent = () => {
-    if (isFetching || (!!data?.list.length && !groups.length)) {
+    if (isFetching || (!!data?.list.length && isEmpty(groups))) {
       return <ActivityIndicator animating={true} style={styles.activityIndicator} />;
     }
 
@@ -43,7 +44,7 @@ export const HomeScreen = () => {
 
     return (
       <View style={styles.content}>
-        {groups.map((group) => (
+        {Object.values(groups).map((group) => (
           <GroupContainer group={group} key={group._id} />
         ))}
       </View>

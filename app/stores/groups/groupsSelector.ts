@@ -9,7 +9,7 @@ export const currentGroupSelector = createSelector(
   getGroupsSelector,
   getCurrentGroupIdSelector,
   (groups, currentGroupId) => {
-    return groups.find((group) => group._id === currentGroupId);
+    return currentGroupId ? groups[currentGroupId] : undefined;
   },
 );
 
@@ -17,12 +17,6 @@ export const getIsTypingUserSelector = createSelector(
   getGroupsSelector,
   (groups) =>
     ({ groupId }: { groupId: string }) => {
-      const currentGroupIndex = groups.findIndex((group) => group._id === groupId);
-
-      if (currentGroupIndex === -1) {
-        return [];
-      }
-
-      return groups[currentGroupIndex].usersTyping;
+      return groups[groupId].usersTyping;
     },
 );
