@@ -9,7 +9,6 @@ export const getMessagesForGroupSelector = createSelector(
   getGroupMessagesSelector,
   getCurrentGroupIdSelector,
   (groupsMessages, groupId) => {
-    // return groupsMessages.find((group) => group.groupId === groupId);
-    return groupsMessages[groupId || '1'];
+    return groupId ? groupsMessages[groupId] : undefined;
   },
 );
