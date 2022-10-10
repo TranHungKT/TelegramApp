@@ -14,3 +14,8 @@ export interface TypingEventPayload {
   user: IUser;
   groupId: string;
 }
+
+export interface UpdateMessageStatusPayload {
+  messageId: string;
+  groupId: string;
+}

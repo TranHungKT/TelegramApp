@@ -1,6 +1,6 @@
 import { IMessage } from 'react-native-gifted-chat';
 
-import { NewMessageFromSocket } from '@Models/index';
+import { NewMessageFromSocket, UpdateMessageStatusPayload } from '@Models/index';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface MessagesState {
@@ -43,6 +43,20 @@ export const messagesSlice = createSlice({
         state.groupMessages[groupId].count += 1;
       }
       return;
+    },
+
+    updateMessageToReceivedStatus(state, action: PayloadAction<UpdateMessageStatusPayload>) {
+      const { groupId, messageId } = action.payload;
+
+      if (state.groupMessages[groupId]) {
+        const messageIndex = state.groupMessages[groupId].messages.findIndex(
+          (message) => message._id === messageId,
+        );
+
+        if (messageIndex !== -1) {
+          state.groupMessages[groupId].messages[messageIndex].received = true;
+        }
+      }
     },
   },
 });
