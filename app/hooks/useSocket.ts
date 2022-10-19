@@ -15,17 +15,15 @@ export const useSocket = () => {
   const [handleMessageReceived] = useReduxToUpdateMessageStatus();
 
   useEffect(() => {
-    socket.on(SOCKET_EVENTS.SEND_MESSAGE, (payload: NewMessageFromSocket) => {
-      handleAddNewMessage(payload);
-
+    socket.on(SOCKET_EVENTS.GET_MESSAGE, (payload: NewMessageFromSocket) => {
       socket.emit(SOCKET_EVENTS.RECEIVED_MESSAGE, {
         groupId: payload.groupId,
         messageId: payload.newMessage._id,
       });
+      handleAddNewMessage(payload);
     });
 
     socket.on(SOCKET_EVENTS.RECEIVED_MESSAGE, (payload) => {
-      console.log('ok', payload);
       handleMessageReceived(payload);
     });
 
