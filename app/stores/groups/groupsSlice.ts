@@ -44,7 +44,7 @@ export const groupsSlice = createSlice({
     setTypingEvent(state, action: PayloadAction<TypingEventPayload>) {
       const { groupId } = action.payload;
 
-      if (groupId) {
+      if (groupId && state.groups[groupId]) {
         const user = state.groups[groupId].usersTyping.find(
           (currentUser) => currentUser._id === action.payload.user._id,
         );
