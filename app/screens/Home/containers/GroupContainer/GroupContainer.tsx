@@ -3,7 +3,7 @@ import { IMAGES } from 'themes';
 
 import { Group as IGroup } from '@Models/index';
 import { AllGroupChatNavigationParamList } from '@Navigators/index';
-import { groupsActions } from '@Stores/groups';
+import { groupsActions, getNumberOfUnReadMessagesSelector } from '@Stores/groups';
 import { useAppDispatch } from '@Stores/index';
 import { userIdSelector } from '@Stores/user';
 import { useNavigation } from '@react-navigation/native';
@@ -21,6 +21,10 @@ export const GroupContainer = (props: GroupContainerProps) => {
   const dispatch = useAppDispatch();
 
   const userId = useSelector(userIdSelector);
+  const unReadMessageSelector = useSelector(getNumberOfUnReadMessagesSelector);
+
+  const unReadMessage = unReadMessageSelector({ groupId: group._id });
+
   const navigation =
     useNavigation<NativeStackNavigationProp<AllGroupChatNavigationParamList, 'AllMessageScreen'>>();
 
@@ -51,6 +55,7 @@ export const GroupContainer = (props: GroupContainerProps) => {
     <Group
       group={{ ...group, name: generateGroupName(), groupAvatar: getAvatarUrl() }}
       onClickGroup={handleClickGroup}
+      numberOfUnReadMessage={unReadMessage?.numberOfUnReadMessage}
     />
   );
 };

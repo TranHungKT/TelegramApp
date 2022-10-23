@@ -10,10 +10,11 @@ import { styles } from './LastMessageContainerStyles';
 interface LastMessageContainerProps {
   members: Member[];
   message?: LastMessage;
+  hasUnReadMessage: boolean;
 }
 
 export const LastMessageContainer = (props: LastMessageContainerProps) => {
-  const { message, members } = props;
+  const { message, members, hasUnReadMessage } = props;
 
   const userId = useSelector(userIdSelector);
 
@@ -32,7 +33,10 @@ export const LastMessageContainer = (props: LastMessageContainerProps) => {
   };
 
   return (
-    <Text numberOfLines={1} style={styles.chat}>
+    <Text
+      numberOfLines={1}
+      style={[styles.chat, hasUnReadMessage && styles.chatWhenHaveUnReadMessage]}
+    >
       {getNameOfUser()}
       {message?.text}
     </Text>

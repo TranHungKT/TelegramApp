@@ -6,15 +6,17 @@ import { getImageSource } from 'utils';
 import { Group as IGroup } from '@Models/index';
 
 import { LastMessageContainer } from '../../containers/LastMessageContainer';
+import { UnReadMessage } from '../UnReadMessage';
 import { styles } from './GroupStyles';
 
 interface GroupProps {
   group: IGroup;
   onClickGroup: () => void;
+  numberOfUnReadMessage?: number;
 }
 
 export const Group = (props: GroupProps) => {
-  const { group, onClickGroup } = props;
+  const { group, onClickGroup, numberOfUnReadMessage } = props;
   const { _id, name, lastUpdatedAt, groupAvatar } = group;
 
   const isMoreThan2Member = () => group.members.length > 2;
@@ -32,11 +34,20 @@ export const Group = (props: GroupProps) => {
             {name}
           </Text>
 
-          <LastMessageContainer members={group.members} message={group.lastMessage} />
+          <LastMessageContainer
+            members={group.members}
+            message={group.lastMessage}
+            hasUnReadMessage={!!numberOfUnReadMessage}
+          />
         </View>
 
         <View style={styles.rightCol}>
           <Text style={styles.lastUpdatedTime}>{moment(lastUpdatedAt).format('HH:MM')}</Text>
+          {numberOfUnReadMessage !== undefined && (
+            <Text>
+              <UnReadMessage numberOfUnReadMessage={numberOfUnReadMessage} />
+            </Text>
+          )}
         </View>
       </>
     </TouchableOpacity>
