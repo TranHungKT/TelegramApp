@@ -27,8 +27,6 @@ export const getNumberOfUnReadMessagesSelector = createSelector(
   getNumberOfUnReadMessages,
   (unReadMessages) =>
     ({ groupId }: { groupId: string }) => {
-      console.log(groupId);
-      console.log(unReadMessages);
       return unReadMessages.find((unReadMessage) => unReadMessage.groupId === groupId);
     },
 );
