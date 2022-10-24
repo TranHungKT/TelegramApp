@@ -17,7 +17,7 @@ const initialState: MessagesState = {
 };
 
 export const messagesSlice = createSlice({
-  name: 'user',
+  name: 'messages',
   initialState,
   reducers: {
     setMessages(

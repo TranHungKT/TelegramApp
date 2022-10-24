@@ -19,3 +19,8 @@ export interface UpdateMessageStatusPayload {
   messageId: string;
   groupId: string;
 }
+
+export interface ReadMessagePayload {
+  groupId: string;
+  userId: string;
+}
