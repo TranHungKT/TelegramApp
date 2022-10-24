@@ -6,7 +6,7 @@ import { getImageSource } from 'utils';
 import { Group as IGroup } from '@Models/index';
 
 import { LastMessageContainer } from '../../containers/LastMessageContainer';
-import { UnReadMessage } from '../UnReadMessage';
+import { UnReadMessageContainer } from '../../containers/UnReadMessageContainer';
 import { styles } from './GroupStyles';
 
 interface GroupProps {
@@ -44,9 +44,10 @@ export const Group = (props: GroupProps) => {
         <View style={styles.rightCol}>
           <Text style={styles.lastUpdatedTime}>{moment(lastUpdatedAt).format('HH:MM')}</Text>
           {numberOfUnReadMessage !== undefined && (
-            <Text>
-              <UnReadMessage numberOfUnReadMessage={numberOfUnReadMessage} />
-            </Text>
+            <UnReadMessageContainer
+              numberOfUnReadMessage={numberOfUnReadMessage}
+              senderOfLastMessage={group.lastMessage?.user}
+            />
           )}
         </View>
       </>

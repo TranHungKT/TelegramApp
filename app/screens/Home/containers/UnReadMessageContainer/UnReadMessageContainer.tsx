@@ -1,16 +1,26 @@
 import { View } from 'react-native';
 import { Text } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/AntDesign';
+import { useSelector } from 'react-redux';
 
-import { styles } from './UnReadMessageStyles';
+import { userIdSelector } from '@Stores/user';
 
-interface UnReadMessageProps {
+import { styles } from './UnReadMessageContainerStyles';
+
+interface UnReadMessageContainerProps {
   numberOfUnReadMessage: number;
+  senderOfLastMessage?: string;
 }
-export const UnReadMessage = (props: UnReadMessageProps) => {
-  const { numberOfUnReadMessage } = props;
+export const UnReadMessageContainer = (props: UnReadMessageContainerProps) => {
+  const { numberOfUnReadMessage, senderOfLastMessage } = props;
+
+  const userId = useSelector(userIdSelector);
 
   const getTextUnReadMessages = () => {
+    if (userId === senderOfLastMessage) {
+      return '';
+    }
+
     if (numberOfUnReadMessage === 0) {
       return <Icon name="check" size={20} />;
     }
