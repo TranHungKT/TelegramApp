@@ -1,3 +1,4 @@
+import { map } from 'lodash';
 import isEmpty from 'lodash/isEmpty';
 import { useContext, useEffect } from 'react';
 import { SafeAreaView, View } from 'react-native';
@@ -6,7 +7,7 @@ import { useSelector } from 'react-redux';
 
 import { PAGE_SIZE, SOCKET_EVENTS } from '@Constants/index';
 import { WebSocketContext } from '@Providers/index';
-import { fetchListGroups } from '@Services/index';
+import { fetchListGroups, fetchNumberOfUnReadMessages } from '@Services/index';
 import { getGroupsSelector, groupsActions } from '@Stores/groups';
 import { useAppDispatch } from '@Stores/index';
 import { userIdSelector, userTokenSelector } from '@Stores/user';
@@ -25,12 +26,23 @@ export const HomeScreen = () => {
   const dispatch = useAppDispatch();
   const socket = useContext(WebSocketContext);
 
-  const { data, isFetching, error } = useQuery(['getListGroups', token], () =>
+  const {
+    data: listGroups,
+    isFetching,
+    error,
+  } = useQuery(['getListGroups', token], () =>
+    // TODO: PAGINATION HERE
     fetchListGroups({ token, pageNumber: 1, pageSize: PAGE_SIZE }),
   );
 
+  const { data: unReadMessages } = useQuery(
+    ['getNumberOfUnReadMessages', token, listGroups],
+    () => fetchNumberOfUnReadMessages({ token, groupIds: map(listGroups?.list, '_id') }),
+    { enabled: !!listGroups?.count },
+  );
+
   const renderComponent = () => {
-    if (isFetching || (!!data?.list.length && isEmpty(groups))) {
+    if (isFetching || (!!listGroups?.list.length && isEmpty(groups))) {
       return <ActivityIndicator animating={true} style={styles.activityIndicator} />;
     }
 
@@ -38,7 +50,7 @@ export const HomeScreen = () => {
       return <ErrorGetList />;
     }
 
-    if (!data?.list.length) {
+    if (!listGroups?.list.length) {
       return <EmptyListOfGroups />;
     }
 
@@ -52,11 +64,17 @@ export const HomeScreen = () => {
   };
 
   useEffect(() => {
-    if (data) {
-      dispatch(groupsActions.setGroups({ data, userId }));
-      data.list.forEach((group) => socket.emit(SOCKET_EVENTS.JOIN_ROOM, group._id));
+    if (listGroups) {
+      dispatch(groupsActions.setGroups({ data: listGroups, userId }));
+      listGroups.list.forEach((group) => socket.emit(SOCKET_EVENTS.JOIN_ROOM, group._id));
     }
-  }, [data, dispatch, socket, userId]);
+  }, [listGroups, dispatch, socket, userId]);
+
+  useEffect(() => {
+    if (unReadMessages) {
+      dispatch(groupsActions.setInitialUnReadMessages(unReadMessages));
+    }
+  }, [dispatch, unReadMessages]);
 
   return (
     <SafeAreaView style={styles.safeArea}>

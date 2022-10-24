@@ -1,6 +1,12 @@
 import { normalizeGroup } from 'utils/groupUtils';
 
-import { GetListGroupResponse, Group, LastMessage, TypingEventPayload } from '@Models/index';
+import {
+  GetListGroupResponse,
+  Group,
+  LastMessage,
+  TypingEventPayload,
+  UnReadMessage,
+} from '@Models/index';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface GroupState {
@@ -9,11 +15,13 @@ export interface GroupState {
   };
   count: number;
   currentGroupId?: string;
+  unReadMessages: UnReadMessage[];
 }
 
 const initialState: GroupState = {
   groups: {},
   count: 0,
+  unReadMessages: [],
 };
 
 export const groupsSlice = createSlice({
@@ -68,6 +76,10 @@ export const groupsSlice = createSlice({
 
         state.groups[groupId].usersTyping.splice(index, 1);
       }
+    },
+
+    setInitialUnReadMessages(state, action: PayloadAction<UnReadMessage[]>) {
+      state.unReadMessages = action.payload;
     },
   },
 });

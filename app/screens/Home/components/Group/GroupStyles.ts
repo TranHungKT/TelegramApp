@@ -10,6 +10,8 @@ interface Styles {
   avatar: ImageStyle;
   rightCol: ViewStyle;
   lastUpdatedTime: TextStyle;
+  numberOfUnReadMessageView: ViewStyle;
+  numberOfUnReadMessageText: TextStyle;
 }
 
 export const styles = StyleSheet.create<Styles>({
@@ -54,5 +56,19 @@ export const styles = StyleSheet.create<Styles>({
   lastUpdatedTime: {
     fontSize: 17,
     color: palette.lightGrey,
+  },
+
+  numberOfUnReadMessageView: {
+    backgroundColor: palette.blue,
+    height: 26,
+    width: 26,
+    borderRadius: 26,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  numberOfUnReadMessageText: {
+    color: palette.white,
+    fontSize: sizes.medium,
   },
 });

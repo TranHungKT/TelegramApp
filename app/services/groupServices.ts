@@ -2,7 +2,7 @@ import axios from 'axios';
 import { IMessage } from 'react-native-gifted-chat';
 
 import { BASE_URL } from '@Configs/index';
-import { GetListGroupResponse } from '@Models/index';
+import { GetListGroupResponse, UnReadMessage } from '@Models/index';
 
 interface GetListPayload {
   token: string;
@@ -12,6 +12,11 @@ interface GetListPayload {
 
 interface GetListPayloadWithGroupId extends GetListPayload {
   groupId?: string;
+}
+
+interface GetNumberUnReadMessagePayload {
+  token: string;
+  groupIds: string[];
 }
 
 export const fetchListGroups = async ({
@@ -43,6 +48,28 @@ export const fetchListMessages = async ({
   try {
     const response = await axios.get(
       `${BASE_URL}list-message?groupId=${groupId}&pageSize=${pageSize}&pageNumber=${pageNumber}`,
+      {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(error as string);
+  }
+};
+
+export const fetchNumberOfUnReadMessages = async ({
+  token,
+  groupIds,
+}: GetNumberUnReadMessagePayload): Promise<UnReadMessage[]> => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}get-unread-messages`,
+      {
+        groupIds,
+      },
       {
         headers: {
           authorization: `Bearer ${token}`,
