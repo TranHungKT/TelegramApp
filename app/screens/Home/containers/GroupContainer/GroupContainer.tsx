@@ -25,6 +25,7 @@ export const GroupContainer = (props: GroupContainerProps) => {
   const socket = useContext(WebSocketContext);
 
   const userId = useSelector(userIdSelector);
+
   const unReadMessageSelector = useSelector(getNumberOfUnReadMessagesSelector);
 
   const numberOfUnReadMessage = unReadMessageSelector({ groupId: group._id });
@@ -50,15 +51,22 @@ export const GroupContainer = (props: GroupContainerProps) => {
     return IMAGES.Group;
   };
 
+  const handleSendReadMessagesEvent = () => {
+    if (numberOfUnReadMessage) {
+      socket.emit(SOCKET_EVENTS.READ_MESSAGE, {
+        groupId: group._id,
+        userId,
+      });
+      dispatch(
+        groupsActions.updateUnReadMessages({ groupId: group._id, numberOfUnReadMessage: 0 }),
+      );
+    }
+  };
+
   const handleClickGroup = () => {
     dispatch(groupsActions.setCurrentGroupId(group._id));
-    // TODO: Update this function just run when there is unread message
-    socket.emit(SOCKET_EVENTS.READ_MESSAGE, {
-      groupId: group._id,
-      userId,
-    });
-    dispatch(groupsActions.updateUnReadMessages({ groupId: group._id, numberOfUnReadMessage: 0 }));
-    // TODO: Update this function just run when there is unread message
+    handleSendReadMessagesEvent();
+
     navigation.navigate('ChatScreen');
   };
 
