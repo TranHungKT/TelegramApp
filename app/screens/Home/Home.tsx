@@ -17,7 +17,7 @@ import { styles } from './HomeStyles';
 import { Header } from './components';
 import { EmptyListOfGroups } from './components/EmptyListOfGroups';
 import { ErrorGetList } from './components/ErrorGetList';
-import { ListGroupsContainer } from './containers/ListGroupsContainer/ListGroupsContainer';
+import { GroupContainer } from './containers/GroupContainer';
 
 export const HomeScreen = () => {
   const token = useSelector(userTokenSelector);
@@ -56,7 +56,9 @@ export const HomeScreen = () => {
 
     return (
       <View style={styles.content}>
-        <ListGroupsContainer />
+        {Object.values(groups).map((group) => (
+          <GroupContainer group={group} key={group._id} />
+        ))}
       </View>
     );
   };

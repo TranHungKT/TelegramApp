@@ -1,16 +1,19 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { fetchListMessages } from 'services';
+import { messagesActions } from 'stores/messages';
 import { IMAGES } from 'themes';
 
-import { SOCKET_EVENTS } from '@Constants/index';
+import { PAGE_SIZE, SOCKET_EVENTS } from '@Constants/index';
 import { Group as IGroup } from '@Models/index';
 import { AllGroupChatNavigationParamList } from '@Navigators/index';
 import { WebSocketContext } from '@Providers/index';
 import { groupsActions, getNumberOfUnReadMessagesSelector } from '@Stores/groups';
 import { useAppDispatch } from '@Stores/index';
-import { userIdSelector } from '@Stores/user';
+import { userIdSelector, userTokenSelector } from '@Stores/user';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useQuery } from '@tanstack/react-query';
 
 import { Group } from '../../components/Group';
 
@@ -23,7 +26,7 @@ export const GroupContainer = (props: GroupContainerProps) => {
   const { members } = group;
   const dispatch = useAppDispatch();
   const socket = useContext(WebSocketContext);
-
+  const accessToken = useSelector(userTokenSelector);
   const userId = useSelector(userIdSelector);
 
   const unReadMessageSelector = useSelector(getNumberOfUnReadMessagesSelector);
@@ -32,6 +35,15 @@ export const GroupContainer = (props: GroupContainerProps) => {
 
   const navigation =
     useNavigation<NativeStackNavigationProp<AllGroupChatNavigationParamList, 'AllMessageScreen'>>();
+
+  const { data } = useQuery(['fetchListMessages', group._id], () =>
+    fetchListMessages({
+      token: accessToken,
+      pageNumber: 1,
+      pageSize: PAGE_SIZE,
+      groupId: group._id,
+    }),
+  );
 
   const generateGroupName = () => {
     let name = '';
@@ -69,6 +81,18 @@ export const GroupContainer = (props: GroupContainerProps) => {
 
     navigation.navigate('ChatScreen');
   };
+
+  useEffect(() => {
+    if (data) {
+      dispatch(
+        messagesActions.setMessages({
+          count: data.count,
+          list: data.list,
+          groupId: data.groupId,
+        }),
+      );
+    }
+  }, [dispatch, data]);
 
   return (
     <Group
