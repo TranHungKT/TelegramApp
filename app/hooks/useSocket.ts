@@ -2,7 +2,12 @@ import { useContext, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import { SOCKET_EVENTS } from '@Constants/index';
-import { NewMessageFromSocket, ReadMessagePayload, TypingEventPayload } from '@Models/index';
+import {
+  NewMessageFromSocket,
+  ReadMessagePayload,
+  TypingEventPayload,
+  UpdateMessageStatusPayload,
+} from '@Models/index';
 import { WebSocketContext } from '@Providers/index';
 import { userIdSelector } from '@Stores/user';
 
@@ -28,13 +33,13 @@ export const useSocket = () => {
         if (userId !== payload.newMessage.user._id) {
           socket.emit(SOCKET_EVENTS.RECEIVED_MESSAGE, {
             groupId: payload.groupId,
-            messageId: payload.newMessage._id,
+            messageIds: [payload.newMessage._id],
           });
         }
         handleAddNewMessage(payload);
       });
 
-    socket.on(SOCKET_EVENTS.RECEIVED_MESSAGE, (payload) => {
+    socket.on(SOCKET_EVENTS.RECEIVED_MESSAGE, (payload: UpdateMessageStatusPayload) => {
       handleMessageReceived(payload);
     });
 

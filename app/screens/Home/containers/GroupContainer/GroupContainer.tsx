@@ -1,3 +1,4 @@
+import { map } from 'lodash';
 import { useContext, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { fetchListMessages } from 'services';
@@ -36,7 +37,7 @@ export const GroupContainer = (props: GroupContainerProps) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<AllGroupChatNavigationParamList, 'AllMessageScreen'>>();
 
-  const { data } = useQuery(['fetchListMessages', group._id], () =>
+  const { data: listMessages } = useQuery(['fetchListMessages', group._id], () =>
     fetchListMessages({
       token: accessToken,
       pageNumber: 1,
@@ -83,16 +84,27 @@ export const GroupContainer = (props: GroupContainerProps) => {
   };
 
   useEffect(() => {
-    if (data) {
+    if (listMessages && listMessages.list.length) {
+      const unReceivedMessage = listMessages.list.filter((message) => !message.received);
+
+      socket.emit(SOCKET_EVENTS.RECEIVED_MESSAGE, {
+        groupId: group._id,
+        messageIds: map(unReceivedMessage, '_id'),
+      });
+    }
+  }, [group._id, listMessages, socket]);
+
+  useEffect(() => {
+    if (listMessages) {
       dispatch(
         messagesActions.setMessages({
-          count: data.count,
-          list: data.list,
-          groupId: data.groupId,
+          count: listMessages.count,
+          list: listMessages.list,
+          groupId: listMessages.groupId,
         }),
       );
     }
-  }, [dispatch, data]);
+  }, [dispatch, listMessages]);
 
   return (
     <Group

@@ -53,7 +53,7 @@ export const groupsSlice = createSlice({
     setTypingEvent(state, action: PayloadAction<TypingEventPayload>) {
       const { groupId } = action.payload;
 
-      if (groupId && state.groups[groupId]) {
+      if (groupId && state.groups[groupId] !== undefined) {
         const user = state.groups[groupId].usersTyping.find(
           (currentUser) => currentUser._id === action.payload.user._id,
         );
@@ -90,7 +90,7 @@ export const groupsSlice = createSlice({
     updateUnReadMessages(state, action: PayloadAction<UnReadMessage>) {
       const { groupId, numberOfUnReadMessage } = action.payload;
 
-      if (state.unReadMessages[groupId]) {
+      if (state.unReadMessages[groupId] !== undefined) {
         state.unReadMessages[groupId] = numberOfUnReadMessage;
       }
     },
@@ -98,7 +98,7 @@ export const groupsSlice = createSlice({
     updateLastMessageToSeenStatus(state, action: PayloadAction<{ groupId: string }>) {
       const { groupId } = action.payload;
 
-      if (state.groups[groupId] && state.groups[groupId].lastMessage) {
+      if (state.groups[groupId] !== undefined && state.groups[groupId].lastMessage) {
         (state.groups[groupId].lastMessage as LastMessage).seen = true;
       }
     },

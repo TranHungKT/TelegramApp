@@ -38,7 +38,7 @@ export const HomeScreen = () => {
   const { data: unReadMessages } = useQuery(
     ['getNumberOfUnReadMessages', token, listGroups],
     () => fetchNumberOfUnReadMessages({ token, groupIds: map(listGroups?.list, '_id') }),
-    { enabled: !!listGroups?.count },
+    { enabled: !!listGroups?.list.length },
   );
 
   const renderComponent = () => {

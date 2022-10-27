@@ -11,15 +11,19 @@ interface HeaderProps {
   name: string;
   groupAvatar: string | ImageSourcePropType;
   totalMembers: number;
+  onClickGoBack?: () => void;
 }
 
 export const Header = (props: HeaderProps) => {
-  const { name, groupAvatar, totalMembers } = props;
+  const { name, groupAvatar, totalMembers, onClickGoBack } = props;
 
   const navigation = useNavigation();
   const isMoreThan2Member = totalMembers > 2;
 
-  const handleClickGoBack = () => navigation.goBack();
+  const handleClickGoBack = () => {
+    onClickGoBack && onClickGoBack();
+    navigation.goBack();
+  };
 
   return (
     <View style={styles.container}>

@@ -46,16 +46,18 @@ export const messagesSlice = createSlice({
     },
 
     updateMessageToReceivedStatus(state, action: PayloadAction<UpdateMessageStatusPayload>) {
-      const { groupId, messageId } = action.payload;
+      const { groupId, messageIds } = action.payload;
 
       if (state.groupMessages[groupId]) {
-        const messageIndex = state.groupMessages[groupId].messages.findIndex(
-          (message) => message._id === messageId,
-        );
+        messageIds.forEach((messageId) => {
+          const messageIndex = state.groupMessages[groupId].messages.findIndex(
+            (message) => message._id === messageId,
+          );
 
-        if (messageIndex !== -1) {
-          state.groupMessages[groupId].messages[messageIndex].received = true;
-        }
+          if (messageIndex !== -1) {
+            state.groupMessages[groupId].messages[messageIndex].received = true;
+          }
+        });
       }
     },
   },
