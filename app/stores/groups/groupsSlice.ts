@@ -95,12 +95,9 @@ export const groupsSlice = createSlice({
       }
     },
 
-    updateLastMessageToSeenStatus(state, action: PayloadAction<{ groupId: string }>) {
-      const { groupId } = action.payload;
-
-      if (state.groups[groupId] !== undefined && state.groups[groupId].lastMessage) {
-        (state.groups[groupId].lastMessage as LastMessage).seen = true;
-      }
+    updateLastMessageToSeenStatus(_, action: PayloadAction<{ groupId: string }>) {
+      console.log(action.payload.groupId);
+      console.log('WILL BE IMPLEMENTED LATER');
     },
   },
 });

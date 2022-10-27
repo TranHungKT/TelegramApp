@@ -85,11 +85,11 @@ export const GroupContainer = (props: GroupContainerProps) => {
 
   useEffect(() => {
     if (listMessages && listMessages.list.length) {
-      const unReceivedMessage = listMessages.list.filter((message) => !message.received);
+      const unReceivedMessages = listMessages.list.filter((message) => !message.received);
 
       socket.emit(SOCKET_EVENTS.RECEIVED_MESSAGE, {
         groupId: group._id,
-        messageIds: map(unReceivedMessage, '_id'),
+        messageIds: map(unReceivedMessages, '_id'),
       });
     }
   }, [group._id, listMessages, socket]);

@@ -26,16 +26,20 @@ export const useSocket = () => {
   const [handleMessageReceived] = useReduxToUpdateMessageStatus();
   const [handleMessageRead] = useReduxForReadMessageStatus();
 
+  const handleEmitReceivedMessage = (payload: NewMessageFromSocket) => {
+    if (userId !== payload.newMessage.user._id) {
+      socket.emit(SOCKET_EVENTS.RECEIVED_MESSAGE, {
+        groupId: payload.groupId,
+        messageIds: [payload.newMessage._id],
+      });
+    }
+  };
+
   useEffect(() => {
     socket
       .off(SOCKET_EVENTS.GET_MESSAGE)
       .on(SOCKET_EVENTS.GET_MESSAGE, (payload: NewMessageFromSocket) => {
-        if (userId !== payload.newMessage.user._id) {
-          socket.emit(SOCKET_EVENTS.RECEIVED_MESSAGE, {
-            groupId: payload.groupId,
-            messageIds: [payload.newMessage._id],
-          });
-        }
+        handleEmitReceivedMessage(payload);
         handleAddNewMessage(payload);
       });
 
