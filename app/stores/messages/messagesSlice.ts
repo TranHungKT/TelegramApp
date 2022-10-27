@@ -56,6 +56,7 @@ export const messagesSlice = createSlice({
 
           if (messageIndex !== -1) {
             state.groupMessages[groupId].messages[messageIndex].received = true;
+            state.groupMessages[groupId].messages[messageIndex].seen = true;
           }
         });
       }
