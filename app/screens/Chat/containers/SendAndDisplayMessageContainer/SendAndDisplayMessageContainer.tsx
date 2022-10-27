@@ -1,6 +1,6 @@
-import { useCallback, useContext, useEffect } from 'react';
-import { useState } from 'react';
-import { GiftedChat, IMessage } from 'react-native-gifted-chat';
+import { useCallback, useContext, useEffect, useState } from 'react';
+import { Text, View } from 'react-native';
+import { GiftedChat, IMessage, Bubble, BubbleProps } from 'react-native-gifted-chat';
 import { useSelector } from 'react-redux';
 
 import { SOCKET_EVENTS } from '@Constants/index';
@@ -11,6 +11,7 @@ import { userDataSelector } from '@Stores/user';
 import { generateName } from '@Utils/index';
 
 import { TypingContainer } from '../TypingContainer';
+import { styles } from './SendAndDisplayMessageContainerStyles';
 
 interface SendAndDisplayMessageContainerProps {
   messages?: IMessage[];
@@ -55,6 +56,25 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
     return <TypingContainer groupId={currentGroupId || ''} isTyping={isTyping} />;
   };
 
+  const renderTicks = (message: IMessage) => {
+    if (message.user._id !== _id) {
+      return null;
+    }
+    return (
+      <View style={styles.ticksView}>
+        {!!message.sent && <Text style={styles.ticks}>✓</Text>}
+        {!!message.received && <Text style={styles.ticks}>✓</Text>}
+        {!!message.pending && <Text style={styles.ticks}>🕓</Text>}
+        {/* TODO: ADD SEEN STATUS */}
+        {/* {!!message.pending && <Text style={styles.ticks}>🕓</Text>} */}
+      </View>
+    );
+  };
+
+  const renderBubble = (message: BubbleProps<IMessage>) => {
+    return <Bubble {...message} renderTicks={renderTicks} />;
+  };
+
   useEffect(() => {
     socket.on(SOCKET_EVENTS.SOCKET_ERROR, (payload: SocketErrorPayload) => {
       console.error(payload.type);
@@ -79,6 +99,7 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
       }}
       renderFooter={renderFooter}
       onInputTextChanged={handleTextInputChanged}
+      renderBubble={renderBubble}
     />
   );
 };

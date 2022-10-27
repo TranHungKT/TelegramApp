@@ -24,6 +24,7 @@ export enum TypeOfGroup {
 }
 export interface LastMessage extends Omit<IMessage, 'user'> {
   user: string;
+  seen?: boolean;
 }
 
 export interface GroupResponse {

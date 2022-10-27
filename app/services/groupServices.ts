@@ -44,7 +44,7 @@ export const fetchListMessages = async ({
   pageSize,
   pageNumber,
   groupId,
-}: GetListPayloadWithGroupId): Promise<{ list: IMessage[]; count: number }> => {
+}: GetListPayloadWithGroupId): Promise<{ groupId: string; list: IMessage[]; count: number }> => {
   try {
     const response = await axios.get(
       `${BASE_URL}list-message?groupId=${groupId}&pageSize=${pageSize}&pageNumber=${pageNumber}`,

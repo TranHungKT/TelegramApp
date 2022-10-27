@@ -1,5 +1,3 @@
-import { normalizeGroup } from 'utils/groupUtils';
-
 import {
   GetListGroupResponse,
   Group,
@@ -7,6 +5,7 @@ import {
   TypingEventPayload,
   UnReadMessage,
 } from '@Models/index';
+import { normalizeGroup } from '@Utils/groupUtils';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface GroupState {
@@ -15,17 +14,19 @@ export interface GroupState {
   };
   count: number;
   currentGroupId?: string;
-  unReadMessages: UnReadMessage[];
+  unReadMessages: {
+    [key: string]: number;
+  };
 }
 
 const initialState: GroupState = {
   groups: {},
   count: 0,
-  unReadMessages: [],
+  unReadMessages: {},
 };
 
 export const groupsSlice = createSlice({
-  name: 'user',
+  name: 'groups',
   initialState,
   reducers: {
     setGroups(state, action: PayloadAction<{ data: GetListGroupResponse; userId: string }>) {
@@ -52,7 +53,7 @@ export const groupsSlice = createSlice({
     setTypingEvent(state, action: PayloadAction<TypingEventPayload>) {
       const { groupId } = action.payload;
 
-      if (groupId && state.groups[groupId]) {
+      if (groupId && state.groups[groupId] !== undefined) {
         const user = state.groups[groupId].usersTyping.find(
           (currentUser) => currentUser._id === action.payload.user._id,
         );
@@ -79,7 +80,24 @@ export const groupsSlice = createSlice({
     },
 
     setInitialUnReadMessages(state, action: PayloadAction<UnReadMessage[]>) {
-      state.unReadMessages = action.payload;
+      action.payload.forEach((unReadMessage) => {
+        const { groupId, numberOfUnReadMessage } = unReadMessage;
+
+        state.unReadMessages[groupId] = numberOfUnReadMessage;
+      });
+    },
+
+    updateUnReadMessages(state, action: PayloadAction<UnReadMessage>) {
+      const { groupId, numberOfUnReadMessage } = action.payload;
+
+      if (state.unReadMessages[groupId] !== undefined) {
+        state.unReadMessages[groupId] = numberOfUnReadMessage;
+      }
+    },
+
+    updateLastMessageToSeenStatus(_, action: PayloadAction<{ groupId: string }>) {
+      console.log(action.payload.groupId);
+      console.log('WILL BE IMPLEMENTED LATER');
     },
   },
 });

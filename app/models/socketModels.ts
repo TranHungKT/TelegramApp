@@ -16,6 +16,11 @@ export interface TypingEventPayload {
 }
 
 export interface UpdateMessageStatusPayload {
-  messageId: string;
+  messageIds: string[];
   groupId: string;
+}
+
+export interface ReadMessagePayload {
+  groupId: string;
+  userId: string;
 }
