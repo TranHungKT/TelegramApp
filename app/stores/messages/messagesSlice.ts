@@ -45,8 +45,8 @@ export const messagesSlice = createSlice({
       return;
     },
 
-    updateMessageToReceivedStatus(state, action: PayloadAction<UpdateMessageStatusPayload>) {
-      const { groupId, messageIds } = action.payload;
+    updateMessageStatus(state, action: PayloadAction<UpdateMessageStatusPayload>) {
+      const { groupId, messageIds, status } = action.payload;
 
       if (state.groupMessages[groupId]) {
         messageIds.forEach((messageId) => {
@@ -55,8 +55,7 @@ export const messagesSlice = createSlice({
           );
 
           if (messageIndex !== -1) {
-            state.groupMessages[groupId].messages[messageIndex].received = true;
-            state.groupMessages[groupId].messages[messageIndex].seen = true;
+            state.groupMessages[groupId].messages[messageIndex][status] = true;
           }
         });
       }

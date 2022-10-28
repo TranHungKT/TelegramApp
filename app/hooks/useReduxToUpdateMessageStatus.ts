@@ -6,8 +6,11 @@ export const useReduxToUpdateMessageStatus = () => {
   const dispatch = useAppDispatch();
 
   const handleMessageReceived = (payload: UpdateMessageStatusPayload) => {
-    dispatch(messagesActions.updateMessageToReceivedStatus(payload));
+    dispatch(messagesActions.updateMessageStatus(payload));
   };
 
-  return [handleMessageReceived];
+  const handleMessageRead = (payload: UpdateMessageStatusPayload) => {
+    dispatch(messagesActions.updateMessageStatus(payload));
+  };
+  return [handleMessageReceived, handleMessageRead];
 };

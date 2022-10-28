@@ -60,13 +60,13 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
     if (message.user._id !== _id) {
       return null;
     }
+
     return (
       <View style={styles.ticksView}>
         {!!message.sent && <Text style={styles.ticks}>✓</Text>}
         {!!message.received && <Text style={styles.ticks}>✓</Text>}
         {!!message.pending && <Text style={styles.ticks}>🕓</Text>}
-        {/* TODO: ADD SEEN STATUS */}
-        {/* {!!message.pending && <Text style={styles.ticks}>🕓</Text>} */}
+        {!!message.seen && <Text style={styles.ticks}>✓</Text>}
       </View>
     );
   };

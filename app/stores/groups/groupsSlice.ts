@@ -94,11 +94,6 @@ export const groupsSlice = createSlice({
         state.unReadMessages[groupId] = numberOfUnReadMessage;
       }
     },
-
-    updateLastMessageToSeenStatus(_, action: PayloadAction<{ groupId: string }>) {
-      console.log(action.payload.groupId);
-      console.log('WILL BE IMPLEMENTED LATER');
-    },
   },
 });
 

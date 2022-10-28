@@ -18,6 +18,7 @@ export interface TypingEventPayload {
 export interface UpdateMessageStatusPayload {
   messageIds: string[];
   groupId: string;
+  status: 'received' | 'sent' | 'seen';
 }
 
 export interface ReadMessagePayload {

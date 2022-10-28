@@ -1,17 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import { SOCKET_EVENTS } from '@Constants/index';
 import {
   NewMessageFromSocket,
-  ReadMessagePayload,
   TypingEventPayload,
   UpdateMessageStatusPayload,
 } from '@Models/index';
 import { WebSocketContext } from '@Providers/index';
 import { userIdSelector } from '@Stores/user';
 
-import { useReduxForReadMessageStatus } from './useReduxForReadMessageStatus';
 import { useReduxForTypingEvent } from './useReduxForTypingEvent';
 import { useReduxToAddNewMessage } from './useReduxToAddNewMessage';
 import { useReduxToUpdateMessageStatus } from './useReduxToUpdateMessageStatus';
@@ -23,8 +22,7 @@ export const useSocket = () => {
 
   const handleAddNewMessage = useReduxToAddNewMessage();
   const [handleTypingEvent, handleUnTypingEvent] = useReduxForTypingEvent();
-  const [handleMessageReceived] = useReduxToUpdateMessageStatus();
-  const [handleMessageRead] = useReduxForReadMessageStatus();
+  const [handleMessageReceived, handleMessageRead] = useReduxToUpdateMessageStatus();
 
   const handleEmitReceivedMessage = (payload: NewMessageFromSocket) => {
     if (userId !== payload.newMessage.user._id) {
@@ -43,10 +41,6 @@ export const useSocket = () => {
         handleAddNewMessage(payload);
       });
 
-    socket.on(SOCKET_EVENTS.RECEIVED_MESSAGE, (payload: UpdateMessageStatusPayload) => {
-      handleMessageReceived(payload);
-    });
-
     socket.on(SOCKET_EVENTS.TYPING, (payload: TypingEventPayload) => {
       handleTypingEvent(payload);
     });
@@ -55,8 +49,12 @@ export const useSocket = () => {
       handleUnTypingEvent(payload);
     });
 
-    socket.on(SOCKET_EVENTS.READ_MESSAGE, (payload: ReadMessagePayload) => {
-      handleMessageRead(payload);
+    socket.on(SOCKET_EVENTS.RECEIVED_MESSAGE, (payload: UpdateMessageStatusPayload) => {
+      handleMessageReceived({ ...payload, status: 'received' });
+    });
+
+    socket.on(SOCKET_EVENTS.SEEN_MESSAGE, (payload: UpdateMessageStatusPayload) => {
+      handleMessageRead({ ...payload, status: 'seen' });
     });
   }, [
     socket,
@@ -65,6 +63,7 @@ export const useSocket = () => {
     handleUnTypingEvent,
     handleMessageReceived,
     handleMessageRead,
+    // handleEmitReceivedMessage,
     userId,
   ]);
 

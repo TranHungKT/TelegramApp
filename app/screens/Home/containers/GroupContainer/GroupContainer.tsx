@@ -64,12 +64,16 @@ export const GroupContainer = (props: GroupContainerProps) => {
     return IMAGES.Group;
   };
 
-  const handleSendReadMessagesEvent = () => {
-    if (numberOfUnReadMessage) {
-      socket.emit(SOCKET_EVENTS.READ_MESSAGE, {
+  const handleSendSeenMessagesEvent = () => {
+    if (numberOfUnReadMessage && listMessages && listMessages.list.length) {
+      const unSeenMessages = listMessages.list.filter((message) => !message.seen);
+
+      socket.emit(SOCKET_EVENTS.SEEN_MESSAGE, {
         groupId: group._id,
         userId,
+        messageIds: map(unSeenMessages, '_id'),
       });
+
       dispatch(
         groupsActions.updateUnReadMessages({ groupId: group._id, numberOfUnReadMessage: 0 }),
       );
@@ -78,7 +82,7 @@ export const GroupContainer = (props: GroupContainerProps) => {
 
   const handleClickGroup = () => {
     dispatch(groupsActions.setCurrentGroupId(group._id));
-    handleSendReadMessagesEvent();
+    handleSendSeenMessagesEvent();
 
     navigation.navigate('ChatScreen');
   };
