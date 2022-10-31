@@ -17,7 +17,7 @@ export const useSocket = () => {
 
   const handleAddNewMessage = useReduxToAddNewMessage();
   const [handleTypingEvent, handleUnTypingEvent] = useReduxForTypingEvent();
-  const [handleMessageReceived, handleMessageRead] = useReduxToUpdateMessageStatus();
+  const [handleUpdateMessageStatus] = useReduxToUpdateMessageStatus();
 
   useEffect(() => {
     socket
@@ -35,20 +35,18 @@ export const useSocket = () => {
     });
 
     socket.on(SOCKET_EVENTS.RECEIVED_MESSAGE, (payload: UpdateMessageStatusPayload) => {
-      handleMessageReceived({ ...payload, status: 'received' });
+      handleUpdateMessageStatus({ ...payload, status: 'received' });
     });
 
     socket.on(SOCKET_EVENTS.SEEN_MESSAGE, (payload: UpdateMessageStatusPayload) => {
-      handleMessageRead({ ...payload, status: 'seen' });
+      handleUpdateMessageStatus({ ...payload, status: 'seen' });
     });
   }, [
     socket,
     handleAddNewMessage,
     handleTypingEvent,
     handleUnTypingEvent,
-    handleMessageReceived,
-    handleMessageRead,
-    // handleEmitReceivedMessage,å
+    handleUpdateMessageStatus,
   ]);
 
   return socket;

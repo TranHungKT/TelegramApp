@@ -37,7 +37,7 @@ export const GroupContainer = (props: GroupContainerProps) => {
   const numberOfUnReadMessage = unReadMessageSelector({ groupId: group._id });
   const groupMessagesUnReceived = groupMessagesUnReceivedSelector({ groupId: group._id });
 
-  const [handleMessageReceived] = useReduxToUpdateMessageStatus();
+  const [handleUpdateMessageStatus] = useReduxToUpdateMessageStatus();
 
   const navigation =
     useNavigation<NativeStackNavigationProp<AllGroupChatNavigationParamList, 'AllMessageScreen'>>();
@@ -83,13 +83,13 @@ export const GroupContainer = (props: GroupContainerProps) => {
         messageIds: groupMessagesUnReceivedIds,
       });
 
-      handleMessageReceived({
+      handleUpdateMessageStatus({
         groupId: group._id,
         messageIds: groupMessagesUnReceivedIds as string[],
         status: 'received',
       });
     }
-  }, [group._id, groupMessagesUnReceived, handleMessageReceived, socket]);
+  }, [group._id, groupMessagesUnReceived, handleUpdateMessageStatus, socket]);
 
   useEffect(() => {
     if (listMessages) {
