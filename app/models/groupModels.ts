@@ -38,8 +38,3 @@ export interface GetListGroupResponse {
   count: number;
   list: GroupResponse[];
 }
-
-export interface UnReadMessage {
-  groupId: string;
-  numberOfUnReadMessage: number;
-}
