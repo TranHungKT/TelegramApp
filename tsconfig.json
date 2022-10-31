@@ -34,5 +34,6 @@
       "@Containers/*": ["app/containers/*"]
     }
   },
-  "include": ["app"]
+  "include": ["app"],
+  "files": ["app/globals.d.ts"]
 }

@@ -1,12 +1,15 @@
+import { useReduxToUpdateMessageStatus } from 'hooks/useReduxToUpdateMessageStatus';
+import { map } from 'lodash';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import { GiftedChat, IMessage, Bubble, BubbleProps } from 'react-native-gifted-chat';
 import { useSelector } from 'react-redux';
 
 import { SOCKET_EVENTS } from '@Constants/index';
-import { SocketErrorPayload } from '@Models/index';
+import { MessageStatus, SocketErrorPayload } from '@Models/index';
 import { WebSocketContext } from '@Providers/index';
 import { getCurrentGroupIdSelector } from '@Stores/groups';
+import { getMessagesUnSeenOrReceivedByGroupIdSelector } from '@Stores/messages';
 import { userDataSelector } from '@Stores/user';
 import { generateName } from '@Utils/index';
 
@@ -23,8 +26,15 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
 
   const currentGroupId = useSelector(getCurrentGroupIdSelector);
   const { _id, firstName, lastName, avatarUrl } = useSelector(userDataSelector);
+  const groupMessagesUnSeenSelector = useSelector(getMessagesUnSeenOrReceivedByGroupIdSelector);
+  const groupMessagesUnSeen = groupMessagesUnSeenSelector({
+    groupId: currentGroupId || '',
+    status: MessageStatus.SEEN,
+  });
 
   const [isTyping, setIsTyping] = useState(false);
+
+  const [handleUpdateMessageStatus] = useReduxToUpdateMessageStatus();
 
   const appendMessageToGiftedChat = useCallback(
     (newMess: IMessage[]) => GiftedChat.append(messages, newMess),
@@ -60,13 +70,13 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
     if (message.user._id !== _id) {
       return null;
     }
+
     return (
       <View style={styles.ticksView}>
         {!!message.sent && <Text style={styles.ticks}>✓</Text>}
         {!!message.received && <Text style={styles.ticks}>✓</Text>}
         {!!message.pending && <Text style={styles.ticks}>🕓</Text>}
-        {/* TODO: ADD SEEN STATUS */}
-        {/* {!!message.pending && <Text style={styles.ticks}>🕓</Text>} */}
+        {!!message.seen && <Text style={styles.ticks}>✓</Text>}
       </View>
     );
   };
@@ -87,6 +97,22 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
       setIsTyping(false);
     });
   }, [socket]);
+
+  useEffect(() => {
+    if (groupMessagesUnSeen && groupMessagesUnSeen.length) {
+      const groupMessagesUnSeenIds = map(groupMessagesUnSeen, '_id');
+      socket.emit(SOCKET_EVENTS.SEEN_MESSAGE, {
+        groupId: currentGroupId,
+        messageIds: groupMessagesUnSeenIds,
+      });
+
+      handleUpdateMessageStatus({
+        groupId: currentGroupId || '',
+        messageIds: groupMessagesUnSeenIds as string[],
+        status: MessageStatus.SEEN,
+      });
+    }
+  }, [currentGroupId, groupMessagesUnSeen, handleUpdateMessageStatus, socket]);
 
   return (
     <GiftedChat

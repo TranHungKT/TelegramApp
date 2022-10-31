@@ -5,9 +5,9 @@ import { messagesActions } from '@Stores/messages';
 export const useReduxToUpdateMessageStatus = () => {
   const dispatch = useAppDispatch();
 
-  const handleMessageReceived = (payload: UpdateMessageStatusPayload) => {
-    dispatch(messagesActions.updateMessageToReceivedStatus(payload));
+  const handleUpdateMessageStatus = (payload: UpdateMessageStatusPayload) => {
+    dispatch(messagesActions.updateMessageStatus(payload));
   };
 
-  return [handleMessageReceived];
+  return [handleUpdateMessageStatus];
 };

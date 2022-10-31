@@ -1,10 +1,4 @@
-import {
-  GetListGroupResponse,
-  Group,
-  LastMessage,
-  TypingEventPayload,
-  UnReadMessage,
-} from '@Models/index';
+import { GetListGroupResponse, Group, LastMessage, TypingEventPayload } from '@Models/index';
 import { normalizeGroup } from '@Utils/groupUtils';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
@@ -14,15 +8,11 @@ export interface GroupState {
   };
   count: number;
   currentGroupId?: string;
-  unReadMessages: {
-    [key: string]: number;
-  };
 }
 
 const initialState: GroupState = {
   groups: {},
   count: 0,
-  unReadMessages: {},
 };
 
 export const groupsSlice = createSlice({
@@ -77,27 +67,6 @@ export const groupsSlice = createSlice({
 
         state.groups[groupId].usersTyping.splice(index, 1);
       }
-    },
-
-    setInitialUnReadMessages(state, action: PayloadAction<UnReadMessage[]>) {
-      action.payload.forEach((unReadMessage) => {
-        const { groupId, numberOfUnReadMessage } = unReadMessage;
-
-        state.unReadMessages[groupId] = numberOfUnReadMessage;
-      });
-    },
-
-    updateUnReadMessages(state, action: PayloadAction<UnReadMessage>) {
-      const { groupId, numberOfUnReadMessage } = action.payload;
-
-      if (state.unReadMessages[groupId] !== undefined) {
-        state.unReadMessages[groupId] = numberOfUnReadMessage;
-      }
-    },
-
-    updateLastMessageToSeenStatus(_, action: PayloadAction<{ groupId: string }>) {
-      console.log(action.payload.groupId);
-      console.log('WILL BE IMPLEMENTED LATER');
     },
   },
 });

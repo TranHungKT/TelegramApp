@@ -18,9 +18,16 @@ export interface TypingEventPayload {
 export interface UpdateMessageStatusPayload {
   messageIds: string[];
   groupId: string;
+  status: MessageStatus;
 }
 
 export interface ReadMessagePayload {
   groupId: string;
   userId: string;
+}
+
+export enum MessageStatus {
+  RECEIVED = 'received',
+  SENT = 'sent',
+  SEEN = 'seen',
 }

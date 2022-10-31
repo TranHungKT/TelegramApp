@@ -24,7 +24,6 @@ export enum TypeOfGroup {
 }
 export interface LastMessage extends Omit<IMessage, 'user'> {
   user: string;
-  seen?: boolean;
 }
 
 export interface GroupResponse {
@@ -38,9 +37,4 @@ export interface GroupResponse {
 export interface GetListGroupResponse {
   count: number;
   list: GroupResponse[];
-}
-
-export interface UnReadMessage {
-  groupId: string;
-  numberOfUnReadMessage: number;
 }
