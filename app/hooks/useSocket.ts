@@ -2,6 +2,7 @@ import { useContext, useEffect } from 'react';
 
 import { SOCKET_EVENTS } from '@Constants/index';
 import {
+  MessageStatus,
   NewMessageFromSocket,
   TypingEventPayload,
   UpdateMessageStatusPayload,
@@ -35,11 +36,11 @@ export const useSocket = () => {
     });
 
     socket.on(SOCKET_EVENTS.RECEIVED_MESSAGE, (payload: UpdateMessageStatusPayload) => {
-      handleUpdateMessageStatus({ ...payload, status: 'received' });
+      handleUpdateMessageStatus({ ...payload, status: MessageStatus.RECEIVED });
     });
 
     socket.on(SOCKET_EVENTS.SEEN_MESSAGE, (payload: UpdateMessageStatusPayload) => {
-      handleUpdateMessageStatus({ ...payload, status: 'seen' });
+      handleUpdateMessageStatus({ ...payload, status: MessageStatus.SEEN });
     });
   }, [
     socket,

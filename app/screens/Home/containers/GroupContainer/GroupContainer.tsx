@@ -4,24 +4,15 @@ import { useContext, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import { PAGE_SIZE, SOCKET_EVENTS } from '@Constants/index';
-import { Group as IGroup } from '@Models/index';
-import { AllGroupChatNavigationParamList } from '@Navigators/index';
+import { Group as IGroup, MessageStatus } from '@Models/index';
 import { WebSocketContext } from '@Providers/index';
 import { fetchListMessages } from '@Services/index';
-import { groupsActions } from '@Stores/groups';
 import { useAppDispatch } from '@Stores/index';
-import {
-  getMessagesUnReceivedByGroupIdSelector,
-  messagesActions,
-  getMessagesUnSeenByGroupIdSelector,
-} from '@Stores/messages';
-import { userIdSelector, userTokenSelector } from '@Stores/user';
-import { IMAGES } from '@Themes/index';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { getMessagesUnReceivedByGroupIdSelector, messagesActions } from '@Stores/messages';
+import { userTokenSelector } from '@Stores/user';
 import { useQuery } from '@tanstack/react-query';
 
-import { Group } from '../../components/Group';
+import { RenderGroupContainer } from '../RenderGroupContainer';
 
 interface GroupContainerProps {
   group: IGroup;
@@ -29,23 +20,16 @@ interface GroupContainerProps {
 
 export const GroupContainer = (props: GroupContainerProps) => {
   const { group } = props;
-  const { members } = group;
+
   const dispatch = useAppDispatch();
   const socket = useContext(WebSocketContext);
   const accessToken = useSelector(userTokenSelector);
-  const userId = useSelector(userIdSelector);
 
   const groupMessagesUnReceivedSelector = useSelector(getMessagesUnReceivedByGroupIdSelector);
-  const groupMessagesUnSeenSelector = useSelector(getMessagesUnSeenByGroupIdSelector);
-
-  const numberOfUnSeenMessage = groupMessagesUnSeenSelector({ groupId: group._id });
 
   const groupMessagesUnReceived = groupMessagesUnReceivedSelector({ groupId: group._id });
 
   const [handleUpdateMessageStatus] = useReduxToUpdateMessageStatus();
-
-  const navigation =
-    useNavigation<NativeStackNavigationProp<AllGroupChatNavigationParamList, 'AllMessageScreen'>>();
 
   const { data: listMessages } = useQuery(['fetchListMessages', group._id], () =>
     fetchListMessages({
@@ -56,33 +40,10 @@ export const GroupContainer = (props: GroupContainerProps) => {
     }),
   );
 
-  const generateGroupName = () => {
-    let name = '';
-    members.forEach((member) => {
-      if (member._id !== userId) {
-        name = name + `,${member.firstName} ${member.lastName}`;
-      }
-    });
-
-    return name.substring(1);
-  };
-
-  const getAvatarUrl = () => {
-    if (members.length === 2) {
-      return members.filter((member) => member._id !== userId)[0].avatarUrl;
-    }
-    return IMAGES.Group;
-  };
-
-  const handleClickGroup = () => {
-    dispatch(groupsActions.setCurrentGroupId(group._id));
-
-    navigation.navigate('ChatScreen');
-  };
-
   useEffect(() => {
     if (groupMessagesUnReceived && groupMessagesUnReceived.length) {
       const groupMessagesUnReceivedIds = map(groupMessagesUnReceived, '_id');
+
       socket.emit(SOCKET_EVENTS.RECEIVED_MESSAGE, {
         groupId: group._id,
         messageIds: groupMessagesUnReceivedIds,
@@ -91,7 +52,7 @@ export const GroupContainer = (props: GroupContainerProps) => {
       handleUpdateMessageStatus({
         groupId: group._id,
         messageIds: groupMessagesUnReceivedIds as string[],
-        status: 'received',
+        status: MessageStatus.RECEIVED,
       });
     }
   }, [group._id, groupMessagesUnReceived, handleUpdateMessageStatus, socket]);
@@ -108,11 +69,5 @@ export const GroupContainer = (props: GroupContainerProps) => {
     }
   }, [dispatch, listMessages]);
 
-  return (
-    <Group
-      group={{ ...group, name: generateGroupName(), groupAvatar: getAvatarUrl() }}
-      onClickGroup={handleClickGroup}
-      numberOfUnReadMessage={numberOfUnSeenMessage?.length}
-    />
-  );
+  return <RenderGroupContainer group={group} />;
 };
