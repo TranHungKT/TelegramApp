@@ -8,9 +8,13 @@ import { Group as IGroup } from '@Models/index';
 import { AllGroupChatNavigationParamList } from '@Navigators/index';
 import { WebSocketContext } from '@Providers/index';
 import { fetchListMessages } from '@Services/index';
-import { groupsActions, getNumberOfUnReadMessagesSelector } from '@Stores/groups';
+import { groupsActions } from '@Stores/groups';
 import { useAppDispatch } from '@Stores/index';
-import { getMessagesUnReceivedByGroupIdSelector, messagesActions } from '@Stores/messages';
+import {
+  getMessagesUnReceivedByGroupIdSelector,
+  messagesActions,
+  getMessagesUnSeenByGroupIdSelector,
+} from '@Stores/messages';
 import { userIdSelector, userTokenSelector } from '@Stores/user';
 import { IMAGES } from '@Themes/index';
 import { useNavigation } from '@react-navigation/native';
@@ -31,10 +35,11 @@ export const GroupContainer = (props: GroupContainerProps) => {
   const accessToken = useSelector(userTokenSelector);
   const userId = useSelector(userIdSelector);
 
-  const unReadMessageSelector = useSelector(getNumberOfUnReadMessagesSelector);
   const groupMessagesUnReceivedSelector = useSelector(getMessagesUnReceivedByGroupIdSelector);
+  const groupMessagesUnSeenSelector = useSelector(getMessagesUnSeenByGroupIdSelector);
 
-  const numberOfUnReadMessage = unReadMessageSelector({ groupId: group._id });
+  const numberOfUnSeenMessage = groupMessagesUnSeenSelector({ groupId: group._id });
+
   const groupMessagesUnReceived = groupMessagesUnReceivedSelector({ groupId: group._id });
 
   const [handleUpdateMessageStatus] = useReduxToUpdateMessageStatus();
@@ -107,7 +112,7 @@ export const GroupContainer = (props: GroupContainerProps) => {
     <Group
       group={{ ...group, name: generateGroupName(), groupAvatar: getAvatarUrl() }}
       onClickGroup={handleClickGroup}
-      numberOfUnReadMessage={numberOfUnReadMessage}
+      numberOfUnReadMessage={numberOfUnSeenMessage?.length}
     />
   );
 };

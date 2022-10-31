@@ -20,13 +20,3 @@ export const getIsTypingUserSelector = createSelector(
       return groups[groupId].usersTyping;
     },
 );
-
-const getNumberOfUnReadMessages = (state: RootState) => state.groups.unReadMessages;
-
-export const getNumberOfUnReadMessagesSelector = createSelector(
-  getNumberOfUnReadMessages,
-  (unReadMessages) =>
-    ({ groupId }: { groupId: string }) => {
-      return unReadMessages[groupId];
-    },
-);

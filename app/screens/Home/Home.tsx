@@ -1,4 +1,3 @@
-import { map } from 'lodash';
 import isEmpty from 'lodash/isEmpty';
 import { useContext, useEffect } from 'react';
 import { SafeAreaView, View } from 'react-native';
@@ -7,7 +6,7 @@ import { useSelector } from 'react-redux';
 
 import { PAGE_SIZE, SOCKET_EVENTS } from '@Constants/index';
 import { WebSocketContext } from '@Providers/index';
-import { fetchListGroups, fetchNumberOfUnReadMessages } from '@Services/index';
+import { fetchListGroups } from '@Services/index';
 import { getGroupsSelector, groupsActions } from '@Stores/groups';
 import { useAppDispatch } from '@Stores/index';
 import { userIdSelector, userTokenSelector } from '@Stores/user';
@@ -33,12 +32,6 @@ export const HomeScreen = () => {
   } = useQuery(['getListGroups', token], () =>
     // TODO: PAGINATION HERE
     fetchListGroups({ token, pageNumber: 1, pageSize: PAGE_SIZE }),
-  );
-
-  const { data: unReadMessages } = useQuery(
-    ['getNumberOfUnReadMessages', token, listGroups],
-    () => fetchNumberOfUnReadMessages({ token, groupIds: map(listGroups?.list, '_id') }),
-    { enabled: !!listGroups?.list.length },
   );
 
   const renderComponent = () => {
@@ -69,12 +62,6 @@ export const HomeScreen = () => {
       listGroups.list.forEach((group) => socket.emit(SOCKET_EVENTS.JOIN_ROOM, group._id));
     }
   }, [listGroups, dispatch, socket, userId]);
-
-  useEffect(() => {
-    if (unReadMessages) {
-      dispatch(groupsActions.setInitialUnReadMessages(unReadMessages));
-    }
-  }, [dispatch, unReadMessages]);
 
   return (
     <SafeAreaView style={styles.safeArea}>

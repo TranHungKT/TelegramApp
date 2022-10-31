@@ -10,7 +10,7 @@ import { SocketErrorPayload } from '@Models/index';
 import { WebSocketContext } from '@Providers/index';
 import { getCurrentGroupIdSelector } from '@Stores/groups';
 import { getMessagesUnSeenByGroupIdSelector } from '@Stores/messages';
-import { userDataSelector, userIdSelector } from '@Stores/user';
+import { userDataSelector } from '@Stores/user';
 import { generateName } from '@Utils/index';
 
 import { TypingContainer } from '../TypingContainer';
@@ -24,7 +24,6 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
   const { messages } = props;
   const socket = useContext(WebSocketContext);
 
-  const userId = useSelector(userIdSelector);
   const currentGroupId = useSelector(getCurrentGroupIdSelector);
   const { _id, firstName, lastName, avatarUrl } = useSelector(userDataSelector);
   const groupMessagesUnSeenSelector = useSelector(getMessagesUnSeenByGroupIdSelector);
@@ -104,7 +103,6 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
       const groupMessagesUnSeenIds = map(groupMessagesUnSeen, '_id');
       socket.emit(SOCKET_EVENTS.SEEN_MESSAGE, {
         groupId: currentGroupId,
-        userId: userId || '',
         messageIds: groupMessagesUnSeenIds,
       });
 
@@ -114,7 +112,7 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
         status: 'seen',
       });
     }
-  }, [currentGroupId, groupMessagesUnSeen, handleUpdateMessageStatus, socket, userId]);
+  }, [currentGroupId, groupMessagesUnSeen, handleUpdateMessageStatus, socket]);
 
   return (
     <GiftedChat
