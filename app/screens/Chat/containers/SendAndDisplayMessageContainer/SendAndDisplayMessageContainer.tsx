@@ -9,7 +9,7 @@ import { SOCKET_EVENTS } from '@Constants/index';
 import { MessageStatus, SocketErrorPayload } from '@Models/index';
 import { WebSocketContext } from '@Providers/index';
 import { getCurrentGroupIdSelector } from '@Stores/groups';
-import { getMessagesUnSeenByGroupIdSelector } from '@Stores/messages';
+import { getMessagesUnSeenOrReceivedByGroupIdSelector } from '@Stores/messages';
 import { userDataSelector } from '@Stores/user';
 import { generateName } from '@Utils/index';
 
@@ -26,15 +26,15 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
 
   const currentGroupId = useSelector(getCurrentGroupIdSelector);
   const { _id, firstName, lastName, avatarUrl } = useSelector(userDataSelector);
-  const groupMessagesUnSeenSelector = useSelector(getMessagesUnSeenByGroupIdSelector);
+  const groupMessagesUnSeenSelector = useSelector(getMessagesUnSeenOrReceivedByGroupIdSelector);
+  const groupMessagesUnSeen = groupMessagesUnSeenSelector({
+    groupId: currentGroupId || '',
+    status: MessageStatus.SEEN,
+  });
 
   const [isTyping, setIsTyping] = useState(false);
 
   const [handleUpdateMessageStatus] = useReduxToUpdateMessageStatus();
-
-  const groupMessagesUnSeen = groupMessagesUnSeenSelector({
-    groupId: currentGroupId || '',
-  });
 
   const appendMessageToGiftedChat = useCallback(
     (newMess: IMessage[]) => GiftedChat.append(messages, newMess),

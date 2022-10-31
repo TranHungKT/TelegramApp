@@ -8,7 +8,7 @@ import { Group as IGroup, MessageStatus } from '@Models/index';
 import { WebSocketContext } from '@Providers/index';
 import { fetchListMessages } from '@Services/index';
 import { useAppDispatch } from '@Stores/index';
-import { getMessagesUnReceivedByGroupIdSelector, messagesActions } from '@Stores/messages';
+import { getMessagesUnSeenOrReceivedByGroupIdSelector, messagesActions } from '@Stores/messages';
 import { userTokenSelector } from '@Stores/user';
 import { useQuery } from '@tanstack/react-query';
 
@@ -25,9 +25,12 @@ export const GroupContainer = (props: GroupContainerProps) => {
   const socket = useContext(WebSocketContext);
   const accessToken = useSelector(userTokenSelector);
 
-  const groupMessagesUnReceivedSelector = useSelector(getMessagesUnReceivedByGroupIdSelector);
+  const groupMessagesUnReceivedSelector = useSelector(getMessagesUnSeenOrReceivedByGroupIdSelector);
 
-  const groupMessagesUnReceived = groupMessagesUnReceivedSelector({ groupId: group._id });
+  const groupMessagesUnReceived = groupMessagesUnReceivedSelector({
+    groupId: group._id,
+    status: MessageStatus.RECEIVED,
+  });
 
   const [handleUpdateMessageStatus] = useReduxToUpdateMessageStatus();
 

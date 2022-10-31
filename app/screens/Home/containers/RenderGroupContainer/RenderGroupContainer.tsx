@@ -1,10 +1,10 @@
 import { useSelector } from 'react-redux';
 
-import { Group as IGroup } from '@Models/index';
+import { Group as IGroup, MessageStatus } from '@Models/index';
 import { AllGroupChatNavigationParamList } from '@Navigators/index';
 import { groupsActions } from '@Stores/groups';
 import { useAppDispatch } from '@Stores/index';
-import { getMessagesUnSeenByGroupIdSelector } from '@Stores/messages';
+import { getMessagesUnSeenOrReceivedByGroupIdSelector } from '@Stores/messages';
 import { userIdSelector } from '@Stores/user';
 import { IMAGES } from '@Themes/index';
 import { useNavigation } from '@react-navigation/native';
@@ -25,8 +25,11 @@ export const RenderGroupContainer = (props: RenderGroupContainerProps) => {
     useNavigation<NativeStackNavigationProp<AllGroupChatNavigationParamList, 'AllMessageScreen'>>();
 
   const userId = useSelector(userIdSelector);
-  const groupMessagesUnSeenSelector = useSelector(getMessagesUnSeenByGroupIdSelector);
-  const groupMessagesUnSeen = groupMessagesUnSeenSelector({ groupId: group._id });
+  const groupMessagesUnSeenSelector = useSelector(getMessagesUnSeenOrReceivedByGroupIdSelector);
+  const groupMessagesUnSeen = groupMessagesUnSeenSelector({
+    groupId: group._id,
+    status: MessageStatus.SEEN,
+  });
 
   const generateGroupName = () => {
     let name = '';

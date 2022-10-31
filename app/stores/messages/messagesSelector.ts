@@ -1,3 +1,4 @@
+import { MessageStatus } from 'models';
 import { userIdSelector } from 'stores/user';
 
 import { createSelector } from '@reduxjs/toolkit';
@@ -15,27 +16,14 @@ export const getMessagesForGroupSelector = createSelector(
   },
 );
 
-export const getMessagesUnReceivedByGroupIdSelector = createSelector(
+export const getMessagesUnSeenOrReceivedByGroupIdSelector = createSelector(
   getGroupMessagesSelector,
   userIdSelector,
   (groupsMessages, userId) =>
-    ({ groupId }: { groupId: string }) => {
+    ({ groupId, status }: { groupId: string; status: MessageStatus }) => {
       if (groupsMessages[groupId]) {
         return groupsMessages[groupId].messages.filter(
-          (message) => message.user._id !== userId && !message.received,
-        );
-      }
-    },
-);
-
-export const getMessagesUnSeenByGroupIdSelector = createSelector(
-  getGroupMessagesSelector,
-  userIdSelector,
-  (groupsMessages, userId) =>
-    ({ groupId }: { groupId: string }) => {
-      if (groupsMessages[groupId]) {
-        return groupsMessages[groupId].messages.filter(
-          (message) => message.user._id !== userId && !message.seen,
+          (message) => message.user._id !== userId && !message[status],
         );
       }
     },
