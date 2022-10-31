@@ -1,3 +1,5 @@
+import { userIdSelector } from 'stores/user';
+
 import { createSelector } from '@reduxjs/toolkit';
 
 import { getCurrentGroupIdSelector } from '../groups/groupsSelector';
@@ -11,4 +13,17 @@ export const getMessagesForGroupSelector = createSelector(
   (groupsMessages, groupId) => {
     return groupId ? groupsMessages[groupId] : undefined;
   },
+);
+
+export const getMessagesUnReceivedByGroupIdSelector = createSelector(
+  getGroupMessagesSelector,
+  userIdSelector,
+  (groupsMessages, userId) =>
+    ({ groupId }: { groupId: string }) => {
+      if (groupsMessages[groupId]) {
+        return groupsMessages[groupId].messages.filter(
+          (message) => message.user._id !== userId && !message.received,
+        );
+      }
+    },
 );

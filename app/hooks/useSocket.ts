@@ -1,6 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useEffect } from 'react';
-import { useSelector } from 'react-redux';
 
 import { SOCKET_EVENTS } from '@Constants/index';
 import {
@@ -9,7 +7,6 @@ import {
   UpdateMessageStatusPayload,
 } from '@Models/index';
 import { WebSocketContext } from '@Providers/index';
-import { userIdSelector } from '@Stores/user';
 
 import { useReduxForTypingEvent } from './useReduxForTypingEvent';
 import { useReduxToAddNewMessage } from './useReduxToAddNewMessage';
@@ -18,26 +15,14 @@ import { useReduxToUpdateMessageStatus } from './useReduxToUpdateMessageStatus';
 export const useSocket = () => {
   const socket = useContext(WebSocketContext);
 
-  const userId = useSelector(userIdSelector);
-
   const handleAddNewMessage = useReduxToAddNewMessage();
   const [handleTypingEvent, handleUnTypingEvent] = useReduxForTypingEvent();
   const [handleMessageReceived, handleMessageRead] = useReduxToUpdateMessageStatus();
-
-  const handleEmitReceivedMessage = (payload: NewMessageFromSocket) => {
-    if (userId !== payload.newMessage.user._id) {
-      socket.emit(SOCKET_EVENTS.RECEIVED_MESSAGE, {
-        groupId: payload.groupId,
-        messageIds: [payload.newMessage._id],
-      });
-    }
-  };
 
   useEffect(() => {
     socket
       .off(SOCKET_EVENTS.GET_MESSAGE)
       .on(SOCKET_EVENTS.GET_MESSAGE, (payload: NewMessageFromSocket) => {
-        handleEmitReceivedMessage(payload);
         handleAddNewMessage(payload);
       });
 
@@ -63,8 +48,7 @@ export const useSocket = () => {
     handleUnTypingEvent,
     handleMessageReceived,
     handleMessageRead,
-    // handleEmitReceivedMessage,
-    userId,
+    // handleEmitReceivedMessage,å
   ]);
 
   return socket;

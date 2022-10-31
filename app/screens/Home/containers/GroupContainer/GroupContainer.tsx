@@ -1,17 +1,18 @@
+import { useReduxToUpdateMessageStatus } from 'hooks/useReduxToUpdateMessageStatus';
 import { map } from 'lodash';
 import { useContext, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { fetchListMessages } from 'services';
-import { messagesActions } from 'stores/messages';
-import { IMAGES } from 'themes';
 
 import { PAGE_SIZE, SOCKET_EVENTS } from '@Constants/index';
 import { Group as IGroup } from '@Models/index';
 import { AllGroupChatNavigationParamList } from '@Navigators/index';
 import { WebSocketContext } from '@Providers/index';
+import { fetchListMessages } from '@Services/index';
 import { groupsActions, getNumberOfUnReadMessagesSelector } from '@Stores/groups';
 import { useAppDispatch } from '@Stores/index';
+import { getMessagesUnReceivedByGroupIdSelector, messagesActions } from '@Stores/messages';
 import { userIdSelector, userTokenSelector } from '@Stores/user';
+import { IMAGES } from '@Themes/index';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useQuery } from '@tanstack/react-query';
@@ -31,8 +32,12 @@ export const GroupContainer = (props: GroupContainerProps) => {
   const userId = useSelector(userIdSelector);
 
   const unReadMessageSelector = useSelector(getNumberOfUnReadMessagesSelector);
+  const groupMessagesUnReceivedSelector = useSelector(getMessagesUnReceivedByGroupIdSelector);
 
   const numberOfUnReadMessage = unReadMessageSelector({ groupId: group._id });
+  const groupMessagesUnReceived = groupMessagesUnReceivedSelector({ groupId: group._id });
+
+  const [handleMessageReceived] = useReduxToUpdateMessageStatus();
 
   const navigation =
     useNavigation<NativeStackNavigationProp<AllGroupChatNavigationParamList, 'AllMessageScreen'>>();
@@ -64,39 +69,27 @@ export const GroupContainer = (props: GroupContainerProps) => {
     return IMAGES.Group;
   };
 
-  const handleSendSeenMessagesEvent = () => {
-    if (numberOfUnReadMessage && listMessages && listMessages.list.length) {
-      const unSeenMessages = listMessages.list.filter((message) => !message.seen);
-
-      socket.emit(SOCKET_EVENTS.SEEN_MESSAGE, {
-        groupId: group._id,
-        userId,
-        messageIds: map(unSeenMessages, '_id'),
-      });
-
-      dispatch(
-        groupsActions.updateUnReadMessages({ groupId: group._id, numberOfUnReadMessage: 0 }),
-      );
-    }
-  };
-
   const handleClickGroup = () => {
     dispatch(groupsActions.setCurrentGroupId(group._id));
-    handleSendSeenMessagesEvent();
 
     navigation.navigate('ChatScreen');
   };
 
   useEffect(() => {
-    if (listMessages && listMessages.list.length) {
-      const unReceivedMessages = listMessages.list.filter((message) => !message.received);
-
+    if (groupMessagesUnReceived && groupMessagesUnReceived.length) {
+      const groupMessagesUnReceivedIds = map(groupMessagesUnReceived, '_id');
       socket.emit(SOCKET_EVENTS.RECEIVED_MESSAGE, {
         groupId: group._id,
-        messageIds: map(unReceivedMessages, '_id'),
+        messageIds: groupMessagesUnReceivedIds,
+      });
+
+      handleMessageReceived({
+        groupId: group._id,
+        messageIds: groupMessagesUnReceivedIds as string[],
+        status: 'received',
       });
     }
-  }, [group._id, listMessages, socket]);
+  }, [group._id, groupMessagesUnReceived, handleMessageReceived, socket]);
 
   useEffect(() => {
     if (listMessages) {
