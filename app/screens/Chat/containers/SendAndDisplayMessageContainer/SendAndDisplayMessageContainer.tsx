@@ -6,7 +6,7 @@ import { GiftedChat, IMessage, Bubble, BubbleProps } from 'react-native-gifted-c
 import { useSelector } from 'react-redux';
 
 import { SOCKET_EVENTS } from '@Constants/index';
-import { SocketErrorPayload } from '@Models/index';
+import { MessageStatus, SocketErrorPayload } from '@Models/index';
 import { WebSocketContext } from '@Providers/index';
 import { getCurrentGroupIdSelector } from '@Stores/groups';
 import { getMessagesUnSeenByGroupIdSelector } from '@Stores/messages';
@@ -109,7 +109,7 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
       handleUpdateMessageStatus({
         groupId: currentGroupId || '',
         messageIds: groupMessagesUnSeenIds as string[],
-        status: 'seen',
+        status: MessageStatus.SEEN,
       });
     }
   }, [currentGroupId, groupMessagesUnSeen, handleUpdateMessageStatus, socket]);
