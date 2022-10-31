@@ -1,3 +1,5 @@
+import { useReduxToUpdateMessageStatus } from 'hooks/useReduxToUpdateMessageStatus';
+import { map } from 'lodash';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import { GiftedChat, IMessage, Bubble, BubbleProps } from 'react-native-gifted-chat';
@@ -7,7 +9,8 @@ import { SOCKET_EVENTS } from '@Constants/index';
 import { SocketErrorPayload } from '@Models/index';
 import { WebSocketContext } from '@Providers/index';
 import { getCurrentGroupIdSelector } from '@Stores/groups';
-import { userDataSelector } from '@Stores/user';
+import { getMessagesUnSeenByGroupIdSelector } from '@Stores/messages';
+import { userDataSelector, userIdSelector } from '@Stores/user';
 import { generateName } from '@Utils/index';
 
 import { TypingContainer } from '../TypingContainer';
@@ -21,10 +24,18 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
   const { messages } = props;
   const socket = useContext(WebSocketContext);
 
+  const userId = useSelector(userIdSelector);
   const currentGroupId = useSelector(getCurrentGroupIdSelector);
   const { _id, firstName, lastName, avatarUrl } = useSelector(userDataSelector);
+  const groupMessagesUnSeenSelector = useSelector(getMessagesUnSeenByGroupIdSelector);
 
   const [isTyping, setIsTyping] = useState(false);
+
+  const [handleUpdateMessageStatus] = useReduxToUpdateMessageStatus();
+
+  const groupMessagesUnSeen = groupMessagesUnSeenSelector({
+    groupId: currentGroupId || '',
+  });
 
   const appendMessageToGiftedChat = useCallback(
     (newMess: IMessage[]) => GiftedChat.append(messages, newMess),
@@ -87,6 +98,23 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
       setIsTyping(false);
     });
   }, [socket]);
+
+  useEffect(() => {
+    if (groupMessagesUnSeen && groupMessagesUnSeen.length) {
+      const groupMessagesUnSeenIds = map(groupMessagesUnSeen, '_id');
+      socket.emit(SOCKET_EVENTS.SEEN_MESSAGE, {
+        groupId: currentGroupId,
+        userId: userId || '',
+        messageIds: groupMessagesUnSeenIds,
+      });
+
+      handleUpdateMessageStatus({
+        groupId: currentGroupId || '',
+        messageIds: groupMessagesUnSeenIds as string[],
+        status: 'seen',
+      });
+    }
+  }, [currentGroupId, groupMessagesUnSeen, handleUpdateMessageStatus, socket, userId]);
 
   return (
     <GiftedChat

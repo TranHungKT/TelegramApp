@@ -27,3 +27,16 @@ export const getMessagesUnReceivedByGroupIdSelector = createSelector(
       }
     },
 );
+
+export const getMessagesUnSeenByGroupIdSelector = createSelector(
+  getGroupMessagesSelector,
+  userIdSelector,
+  (groupsMessages, userId) =>
+    ({ groupId }: { groupId: string }) => {
+      if (groupsMessages[groupId]) {
+        return groupsMessages[groupId].messages.filter(
+          (message) => message.user._id !== userId && !message.seen,
+        );
+      }
+    },
+);
