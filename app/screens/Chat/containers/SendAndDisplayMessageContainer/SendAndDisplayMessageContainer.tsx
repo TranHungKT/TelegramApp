@@ -38,19 +38,22 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
       newMessages.forEach((newMessage) => {
         socket.emit(SOCKET_EVENTS.SEND_MESSAGE, {
           roomId: currentGroupId,
-          message: { text: newMessage.text, user: userId },
+          message: { text: newMessage.text, user: userId, image: newMessage.image },
         });
       });
     },
     [userId, currentGroupId, socket],
   );
 
-  const handleTextInputChanged = (text: string) => {
-    socket.emit(text ? SOCKET_EVENTS.TYPING : SOCKET_EVENTS.UN_TYPING, {
-      groupId: currentGroupId,
-      user: userId,
-    });
-  };
+  const handleTextInputChanged = useCallback(
+    (text: string) => {
+      socket.emit(text ? SOCKET_EVENTS.TYPING : SOCKET_EVENTS.UN_TYPING, {
+        groupId: currentGroupId,
+        user: userId,
+      });
+    },
+    [currentGroupId, socket, userId],
+  );
 
   useEffect(() => {
     socket.on(SOCKET_EVENTS.SOCKET_ERROR, (payload: SocketErrorPayload) => {

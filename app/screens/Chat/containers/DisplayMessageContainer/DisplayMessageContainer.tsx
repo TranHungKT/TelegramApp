@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { GiftedChat, IMessage, BubbleProps } from 'react-native-gifted-chat';
 import { useSelector } from 'react-redux';
 
@@ -19,22 +19,37 @@ interface DisplayMessageContainerProps {
 
 export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => {
   const { messages, onTextInputChanged, onSendMessages, isTyping } = props;
-
+  const [customText, setCustomText] = useState('');
   const currentGroupId = useSelector(getCurrentGroupIdSelector);
   const { _id, firstName, lastName, avatarUrl } = useSelector(userDataSelector);
-
-  const appendMessageToGiftedChat = useCallback(
-    (newMess: IMessage[]) => GiftedChat.append(messages, newMess),
-    [messages],
-  );
 
   const handleSendMessage = useCallback(
     (newMessages: IMessage[] = []) => {
       onSendMessages(newMessages);
-      appendMessageToGiftedChat(newMessages);
     },
-    [appendMessageToGiftedChat, onSendMessages],
+    [onSendMessages],
   );
+
+  const handleTextInputChanged = (text: string) => {
+    setCustomText(text);
+    onTextInputChanged(text);
+  };
+
+  const handleChooseImage = (fileUrl: string) => {
+    handleSendMessage([
+      {
+        _id: Math.random(),
+        text: '',
+        createdAt: new Date(),
+        user: {
+          _id: _id,
+          name: generateName({ firstName, lastName }),
+          avatar: avatarUrl,
+        },
+        image: fileUrl,
+      },
+    ]);
+  };
 
   const renderFooter = () => {
     return <TypingContainer groupId={currentGroupId || ''} isTyping={isTyping} />;
@@ -45,12 +60,14 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
   };
 
   const renderActions = () => {
-    return <RenderActionsMessage />;
+    return <RenderActionsMessage onChooseImage={handleChooseImage} />;
   };
 
   return (
     <GiftedChat
       messages={messages}
+      text={customText}
+      onInputTextChanged={handleTextInputChanged}
       onSend={(newMess) => handleSendMessage(newMess)}
       user={{
         _id,
@@ -58,7 +75,6 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
         avatar: avatarUrl,
       }}
       renderFooter={renderFooter}
-      onInputTextChanged={onTextInputChanged}
       renderBubble={renderBubble}
       renderActions={renderActions}
     />
