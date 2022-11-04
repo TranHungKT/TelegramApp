@@ -5,7 +5,7 @@ import { IMessage } from 'react-native-gifted-chat';
 import { useSelector } from 'react-redux';
 
 import { SOCKET_EVENTS } from '@Constants/index';
-import { MessageStatus, SocketErrorPayload } from '@Models/index';
+import { MessageStatus, SocketErrorPayload, NewMessageContent } from '@Models/index';
 import { WebSocketContext } from '@Providers/index';
 import { getCurrentGroupIdSelector } from '@Stores/groups';
 import { getMessagesUnSeenOrReceivedByGroupIdSelector } from '@Stores/messages';
@@ -34,7 +34,7 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
   const [handleUpdateMessageStatus] = useReduxToUpdateMessageStatus();
 
   const handleSendMessage = useCallback(
-    (newMessages: IMessage[] = []) => {
+    (newMessages: NewMessageContent[] = []) => {
       newMessages.forEach((newMessage) => {
         socket.emit(SOCKET_EVENTS.SEND_MESSAGE, {
           roomId: currentGroupId,

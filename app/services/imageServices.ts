@@ -17,7 +17,7 @@ export const uploadImages = async ({
     type: images[0].type,
   } as any);
 
-  return axios.post(`${BASE_URL}upload-photo`, formData, {
+  return axios.post(`${BASE_URL}upload-image`, formData, {
     headers: {
       Accept: 'application/json',
       'Content-type': 'multipart/form-data',

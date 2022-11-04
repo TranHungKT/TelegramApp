@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import { GiftedChat, IMessage, BubbleProps } from 'react-native-gifted-chat';
 import { useSelector } from 'react-redux';
 
+import { NewMessageContent } from '@Models/index';
 import { getCurrentGroupIdSelector } from '@Stores/groups';
 import { userDataSelector } from '@Stores/user';
 import { generateName } from '@Utils/index';
@@ -14,7 +15,7 @@ interface DisplayMessageContainerProps {
   messages?: IMessage[];
   isTyping: boolean;
   onTextInputChanged: (text: string) => void;
-  onSendMessages: (newMess: IMessage[]) => void;
+  onSendMessages: (newMess: NewMessageContent[]) => void;
 }
 
 export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => {
@@ -24,7 +25,7 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
   const { _id, firstName, lastName, avatarUrl } = useSelector(userDataSelector);
 
   const handleSendMessage = useCallback(
-    (newMessages: IMessage[] = []) => {
+    (newMessages: NewMessageContent[] = []) => {
       onSendMessages(newMessages);
     },
     [onSendMessages],
@@ -35,21 +36,16 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
     onTextInputChanged(text);
   };
 
-  const handleChooseImage = (fileUrl: string) => {
-    handleSendMessage([
-      {
-        _id: Math.random(),
-        text: '',
-        createdAt: new Date(),
-        user: {
-          _id: _id,
-          name: generateName({ firstName, lastName }),
-          avatar: avatarUrl,
+  const handleChooseImage = useCallback(
+    (fileUrl: string) => {
+      handleSendMessage([
+        {
+          image: fileUrl,
         },
-        image: fileUrl,
-      },
-    ]);
-  };
+      ]);
+    },
+    [handleSendMessage],
+  );
 
   const renderFooter = () => {
     return <TypingContainer groupId={currentGroupId || ''} isTyping={isTyping} />;
@@ -68,7 +64,14 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
       messages={messages}
       text={customText}
       onInputTextChanged={handleTextInputChanged}
-      onSend={(newMess) => handleSendMessage(newMess)}
+      onSend={(newMess) =>
+        handleSendMessage(
+          newMess.map((message) => ({
+            text: message.text,
+            image: message.image,
+          })),
+        )
+      }
       user={{
         _id,
         name: generateName({ firstName, lastName }),

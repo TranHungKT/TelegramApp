@@ -4,3 +4,8 @@ export interface UploadImagePayload {
   images: Asset[];
   accessToken: string;
 }
+
+export interface NewMessageContent {
+  text?: string;
+  image?: string;
+}

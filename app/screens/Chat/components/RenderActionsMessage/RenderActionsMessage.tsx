@@ -40,7 +40,7 @@ export const RenderActionsMessage = (props: RenderActionsMessageProps) => {
     if (mutation.isSuccess) {
       onChooseImage(mutation.data.data.fileUrl);
     }
-  }, [mutation.data, mutation.isSuccess]);
+  }, [mutation.data, mutation.isSuccess, onChooseImage]);
 
   return (
     <IconButton
