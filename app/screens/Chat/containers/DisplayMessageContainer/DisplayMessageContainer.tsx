@@ -8,8 +8,8 @@ import { getCurrentGroupIdSelector } from '@Stores/groups';
 import { userDataSelector } from '@Stores/user';
 import { generateName } from '@Utils/index';
 
-import { RenderActionsMessage } from '../../components/RenderActionsMessage';
 import { RenderBubbleMessage } from '../../components/RenderBubbleMessage';
+import { RenderActionsMessageContainer } from '../RenderActionsMessageContainer';
 import { TypingContainer } from '../TypingContainer';
 import { styles } from './DisplayMessageContainerStyles';
 
@@ -22,13 +22,18 @@ interface DisplayMessageContainerProps {
 
 export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => {
   const { messages, onTextInputChanged, onSendMessages, isTyping } = props;
-  const [customText, setCustomText] = useState('');
   const currentGroupId = useSelector(getCurrentGroupIdSelector);
   const { _id, firstName, lastName, avatarUrl } = useSelector(userDataSelector);
 
+  const [customText, setCustomText] = useState('');
+
   const handleSendMessage = useCallback(
-    (newMessages: NewMessageContent[] = []) => {
-      onSendMessages(newMessages);
+    (newMessages: IMessage[] = []) => {
+      const newMess = newMessages.map((message) => ({
+        text: message.text,
+        image: message.image,
+      }));
+      onSendMessages(newMess);
     },
     [onSendMessages],
   );
@@ -40,13 +45,13 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
 
   const handleChooseImage = useCallback(
     (fileUrl: string) => {
-      handleSendMessage([
+      onSendMessages([
         {
           image: fileUrl,
         },
       ]);
     },
-    [handleSendMessage],
+    [onSendMessages],
   );
 
   const renderFooter = () => {
@@ -58,7 +63,7 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
   };
 
   const renderActions = () => {
-    return <RenderActionsMessage onChooseImage={handleChooseImage} />;
+    return <RenderActionsMessageContainer onChooseImage={handleChooseImage} />;
   };
 
   const renderChatFooter = () => {
@@ -70,24 +75,17 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
       messages={messages}
       text={customText}
       onInputTextChanged={handleTextInputChanged}
-      onSend={(newMess) =>
-        handleSendMessage(
-          newMess.map((message) => ({
-            text: message.text,
-            image: message.image,
-          })),
-        )
-      }
+      onSend={handleSendMessage}
       user={{
         _id,
         name: generateName({ firstName, lastName }),
         avatar: avatarUrl,
       }}
+      keyboardShouldPersistTaps="never"
+      forceGetKeyboardHeight={true}
       renderFooter={renderFooter}
       renderBubble={renderBubble}
       renderActions={renderActions}
-      keyboardShouldPersistTaps="never"
-      forceGetKeyboardHeight={true}
       renderChatFooter={renderChatFooter}
     />
   );
