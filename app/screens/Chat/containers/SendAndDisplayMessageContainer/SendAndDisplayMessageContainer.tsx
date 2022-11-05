@@ -1,20 +1,17 @@
 import { useReduxToUpdateMessageStatus } from 'hooks/useReduxToUpdateMessageStatus';
 import { map } from 'lodash';
 import { useCallback, useContext, useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
-import { GiftedChat, IMessage, Bubble, BubbleProps } from 'react-native-gifted-chat';
+import { IMessage } from 'react-native-gifted-chat';
 import { useSelector } from 'react-redux';
 
 import { SOCKET_EVENTS } from '@Constants/index';
-import { MessageStatus, SocketErrorPayload } from '@Models/index';
+import { MessageStatus, SocketErrorPayload, NewMessageContent } from '@Models/index';
 import { WebSocketContext } from '@Providers/index';
 import { getCurrentGroupIdSelector } from '@Stores/groups';
 import { getMessagesUnSeenOrReceivedByGroupIdSelector } from '@Stores/messages';
-import { userDataSelector } from '@Stores/user';
-import { generateName } from '@Utils/index';
+import { userIdSelector } from '@Stores/user';
 
-import { TypingContainer } from '../TypingContainer';
-import { styles } from './SendAndDisplayMessageContainerStyles';
+import { DisplayMessageContainer } from '../DisplayMessageContainer';
 
 interface SendAndDisplayMessageContainerProps {
   messages?: IMessage[];
@@ -25,7 +22,7 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
   const socket = useContext(WebSocketContext);
 
   const currentGroupId = useSelector(getCurrentGroupIdSelector);
-  const { _id, firstName, lastName, avatarUrl } = useSelector(userDataSelector);
+  const userId = useSelector(userIdSelector);
   const groupMessagesUnSeenSelector = useSelector(getMessagesUnSeenOrReceivedByGroupIdSelector);
   const groupMessagesUnSeen = groupMessagesUnSeenSelector({
     groupId: currentGroupId || '',
@@ -36,54 +33,27 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
 
   const [handleUpdateMessageStatus] = useReduxToUpdateMessageStatus();
 
-  const appendMessageToGiftedChat = useCallback(
-    (newMess: IMessage[]) => GiftedChat.append(messages, newMess),
-    [messages],
-  );
-
   const handleSendMessage = useCallback(
-    (newMessages: IMessage[] = []) => {
+    (newMessages: NewMessageContent[] = []) => {
       newMessages.forEach((newMessage) => {
         socket.emit(SOCKET_EVENTS.SEND_MESSAGE, {
           roomId: currentGroupId,
-          message: { text: newMessage.text, user: _id },
+          message: { text: newMessage.text, user: userId, image: newMessage.image },
         });
       });
-
-      appendMessageToGiftedChat(newMessages);
     },
-    [_id, appendMessageToGiftedChat, currentGroupId, socket],
+    [userId, currentGroupId, socket],
   );
 
-  const handleTextInputChanged = (text: string) => {
-    socket.emit(text ? SOCKET_EVENTS.TYPING : SOCKET_EVENTS.UN_TYPING, {
-      groupId: currentGroupId,
-      user: _id,
-    });
-  };
-
-  const renderFooter = () => {
-    return <TypingContainer groupId={currentGroupId || ''} isTyping={isTyping} />;
-  };
-
-  const renderTicks = (message: IMessage) => {
-    if (message.user._id !== _id) {
-      return null;
-    }
-
-    return (
-      <View style={styles.ticksView}>
-        {!!message.sent && <Text style={styles.ticks}>✓</Text>}
-        {!!message.received && <Text style={styles.ticks}>✓</Text>}
-        {!!message.pending && <Text style={styles.ticks}>🕓</Text>}
-        {!!message.seen && <Text style={styles.ticks}>✓</Text>}
-      </View>
-    );
-  };
-
-  const renderBubble = (message: BubbleProps<IMessage>) => {
-    return <Bubble {...message} renderTicks={renderTicks} />;
-  };
+  const handleTextInputChanged = useCallback(
+    (text: string) => {
+      socket.emit(text ? SOCKET_EVENTS.TYPING : SOCKET_EVENTS.UN_TYPING, {
+        groupId: currentGroupId,
+        user: userId,
+      });
+    },
+    [currentGroupId, socket, userId],
+  );
 
   useEffect(() => {
     socket.on(SOCKET_EVENTS.SOCKET_ERROR, (payload: SocketErrorPayload) => {
@@ -115,17 +85,11 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
   }, [currentGroupId, groupMessagesUnSeen, handleUpdateMessageStatus, socket]);
 
   return (
-    <GiftedChat
+    <DisplayMessageContainer
       messages={messages}
-      onSend={(newMess) => handleSendMessage(newMess)}
-      user={{
-        _id,
-        name: generateName({ firstName, lastName }),
-        avatar: avatarUrl,
-      }}
-      renderFooter={renderFooter}
-      onInputTextChanged={handleTextInputChanged}
-      renderBubble={renderBubble}
+      isTyping={isTyping}
+      onTextInputChanged={handleTextInputChanged}
+      onSendMessages={handleSendMessage}
     />
   );
 };
