@@ -54,6 +54,14 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
     [onSendMessages],
   );
 
+  const generateUser = () => {
+    return {
+      _id,
+      name: generateName({ firstName, lastName }),
+      avatar: avatarUrl,
+    };
+  };
+
   const renderFooter = () => {
     return <TypingContainer groupId={currentGroupId || ''} isTyping={isTyping} />;
   };
@@ -74,13 +82,9 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
     <GiftedChat
       messages={messages}
       text={customText}
+      user={generateUser()}
       onInputTextChanged={handleTextInputChanged}
       onSend={handleSendMessage}
-      user={{
-        _id,
-        name: generateName({ firstName, lastName }),
-        avatar: avatarUrl,
-      }}
       keyboardShouldPersistTaps="never"
       forceGetKeyboardHeight={true}
       renderFooter={renderFooter}
