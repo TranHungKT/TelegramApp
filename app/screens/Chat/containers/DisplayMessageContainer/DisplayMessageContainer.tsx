@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { View } from 'react-native';
 import { GiftedChat, IMessage, BubbleProps } from 'react-native-gifted-chat';
 import { useSelector } from 'react-redux';
 
@@ -10,6 +11,7 @@ import { generateName } from '@Utils/index';
 import { RenderActionsMessage } from '../../components/RenderActionsMessage';
 import { RenderBubbleMessage } from '../../components/RenderBubbleMessage';
 import { TypingContainer } from '../TypingContainer';
+import { styles } from './DisplayMessageContainerStyles';
 
 interface DisplayMessageContainerProps {
   messages?: IMessage[];
@@ -59,6 +61,10 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
     return <RenderActionsMessage onChooseImage={handleChooseImage} />;
   };
 
+  const renderChatFooter = () => {
+    return <View style={styles.chatFooter} />;
+  };
+
   return (
     <GiftedChat
       messages={messages}
@@ -80,6 +86,9 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
       renderFooter={renderFooter}
       renderBubble={renderBubble}
       renderActions={renderActions}
+      keyboardShouldPersistTaps="never"
+      forceGetKeyboardHeight={true}
+      renderChatFooter={renderChatFooter}
     />
   );
 };
