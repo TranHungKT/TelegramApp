@@ -15,6 +15,7 @@ export const styles = StyleSheet.create<Styles>({
     justifyContent: 'space-between',
     alignContent: 'center',
     alignItems: 'center',
+    height: 50,
   },
 
   text: {

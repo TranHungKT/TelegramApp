@@ -27,7 +27,7 @@ export const Group = (props: GroupProps) => {
         <Image
           source={getImageSource(groupAvatar, isMoreThan2Member())}
           style={styles.avatar}
-          resizeMode="contain"
+          resizeMode="center"
         />
         <View style={styles.groupView}>
           <Text numberOfLines={1} style={styles.groupName}>
