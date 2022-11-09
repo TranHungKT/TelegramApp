@@ -19,7 +19,7 @@ import { useQuery } from '@tanstack/react-query';
 import { styles } from './LoginStyles';
 
 // TODO: MOVE TO ENV
-const AUTH_URL = 'http://localhost:3000/auth/facebook';
+const AUTH_URL = 'http://localhost:3001/auth/facebook';
 const URL_TYPE = 'url';
 
 const ALERT_OPEN_URL = 'Can not open this url';
