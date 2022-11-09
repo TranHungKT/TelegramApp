@@ -78,10 +78,12 @@ export const groupsSlice = createSlice({
     updateLastMessageStatus(state, action: PayloadAction<UpdateMessageStatusPayload>) {
       const { groupId, messageIds, status } = action.payload;
 
-      const lastMessageId = state.groups[groupId].lastMessage?._id;
+      if (state.groups[groupId] !== undefined) {
+        const lastMessageId = state.groups[groupId].lastMessage?._id.toString();
 
-      if (lastMessageId && messageIds.includes(lastMessageId?.toString())) {
-        (state.groups[groupId].lastMessage as any)[status] = true;
+        if (lastMessageId && messageIds.includes(lastMessageId)) {
+          (state.groups[groupId].lastMessage as any)[status] = true;
+        }
       }
     },
   },

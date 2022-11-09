@@ -17,17 +17,9 @@ export const RenderBubbleMessage = (props: RenderBubbleMessageProps) => {
 
   const renderBubble = () => {
     if (bubbleMessages.currentMessage && bubbleMessages.currentMessage.image) {
-      return (
-        <RenderMessageImage
-          renderBubbleMessages={{
-            ...bubbleMessages,
-            renderTicks: () => <></>,
-            renderTime: () => <></>,
-          }}
-        />
-      );
+      return <RenderMessageImage renderBubbleMessages={bubbleMessages} />;
     }
-    return <Bubble {...bubbleMessages} renderTicks={() => <></>} renderTime={() => <></>} />;
+    return <Bubble {...bubbleMessages} renderTicks={() => <></>} />;
   };
 
   return (

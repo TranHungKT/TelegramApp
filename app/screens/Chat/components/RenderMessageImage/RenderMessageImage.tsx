@@ -19,7 +19,7 @@ export const RenderMessageImage = (props: RenderMessageImageProps) => {
       {...renderBubbleMessages}
       isCustomViewBottom={true}
       renderMessageImage={renderMessageImage}
-      renderTime={() => <></>}
+      renderTicks={() => <></>}
       wrapperStyle={{
         left: styles.wrapperImageStyle,
         right: styles.wrapperImageStyle,
