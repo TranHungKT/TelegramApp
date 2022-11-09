@@ -7,6 +7,7 @@ interface Styles {
   numberOfUnReadMessageEqualZeroView: ViewStyle;
   numberOfUnReadMessageText: TextStyle;
   avatar: ImageStyle;
+  tickView: ViewStyle;
   tick: TextStyle;
 }
 
@@ -33,6 +34,10 @@ export const styles = StyleSheet.create<Styles>({
     width: 15,
     height: 15,
     borderRadius: 8,
+  },
+
+  tickView: {
+    flexDirection: 'row',
   },
 
   tick: {

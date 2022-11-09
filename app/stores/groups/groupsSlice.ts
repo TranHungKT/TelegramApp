@@ -1,4 +1,10 @@
-import { GetListGroupResponse, Group, LastMessage, TypingEventPayload } from '@Models/index';
+import {
+  GetListGroupResponse,
+  Group,
+  LastMessage,
+  TypingEventPayload,
+  UpdateMessageStatusPayload,
+} from '@Models/index';
 import { normalizeGroup } from '@Utils/groupUtils';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
@@ -66,6 +72,16 @@ export const groupsSlice = createSlice({
         );
 
         state.groups[groupId].usersTyping.splice(index, 1);
+      }
+    },
+
+    updateLastMessageStatus(state, action: PayloadAction<UpdateMessageStatusPayload>) {
+      const { groupId, messageIds, status } = action.payload;
+
+      const lastMessageId = state.groups[groupId].lastMessage?._id;
+
+      if (lastMessageId && messageIds.includes(lastMessageId?.toString())) {
+        (state.groups[groupId].lastMessage as any)[status] = true;
       }
     },
   },

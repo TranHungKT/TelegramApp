@@ -27,7 +27,7 @@ export const UnReadMessageContainer = (props: UnReadMessageContainerProps) => {
     }
 
     return (
-      <View>
+      <View style={styles.tickView}>
         {!!lastMessage?.sent && <Text style={styles.tick}>✓</Text>}
         {!!lastMessage?.received && <Text style={styles.tick}>✓</Text>}
       </View>
