@@ -1,4 +1,4 @@
-import { StyleSheet, TextStyle, ViewStyle } from 'react-native';
+import { ImageStyle, StyleSheet, TextStyle, ViewStyle } from 'react-native';
 
 import { palette, sizes } from '@Themes/index';
 
@@ -6,6 +6,8 @@ interface Styles {
   numberOfUnReadMessageView: ViewStyle;
   numberOfUnReadMessageEqualZeroView: ViewStyle;
   numberOfUnReadMessageText: TextStyle;
+  avatar: ImageStyle;
+  tick: TextStyle;
 }
 
 export const styles = StyleSheet.create<Styles>({
@@ -25,5 +27,16 @@ export const styles = StyleSheet.create<Styles>({
   numberOfUnReadMessageText: {
     color: palette.white,
     fontSize: sizes.medium,
+  },
+
+  avatar: {
+    width: 15,
+    height: 15,
+    borderRadius: 8,
+  },
+
+  tick: {
+    color: palette.black,
+    fontSize: 14,
   },
 });

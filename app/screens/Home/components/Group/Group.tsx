@@ -47,6 +47,8 @@ export const Group = (props: GroupProps) => {
             <UnReadMessageContainer
               numberOfUnReadMessage={numberOfUnReadMessage}
               senderOfLastMessage={group.lastMessage?.user}
+              lastMessage={group.lastMessage}
+              groupId={group._id}
             />
           )}
         </View>

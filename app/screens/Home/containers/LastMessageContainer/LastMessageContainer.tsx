@@ -32,13 +32,20 @@ export const LastMessageContainer = (props: LastMessageContainerProps) => {
     return `${generateName({ firstName: user?.firstName, lastName: user?.lastName })}: `;
   };
 
+  const renderText = () => {
+    if (message?.image) {
+      return 'Sent image';
+    }
+    return message?.text;
+  };
+
   return (
     <Text
       numberOfLines={1}
       style={[styles.chat, hasUnReadMessage && styles.chatWhenHaveUnReadMessage]}
     >
       {getNameOfUser()}
-      {message?.text}
+      {renderText()}
     </Text>
   );
 };

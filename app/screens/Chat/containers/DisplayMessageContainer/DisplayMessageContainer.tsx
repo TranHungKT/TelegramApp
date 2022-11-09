@@ -67,7 +67,9 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
   };
 
   const renderBubble = (message: BubbleProps<IMessage>) => {
-    return <RenderBubbleMessage bubbleMessages={message} userId={_id} />;
+    return (
+      <RenderBubbleMessage bubbleMessages={message} userId={_id} groupId={currentGroupId || ''} />
+    );
   };
 
   const renderActions = () => {

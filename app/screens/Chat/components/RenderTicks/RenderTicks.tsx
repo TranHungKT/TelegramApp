@@ -11,6 +11,10 @@ interface RenderTicksProps {
 export const RenderTicks = (props: RenderTicksProps) => {
   const { bubbleMessages, userId } = props;
 
+  if (bubbleMessages?.currentMessage?.seen) {
+    return null;
+  }
+
   if (
     bubbleMessages?.nextMessage?.seen ||
     bubbleMessages?.nextMessage?.sent ||
@@ -28,7 +32,6 @@ export const RenderTicks = (props: RenderTicksProps) => {
       {!!bubbleMessages?.currentMessage.sent && <Text style={styles.ticks}>✓</Text>}
       {!!bubbleMessages?.currentMessage.received && <Text style={styles.ticks}>✓</Text>}
       {!!bubbleMessages?.currentMessage.pending && <Text style={styles.ticks}>🕓</Text>}
-      {!!bubbleMessages?.currentMessage.seen && <Text style={styles.ticks}>✓</Text>}
     </View>
   );
 };
