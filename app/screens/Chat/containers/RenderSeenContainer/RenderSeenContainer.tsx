@@ -1,4 +1,4 @@
-import { Image } from 'react-native';
+import { View, Image } from 'react-native';
 import { BubbleProps, IMessage } from 'react-native-gifted-chat';
 import { useSelector } from 'react-redux';
 
@@ -28,8 +28,10 @@ export const RenderSeenContainer = (props: RenderSeenContainerProps) => {
   }
 
   return (
-    !!bubbleMessages?.currentMessage.seen && (
-      <Image source={{ uri: avatarUrl }} style={styles.avatar} />
-    )
+    <View>
+      {!!bubbleMessages?.currentMessage.seen && (
+        <Image source={{ uri: avatarUrl }} style={styles.avatar} />
+      )}
+    </View>
   );
 };
