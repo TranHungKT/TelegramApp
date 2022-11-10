@@ -35,9 +35,9 @@ export const styles = StyleSheet.create<Styles>({
   avatar: {
     marginRight: spacing.mediumPlus,
     backgroundColor: palette.white,
-    width: 82,
-    height: 82,
-    borderRadius: 23,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
   },
 
   rightCol: {

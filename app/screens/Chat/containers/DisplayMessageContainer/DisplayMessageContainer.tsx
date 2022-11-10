@@ -93,7 +93,6 @@ export const DisplayMessageContainer = (props: DisplayMessageContainerProps) => 
       renderBubble={renderBubble}
       renderActions={renderActions}
       renderChatFooter={renderChatFooter}
-      renderTime={() => <></>}
     />
   );
 };

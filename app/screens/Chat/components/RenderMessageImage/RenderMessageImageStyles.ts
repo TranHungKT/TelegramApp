@@ -12,6 +12,7 @@ export const styles = StyleSheet.create<Styles>({
     minWidth: 100,
     minHeight: 100,
     borderRadius: 20,
+    marginBottom: 5,
   },
 
   wrapperImageStyle: {
