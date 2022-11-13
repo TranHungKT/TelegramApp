@@ -1,9 +1,9 @@
 import moment from 'moment';
-import { View, TouchableOpacity, Image } from 'react-native';
+import { View, TouchableOpacity, ImageBackground } from 'react-native';
 import { Text } from 'react-native-paper';
 import { getImageSource } from 'utils';
 
-import { Group as IGroup } from '@Models/index';
+import { Group as IGroup, UserStatus } from '@Models/index';
 
 import { LastMessageContainer } from '../../containers/LastMessageContainer';
 import { UnReadMessageContainer } from '../../containers/UnReadMessageContainer';
@@ -13,10 +13,11 @@ interface GroupProps {
   group: IGroup;
   onClickGroup: () => void;
   numberOfUnReadMessage?: number;
+  userStatus: UserStatus;
 }
 
 export const Group = (props: GroupProps) => {
-  const { group, onClickGroup, numberOfUnReadMessage } = props;
+  const { group, onClickGroup, numberOfUnReadMessage, userStatus } = props;
   const { _id, name, lastUpdatedAt, groupAvatar } = group;
 
   const isMoreThan2Member = () => group.members.length > 2;
@@ -24,11 +25,14 @@ export const Group = (props: GroupProps) => {
   return (
     <TouchableOpacity key={_id} style={styles.container} onPress={onClickGroup}>
       <>
-        <Image
+        <ImageBackground
           source={getImageSource(groupAvatar, isMoreThan2Member())}
-          style={styles.avatar}
-          resizeMode="center"
-        />
+          imageStyle={styles.avatarImage}
+          resizeMode="cover"
+          style={styles.avatarView}
+        >
+          {<Text style={styles.status}>{userStatus === UserStatus.ONLINE ? '\u2B24' : ''}</Text>}
+        </ImageBackground>
         <View style={styles.groupView}>
           <Text numberOfLines={1} style={styles.groupName}>
             {name}

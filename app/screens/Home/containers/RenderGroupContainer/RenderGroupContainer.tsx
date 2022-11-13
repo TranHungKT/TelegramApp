@@ -5,7 +5,7 @@ import { AllGroupChatNavigationParamList } from '@Navigators/index';
 import { groupsActions } from '@Stores/groups';
 import { useAppDispatch } from '@Stores/index';
 import { getMessagesUnSeenOrReceivedByGroupIdSelector } from '@Stores/messages';
-import { userIdSelector } from '@Stores/user';
+import { getUserStatusByIdSelector, userIdSelector } from '@Stores/user';
 import { IMAGES } from '@Themes/index';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -30,6 +30,10 @@ export const RenderGroupContainer = (props: RenderGroupContainerProps) => {
     groupId: group._id,
     status: MessageStatus.SEEN,
   });
+  const otherMember = members.filter((member) => member._id !== userId);
+
+  const userStatusSelector = useSelector(getUserStatusByIdSelector);
+  const userStatus = userStatusSelector({ userId: otherMember[0]._id });
 
   const generateGroupName = () => {
     let name = '';
@@ -59,6 +63,7 @@ export const RenderGroupContainer = (props: RenderGroupContainerProps) => {
       group={{ ...group, name: generateGroupName(), groupAvatar: getAvatarUrl() }}
       onClickGroup={handleClickGroup}
       numberOfUnReadMessage={groupMessagesUnSeen?.length}
+      userStatus={userStatus}
     />
   );
 };
