@@ -1,14 +1,17 @@
+import { useSocket } from 'hooks/useSocket';
 import React from 'react';
 import { useColorScheme } from 'react-native';
+import { useSelector } from 'react-redux';
+import { userTokenSelector } from 'stores/user';
 
 import { MainTabBar } from '@Components/index';
 import { linking } from '@Configs/index';
-import { useSocket } from '@Hooks/useSocket';
 import { LoginScreen, HomeScreen, ChatScreen, SplashScreen } from '@Screens/index';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import { WebSocketContext, useInitSocket } from '../providers/WebSocketProvider';
 import { navigationRef, useBackButtonHandler } from './NavigationUtilities';
 
 export type AllGroupChatNavigationParamList = {
@@ -19,6 +22,19 @@ export type AllGroupChatNavigationParamList = {
 const AllGroupChatStack = createNativeStackNavigator<AllGroupChatNavigationParamList>();
 
 const AllGroupChat = () => {
+  const token = useSelector(userTokenSelector);
+
+  const initSocket = useInitSocket(token);
+
+  return (
+    <WebSocketContext.Provider value={initSocket()}>
+      <AllGroupChatContainer />
+    </WebSocketContext.Provider>
+  );
+};
+
+const AllGroupChatContainer = () => {
+  useSocket();
   return (
     <AllGroupChatStack.Navigator screenOptions={{ headerShown: false }}>
       <AllGroupChatStack.Screen name="AllMessageScreen" component={MainTobTab} />
@@ -102,7 +118,6 @@ interface NavigationProps extends Partial<React.ComponentProps<typeof Navigation
 export const AppNavigator = (props: NavigationProps) => {
   const colorScheme = useColorScheme();
   useBackButtonHandler(canExit);
-  useSocket();
 
   return (
     <NavigationContainer

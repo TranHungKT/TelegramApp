@@ -21,11 +21,9 @@ export const useSocket = () => {
   const [handleUpdateMessageStatus] = useReduxToUpdateMessageStatus();
 
   useEffect(() => {
-    socket
-      .off(SOCKET_EVENTS.GET_MESSAGE)
-      .on(SOCKET_EVENTS.GET_MESSAGE, (payload: NewMessageFromSocket) => {
-        handleAddNewMessage(payload);
-      });
+    socket.on(SOCKET_EVENTS.GET_MESSAGE, (payload: NewMessageFromSocket) => {
+      handleAddNewMessage(payload);
+    });
 
     socket.on(SOCKET_EVENTS.TYPING, (payload: TypingEventPayload) => {
       handleTypingEvent(payload);
@@ -42,6 +40,10 @@ export const useSocket = () => {
     socket.on(SOCKET_EVENTS.SEEN_MESSAGE, (payload: UpdateMessageStatusPayload) => {
       handleUpdateMessageStatus({ ...payload, status: MessageStatus.SEEN });
     });
+
+    return () => {
+      socket.off(SOCKET_EVENTS.GET_MESSAGE);
+    };
   }, [
     socket,
     handleAddNewMessage,
