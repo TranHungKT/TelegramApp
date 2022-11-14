@@ -1,10 +1,10 @@
-import { useReduxToUpdateMessageStatus } from 'hooks/useReduxToUpdateMessageStatus';
 import { map } from 'lodash';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { IMessage } from 'react-native-gifted-chat';
 import { useSelector } from 'react-redux';
 
 import { SOCKET_EVENTS } from '@Constants/index';
+import { useReduxToUpdateMessageStatus } from '@Hooks/useReduxToUpdateMessageStatus';
 import { MessageStatus, SocketErrorPayload, NewMessageContent } from '@Models/index';
 import { WebSocketContext } from '@Providers/index';
 import { getCurrentGroupIdSelector } from '@Stores/groups';

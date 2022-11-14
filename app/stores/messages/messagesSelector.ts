@@ -1,6 +1,5 @@
-import { MessageStatus } from 'models';
-import { userIdSelector } from 'stores/user';
-
+import { MessageStatus } from '@Models/index';
+import { userIdSelector } from '@Stores/user';
 import { createSelector } from '@reduxjs/toolkit';
 
 import { getCurrentGroupIdSelector } from '../groups/groupsSelector';

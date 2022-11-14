@@ -1,6 +1,5 @@
-import { IMAGES } from 'themes';
-
 import { EmptyOrErrorContent } from '@Components/index';
+import { IMAGES } from '@Themes/index';
 
 export const EmptyListOfGroups = () => {
   return (

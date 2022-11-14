@@ -1,6 +1,5 @@
-import { IMAGES } from 'themes';
-
 import { EmptyOrErrorContent, SnackBarError } from '@Components/index';
+import { IMAGES } from '@Themes/index';
 
 export const ErrorGetList = () => {
   return (

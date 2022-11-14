@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { BASE_URL } from 'configs';
 import { Asset } from 'react-native-image-picker';
+
+import { BASE_URL } from '@Configs/index';
 
 export const uploadImages = async ({
   images,

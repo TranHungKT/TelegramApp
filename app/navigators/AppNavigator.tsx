@@ -1,4 +1,3 @@
-import { useSocket } from 'hooks/useSocket';
 import React from 'react';
 import { useColorScheme } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -6,6 +5,7 @@ import { userTokenSelector } from 'stores/user';
 
 import { MainTabBar } from '@Components/index';
 import { linking } from '@Configs/index';
+import { useSocket } from '@Hooks/useSocket';
 import { LoginScreen, HomeScreen, ChatScreen, SplashScreen } from '@Screens/index';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
