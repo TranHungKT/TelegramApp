@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useColorScheme } from 'react-native';
 import { useSelector } from 'react-redux';
 import { userTokenSelector } from 'stores/user';
@@ -26,8 +26,10 @@ const AllGroupChat = () => {
 
   const initSocket = useInitSocket(token);
 
+  const socket = useMemo(() => initSocket(), [initSocket]);
+
   return (
-    <WebSocketContext.Provider value={initSocket()}>
+    <WebSocketContext.Provider value={socket}>
       <AllGroupChatContainer />
     </WebSocketContext.Provider>
   );
