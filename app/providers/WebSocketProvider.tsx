@@ -13,6 +13,7 @@ export const useInitSocket = (token: string) => {
         auth: {
           token,
         },
+        reconnection: true,
       }).connect(),
     [token],
   );

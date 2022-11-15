@@ -46,6 +46,7 @@ export const HomeScreen = () => {
     },
     {
       enabled: !!listGroups?.list.length,
+      refetchInterval: 30000,
     },
   );
 
