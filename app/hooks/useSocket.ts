@@ -41,6 +41,10 @@ export const useSocket = () => {
       handleUpdateMessageStatus({ ...payload, status: MessageStatus.SEEN });
     });
 
+    socket.on('disconnect', () => {
+      console.log('heheheh');
+    });
+
     return () => {
       socket.off(SOCKET_EVENTS.GET_MESSAGE);
     };

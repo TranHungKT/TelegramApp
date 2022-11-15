@@ -11,7 +11,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { WebSocketContext, useInitSocket } from '../providers/WebSocketProvider';
+import { WebSocketContext, initSocket } from '../providers/WebSocketProvider';
 import { navigationRef, useBackButtonHandler } from './NavigationUtilities';
 
 export type AllGroupChatNavigationParamList = {
@@ -24,9 +24,9 @@ const AllGroupChatStack = createNativeStackNavigator<AllGroupChatNavigationParam
 const AllGroupChat = () => {
   const token = useSelector(userTokenSelector);
 
-  const initSocket = useInitSocket(token);
+  const socket = useMemo(() => initSocket(token), [token]);
 
-  const socket = useMemo(() => initSocket(), [initSocket]);
+  console.log(socket);
 
   return (
     <WebSocketContext.Provider value={socket}>
