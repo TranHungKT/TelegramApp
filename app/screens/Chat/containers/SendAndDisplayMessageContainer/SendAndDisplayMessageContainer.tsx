@@ -60,10 +60,6 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
           user: userId,
         });
       }
-      socket.emit(!currentText && !!text ? SOCKET_EVENTS.TYPING : SOCKET_EVENTS.UN_TYPING, {
-        groupId: currentGroupId,
-        user: userId,
-      });
       setCurrentText(text);
     },
     [currentGroupId, currentText, socket, userId],
