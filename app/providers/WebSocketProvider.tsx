@@ -10,6 +10,7 @@ export const initSocket = (token: string) =>
     auth: {
       token,
     },
+    reconnection: false,
   }).connect();
 
 export const WebSocketContext = createContext<Socket>(null as any);
