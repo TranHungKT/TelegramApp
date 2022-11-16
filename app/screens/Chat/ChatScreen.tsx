@@ -1,6 +1,7 @@
 import { SafeAreaView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { LoadingComponent } from '@Components/index';
 import { currentGroupSelector, groupsActions } from '@Stores/groups';
 import { getUserStatusByIdSelector, userIdSelector } from '@Stores/user';
 
@@ -23,7 +24,7 @@ export const ChatScreen = () => {
   const userStatus = userStatusSelector({ userId: otherMember ? otherMember[0]._id : '' });
 
   if (!currentGroup) {
-    return <></>;
+    return <LoadingComponent />;
   }
 
   return (

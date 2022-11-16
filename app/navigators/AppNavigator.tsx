@@ -4,7 +4,7 @@ import { useColorScheme } from 'react-native';
 import { useSelector } from 'react-redux';
 import { Socket } from 'socket.io-client';
 
-import { MainTabBar } from '@Components/index';
+import { MainTabBar, LoadingComponent } from '@Components/index';
 import { linking } from '@Configs/index';
 import { SOCKET_EVENTS } from '@Constants/index';
 import { useSocket } from '@Hooks/useSocket';
@@ -44,7 +44,7 @@ const AllGroupChat = () => {
   });
 
   if (isEmpty(socket)) {
-    return <></>;
+    return <LoadingComponent />;
   }
 
   return (

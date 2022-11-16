@@ -77,7 +77,7 @@ export const HomeScreen = () => {
       dispatch(groupsActions.setGroups({ data: listGroups, userId }));
       listGroups.list.forEach((group) => socket.emit(SOCKET_EVENTS.JOIN_ROOM, group._id));
     }
-  }, [listGroups, dispatch, socket.id, socket, userId]);
+  }, [listGroups, dispatch, socket, userId]);
 
   useEffect(() => {
     if (usersStatus) {
