@@ -1,6 +1,8 @@
-import React, { useMemo } from 'react';
+import { isEmpty } from 'lodash';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useColorScheme } from 'react-native';
 import { useSelector } from 'react-redux';
+import { Socket } from 'socket.io-client';
 import { userTokenSelector } from 'stores/user';
 
 import { MainTabBar } from '@Components/index';
@@ -23,10 +25,35 @@ const AllGroupChatStack = createNativeStackNavigator<AllGroupChatNavigationParam
 
 const AllGroupChat = () => {
   const token = useSelector(userTokenSelector);
+  const [socketId, setSocketId] = useState<string | undefined>(undefined);
 
-  const socket = useMemo(() => initSocket(token), [token]);
+  const [currentSocket, setCurrentSocket] = useState<Socket | undefined>(undefined);
 
-  console.log(socket);
+  const socket = useMemo(() => {
+    if (socketId === undefined) {
+      console.log('Cool', socketId);
+      return initSocket(token);
+    }
+    return currentSocket;
+  }, [socketId, currentSocket, token]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('connect', () => {
+        setSocketId('Cac');
+        setCurrentSocket(socket);
+      });
+
+      socket.on('disconnect', () => {
+        setSocketId(undefined);
+        setCurrentSocket(undefined);
+      });
+    }
+  });
+
+  if (isEmpty(socket)) {
+    return <></>;
+  }
 
   return (
     <WebSocketContext.Provider value={socket}>
