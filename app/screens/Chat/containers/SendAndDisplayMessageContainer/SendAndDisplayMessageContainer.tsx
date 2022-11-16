@@ -30,6 +30,7 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
   });
 
   const [isTyping, setIsTyping] = useState(false);
+  const [currentText, setCurrentText] = useState('');
 
   const [handleUpdateMessageStatus] = useReduxToUpdateMessageStatus();
 
@@ -47,12 +48,25 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
 
   const handleTextInputChanged = useCallback(
     (text: string) => {
-      socket.emit(text ? SOCKET_EVENTS.TYPING : SOCKET_EVENTS.UN_TYPING, {
+      if (!currentText && !!text) {
+        socket.emit(SOCKET_EVENTS.TYPING, {
+          groupId: currentGroupId,
+          user: userId,
+        });
+      }
+      if (currentText && !text) {
+        socket.emit(SOCKET_EVENTS.UN_TYPING, {
+          groupId: currentGroupId,
+          user: userId,
+        });
+      }
+      socket.emit(!currentText && !!text ? SOCKET_EVENTS.TYPING : SOCKET_EVENTS.UN_TYPING, {
         groupId: currentGroupId,
         user: userId,
       });
+      setCurrentText(text);
     },
-    [currentGroupId, socket, userId],
+    [currentGroupId, currentText, socket, userId],
   );
 
   useEffect(() => {
