@@ -1,14 +1,15 @@
 import { isEmpty } from 'lodash';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useColorScheme } from 'react-native';
 import { useSelector } from 'react-redux';
 import { Socket } from 'socket.io-client';
-import { userTokenSelector } from 'stores/user';
 
 import { MainTabBar } from '@Components/index';
 import { linking } from '@Configs/index';
+import { SOCKET_EVENTS } from '@Constants/index';
 import { useSocket } from '@Hooks/useSocket';
 import { LoginScreen, HomeScreen, ChatScreen, SplashScreen } from '@Screens/index';
+import { userTokenSelector } from '@Stores/user';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -28,20 +29,15 @@ const AllGroupChat = () => {
 
   const [currentSocket, setCurrentSocket] = useState<Socket | undefined>(undefined);
 
-  const socket = useMemo(() => {
-    if (currentSocket === undefined) {
-      return initSocket(token);
-    }
-    return currentSocket;
-  }, [currentSocket, token]);
+  const socket = useMemo(() => currentSocket ?? initSocket(token), [currentSocket, token]);
 
   useEffect(() => {
     if (socket) {
-      socket.on('connect', () => {
+      socket.on(SOCKET_EVENTS.CONNECT, () => {
         setCurrentSocket(socket);
       });
 
-      socket.on('disconnect', () => {
+      socket.on(SOCKET_EVENTS.DISCONNECT, () => {
         setCurrentSocket(undefined);
       });
     }

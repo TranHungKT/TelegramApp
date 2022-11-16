@@ -8,6 +8,8 @@ export const SOCKET_EVENTS = {
   SOCKET_ERROR: 'socket-error',
   TYPING: 'typing',
   UN_TYPING: 'un-typing',
+  CONNECT: 'connect',
+  DISCONNECT: 'disconnect',
 };
 
 export const SOCKET_ERROR_TYPE = {
