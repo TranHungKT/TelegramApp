@@ -25,27 +25,23 @@ const AllGroupChatStack = createNativeStackNavigator<AllGroupChatNavigationParam
 
 const AllGroupChat = () => {
   const token = useSelector(userTokenSelector);
-  const [socketId, setSocketId] = useState<string | undefined>(undefined);
 
   const [currentSocket, setCurrentSocket] = useState<Socket | undefined>(undefined);
 
   const socket = useMemo(() => {
-    if (socketId === undefined) {
-      console.log('Cool', socketId);
+    if (currentSocket === undefined) {
       return initSocket(token);
     }
     return currentSocket;
-  }, [socketId, currentSocket, token]);
+  }, [currentSocket, token]);
 
   useEffect(() => {
     if (socket) {
       socket.on('connect', () => {
-        setSocketId('Cac');
         setCurrentSocket(socket);
       });
 
       socket.on('disconnect', () => {
-        setSocketId(undefined);
         setCurrentSocket(undefined);
       });
     }
