@@ -1,4 +1,4 @@
-import { User, UserStatus } from '@Models/index';
+import { User } from '@Models/index';
 
 export const DEFAULT_USER_DATA: User = {
   firstName: '',
@@ -7,5 +7,4 @@ export const DEFAULT_USER_DATA: User = {
   accessToken: '',
   _id: '',
   avatarUrl: '',
-  status: UserStatus.OFFLINE,
 };

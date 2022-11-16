@@ -1,9 +1,9 @@
 import { View, Image } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useSelector } from 'react-redux';
-import { getAvatarOfSeenUser } from 'stores/groups';
 
 import { LastMessage } from '@Models/index';
+import { getAvatarOfSeenUser } from '@Stores/groups';
 import { userIdSelector } from '@Stores/user';
 
 import { styles } from './UnReadMessageContainerStyles';

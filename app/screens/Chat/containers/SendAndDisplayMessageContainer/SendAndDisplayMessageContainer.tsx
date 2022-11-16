@@ -1,10 +1,10 @@
-import { useReduxToUpdateMessageStatus } from 'hooks/useReduxToUpdateMessageStatus';
 import { map } from 'lodash';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { IMessage } from 'react-native-gifted-chat';
 import { useSelector } from 'react-redux';
 
 import { SOCKET_EVENTS } from '@Constants/index';
+import { useReduxToUpdateMessageStatus } from '@Hooks/useReduxToUpdateMessageStatus';
 import { MessageStatus, SocketErrorPayload, NewMessageContent } from '@Models/index';
 import { WebSocketContext } from '@Providers/index';
 import { getCurrentGroupIdSelector } from '@Stores/groups';
@@ -30,6 +30,7 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
   });
 
   const [isTyping, setIsTyping] = useState(false);
+  const [currentText, setCurrentText] = useState('');
 
   const [handleUpdateMessageStatus] = useReduxToUpdateMessageStatus();
 
@@ -47,12 +48,21 @@ export const SendAndDisplayMessageContainer = (props: SendAndDisplayMessageConta
 
   const handleTextInputChanged = useCallback(
     (text: string) => {
-      socket.emit(text ? SOCKET_EVENTS.TYPING : SOCKET_EVENTS.UN_TYPING, {
-        groupId: currentGroupId,
-        user: userId,
-      });
+      if (!currentText && !!text) {
+        socket.emit(SOCKET_EVENTS.TYPING, {
+          groupId: currentGroupId,
+          user: userId,
+        });
+      }
+      if (currentText && !text) {
+        socket.emit(SOCKET_EVENTS.UN_TYPING, {
+          groupId: currentGroupId,
+          user: userId,
+        });
+      }
+      setCurrentText(text);
     },
-    [currentGroupId, socket, userId],
+    [currentGroupId, currentText, socket, userId],
   );
 
   useEffect(() => {

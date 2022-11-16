@@ -1,14 +1,20 @@
-import React from 'react';
+import { isEmpty } from 'lodash';
+import { useEffect, useMemo, useState } from 'react';
 import { useColorScheme } from 'react-native';
+import { useSelector } from 'react-redux';
+import { Socket } from 'socket.io-client';
 
-import { MainTabBar } from '@Components/index';
+import { MainTabBar, LoadingComponent } from '@Components/index';
 import { linking } from '@Configs/index';
+import { SOCKET_EVENTS } from '@Constants/index';
 import { useSocket } from '@Hooks/useSocket';
 import { LoginScreen, HomeScreen, ChatScreen, SplashScreen } from '@Screens/index';
+import { userTokenSelector } from '@Stores/user';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import { WebSocketContext, initSocket } from '../providers/WebSocketProvider';
 import { navigationRef, useBackButtonHandler } from './NavigationUtilities';
 
 export type AllGroupChatNavigationParamList = {
@@ -19,6 +25,37 @@ export type AllGroupChatNavigationParamList = {
 const AllGroupChatStack = createNativeStackNavigator<AllGroupChatNavigationParamList>();
 
 const AllGroupChat = () => {
+  const token = useSelector(userTokenSelector);
+
+  const [currentSocket, setCurrentSocket] = useState<Socket | undefined>(undefined);
+
+  const socket = useMemo(() => currentSocket ?? initSocket(token), [currentSocket, token]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on(SOCKET_EVENTS.CONNECT, () => {
+        setCurrentSocket(socket);
+      });
+
+      socket.on(SOCKET_EVENTS.DISCONNECT, () => {
+        setCurrentSocket(undefined);
+      });
+    }
+  });
+
+  if (isEmpty(socket)) {
+    return <LoadingComponent />;
+  }
+
+  return (
+    <WebSocketContext.Provider value={socket}>
+      <AllGroupChatContainer />
+    </WebSocketContext.Provider>
+  );
+};
+
+const AllGroupChatContainer = () => {
+  useSocket();
   return (
     <AllGroupChatStack.Navigator screenOptions={{ headerShown: false }}>
       <AllGroupChatStack.Screen name="AllMessageScreen" component={MainTobTab} />
@@ -102,7 +139,6 @@ interface NavigationProps extends Partial<React.ComponentProps<typeof Navigation
 export const AppNavigator = (props: NavigationProps) => {
   const colorScheme = useColorScheme();
   useBackButtonHandler(canExit);
-  useSocket();
 
   return (
     <NavigationContainer

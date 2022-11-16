@@ -5,10 +5,10 @@ export interface User {
   lastName: string;
   accessToken: string;
   avatarUrl: string;
-  status: UserStatus;
+  status?: UserStatus;
 }
 
 export enum UserStatus {
-  OFFLINE = 'OFFLINE',
-  ONLINE = 'ONLINE',
+  OFFLINE = 1,
+  ONLINE,
 }

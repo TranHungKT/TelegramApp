@@ -1,5 +1,6 @@
 import { ImageStyle, StyleSheet, TextStyle, ViewStyle } from 'react-native';
-import { palette, sizes } from 'themes';
+
+import { palette, sizes } from '@Themes/index';
 
 interface Styles {
   container: ViewStyle;

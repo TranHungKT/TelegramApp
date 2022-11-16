@@ -1,9 +1,9 @@
-import { useReduxToUpdateMessageStatus } from 'hooks/useReduxToUpdateMessageStatus';
 import { map } from 'lodash';
 import { useContext, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import { PAGE_SIZE, SOCKET_EVENTS } from '@Constants/index';
+import { useReduxToUpdateMessageStatus } from '@Hooks/useReduxToUpdateMessageStatus';
 import { Group as IGroup, MessageStatus } from '@Models/index';
 import { WebSocketContext } from '@Providers/index';
 import { fetchListMessages } from '@Services/index';

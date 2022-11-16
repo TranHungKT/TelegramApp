@@ -5,7 +5,6 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { AppNavigator } from './navigators';
-import { WebSocketContext, socket } from './providers/WebSocketProvider';
 import { store } from './stores';
 
 const queryClient = new QueryClient();
@@ -14,13 +13,11 @@ export const App = () => {
   return (
     <ReduxProvider store={store}>
       <QueryClientProvider client={queryClient}>
-        <WebSocketContext.Provider value={socket}>
-          <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-            <PaperProvider>
-              <AppNavigator />
-            </PaperProvider>
-          </SafeAreaProvider>
-        </WebSocketContext.Provider>
+        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+          <PaperProvider>
+            <AppNavigator />
+          </PaperProvider>
+        </SafeAreaProvider>
       </QueryClientProvider>
     </ReduxProvider>
   );

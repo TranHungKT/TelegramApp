@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity, Image, ImageSourcePropType } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import { UserStatus } from '@Models/index';
 import { palette } from '@Themes/index';
 import { getImageSource } from '@Utils/index';
 import { useNavigation } from '@react-navigation/native';
@@ -12,10 +13,11 @@ interface HeaderProps {
   groupAvatar: string | ImageSourcePropType;
   totalMembers: number;
   onClickGoBack?: () => void;
+  userStatus: UserStatus;
 }
 
 export const Header = (props: HeaderProps) => {
-  const { name, groupAvatar, totalMembers, onClickGoBack } = props;
+  const { name, groupAvatar, totalMembers, onClickGoBack, userStatus } = props;
 
   const navigation = useNavigation();
   const isMoreThan2Member = totalMembers > 2;
@@ -34,8 +36,10 @@ export const Header = (props: HeaderProps) => {
         <Image source={getImageSource(groupAvatar, isMoreThan2Member)} style={styles.avatar} />
         <View style={styles.groupNameView}>
           <Text style={styles.groupName}>{name}</Text>
-          {/* Status is temporary now  */}
-          <Text style={styles.status}>Online</Text>
+
+          <Text style={styles.status}>
+            {userStatus === UserStatus.ONLINE ? 'Online' : 'Offline'}
+          </Text>
         </View>
       </View>
       <TouchableOpacity style={styles.profileIconView}>

@@ -7,11 +7,13 @@ interface Styles {
   groupView: ViewStyle;
   groupName: TextStyle;
   chat: TextStyle;
-  avatar: ImageStyle;
+  avatarImage: ImageStyle;
+  avatarView: ViewStyle;
   rightCol: ViewStyle;
   lastUpdatedTime: TextStyle;
   numberOfUnReadMessageView: ViewStyle;
   numberOfUnReadMessageText: TextStyle;
+  status: ViewStyle;
 }
 
 export const styles = StyleSheet.create<Styles>({
@@ -32,9 +34,12 @@ export const styles = StyleSheet.create<Styles>({
     fontWeight: 'bold',
   },
 
-  avatar: {
-    marginRight: spacing.mediumPlus,
-    backgroundColor: palette.white,
+  avatarView: {
+    flex: 3,
+    marginTop: -40,
+  },
+
+  avatarImage: {
     width: 60,
     height: 60,
     borderRadius: 30,
@@ -70,5 +75,12 @@ export const styles = StyleSheet.create<Styles>({
   numberOfUnReadMessageText: {
     color: palette.white,
     fontSize: sizes.medium,
+  },
+
+  status: {
+    color: palette.green,
+    bottom: 0,
+    top: 40,
+    left: 40,
   },
 });
