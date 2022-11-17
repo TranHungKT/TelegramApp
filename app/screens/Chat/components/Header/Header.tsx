@@ -14,10 +14,11 @@ interface HeaderProps {
   totalMembers: number;
   onClickGoBack?: () => void;
   userStatus: UserStatus;
+  onClickName: () => void;
 }
 
 export const Header = (props: HeaderProps) => {
-  const { name, groupAvatar, totalMembers, onClickGoBack, userStatus } = props;
+  const { name, groupAvatar, totalMembers, onClickGoBack, userStatus, onClickName } = props;
 
   const navigation = useNavigation();
   const isMoreThan2Member = totalMembers > 2;
@@ -34,13 +35,13 @@ export const Header = (props: HeaderProps) => {
           <Icon name="chevron-left" size={40} color={palette.blue} />
         </TouchableOpacity>
         <Image source={getImageSource(groupAvatar, isMoreThan2Member)} style={styles.avatar} />
-        <View style={styles.groupNameView}>
+        <TouchableOpacity style={styles.groupNameView} onPress={onClickName}>
           <Text style={styles.groupName}>{name}</Text>
 
           <Text style={styles.status}>
             {userStatus === UserStatus.ONLINE ? 'Online' : 'Offline'}
           </Text>
-        </View>
+        </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.profileIconView}>
         <View style={styles.profileIconRow}>

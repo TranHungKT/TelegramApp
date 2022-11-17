@@ -8,7 +8,13 @@ import { MainTabBar, LoadingComponent } from '@Components/index';
 import { linking } from '@Configs/index';
 import { SOCKET_EVENTS } from '@Constants/index';
 import { useSocket } from '@Hooks/useSocket';
-import { LoginScreen, HomeScreen, ChatScreen, SplashScreen } from '@Screens/index';
+import {
+  LoginScreen,
+  HomeScreen,
+  ChatScreen,
+  SplashScreen,
+  GroupChatInformationScreen,
+} from '@Screens/index';
 import { userTokenSelector } from '@Stores/user';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
@@ -20,6 +26,7 @@ import { navigationRef, useBackButtonHandler } from './NavigationUtilities';
 export type AllGroupChatNavigationParamList = {
   AllMessageScreen: undefined;
   ChatScreen: undefined;
+  GroupChatInformationScreen: undefined;
 };
 
 const AllGroupChatStack = createNativeStackNavigator<AllGroupChatNavigationParamList>();
@@ -60,6 +67,10 @@ const AllGroupChatContainer = () => {
     <AllGroupChatStack.Navigator screenOptions={{ headerShown: false }}>
       <AllGroupChatStack.Screen name="AllMessageScreen" component={MainTobTab} />
       <AllGroupChatStack.Screen name="ChatScreen" component={ChatScreen} />
+      <AllGroupChatStack.Screen
+        name="GroupChatInformationScreen"
+        component={GroupChatInformationScreen}
+      />
     </AllGroupChatStack.Navigator>
   );
 };
