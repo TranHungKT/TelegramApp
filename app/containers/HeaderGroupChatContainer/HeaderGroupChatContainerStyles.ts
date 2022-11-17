@@ -1,6 +1,6 @@
 import { ImageStyle, StyleSheet, TextStyle, ViewStyle } from 'react-native';
 
-import { palette, sizes, paddingHorizontalSpace } from '@Themes/index';
+import { palette, sizes } from '@Themes/index';
 
 interface Styles {
   container: ViewStyle;
@@ -14,13 +14,12 @@ export const styles = StyleSheet.create<Styles>({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: paddingHorizontalSpace,
   },
 
   avatar: {
     width: 64,
     height: 64,
-    borderRadius: 23,
+    borderRadius: 31,
   },
 
   groupName: {

@@ -9,7 +9,7 @@ import { getImageSource } from '@Utils/index';
 import { styles } from './HeaderGroupChatContainerStyles';
 
 interface HeaderGroupChatContainerProps {
-  onClickHeader: () => void;
+  onClickHeader?: () => void;
 }
 
 export const HeaderGroupChatContainer = (props: HeaderGroupChatContainerProps) => {
