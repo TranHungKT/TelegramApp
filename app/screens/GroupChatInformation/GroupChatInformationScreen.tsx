@@ -1,9 +1,12 @@
-import { View, Text } from 'react-native';
+import { SafeAreaView } from 'react-native';
+
+import { styles } from './GroupChatInformationScreenStyles';
+import { Header } from './components';
 
 export const GroupChatInformationScreen = () => {
   return (
-    <View>
-      <Text>GroupChatInformationScreen</Text>
-    </View>
+    <SafeAreaView style={styles.safeArea}>
+      <Header />
+    </SafeAreaView>
   );
 };

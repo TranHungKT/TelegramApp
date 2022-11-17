@@ -1,14 +1,11 @@
-import { ImageStyle, StyleSheet, TextStyle, ViewStyle } from 'react-native';
+import { StyleSheet, ViewStyle } from 'react-native';
 
-import { palette, sizes, paddingHorizontalSpace } from '@Themes/index';
+import { palette, paddingHorizontalSpace } from '@Themes/index';
 
 interface Styles {
   container: ViewStyle;
   firstColumn: ViewStyle;
-  avatar: ImageStyle;
-  groupNameView: ViewStyle;
-  groupName: TextStyle;
-  status: TextStyle;
+
   profileIconView: ViewStyle;
   profileIconRow: ViewStyle;
   profileIcon: ViewStyle;
@@ -24,29 +21,6 @@ export const styles = StyleSheet.create<Styles>({
   firstColumn: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-
-  avatar: {
-    width: 64,
-    height: 64,
-    borderRadius: 23,
-  },
-
-  groupName: {
-    fontWeight: 'bold',
-    fontSize: sizes.big,
-  },
-
-  groupNameView: {
-    marginLeft: 20,
-    paddingTop: 10,
-    paddingBottom: 10,
-    justifyContent: 'space-between',
-  },
-
-  status: {
-    color: palette.blue,
-    fontSize: sizes.medium,
   },
 
   profileIconView: {
