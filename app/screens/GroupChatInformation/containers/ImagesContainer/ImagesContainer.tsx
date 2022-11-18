@@ -1,4 +1,4 @@
-import { FlatList, Image } from 'react-native';
+import { FlatList, Image, View } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import { fetchImagesOfGroups } from '@Services/index';
@@ -33,12 +33,15 @@ export const ImagesContainer = () => {
   }
 
   return (
-    <FlatList
-      data={data}
-      renderItem={renderItem}
-      style={styles.container}
-      numColumns={3}
-      contentContainerStyle={styles.contentContainerStyle}
-    />
+    <>
+      <View style={styles.blankView} />
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        style={styles.container}
+        numColumns={3}
+        contentContainerStyle={styles.contentContainerStyle}
+      />
+    </>
   );
 };

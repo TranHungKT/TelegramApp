@@ -6,6 +6,7 @@ interface Styles {
   container: ViewStyle;
   contentContainerStyle: ViewStyle;
   image: ImageStyle;
+  blankView: ViewStyle;
 }
 
 export const styles = StyleSheet.create<Styles>({
@@ -15,7 +16,6 @@ export const styles = StyleSheet.create<Styles>({
   },
 
   contentContainerStyle: {
-    marginTop: 80,
     justifyContent: 'space-between',
     width: '100%',
   },
@@ -25,5 +25,10 @@ export const styles = StyleSheet.create<Styles>({
     height: 115,
     borderRadius: 30,
     margin: 5,
+  },
+
+  blankView: {
+    height: 80,
+    backgroundColor: palette.white,
   },
 });
