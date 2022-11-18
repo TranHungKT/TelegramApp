@@ -1,7 +1,7 @@
 import { MainTabBar } from '@Components/MainTabBar';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import { DocumentContainer, LocationContainer, ImageContainer } from '../containers';
+import { DocumentContainer, LocationContainer, ImagesContainer } from '../containers';
 import { styles } from './GroupChatNavigatorStyles';
 
 export const GroupChatTabNavigator = createBottomTabNavigator();
@@ -18,8 +18,8 @@ export const GroupChatTab = () => {
         />
       )}
     >
+      <GroupChatTabNavigator.Screen component={ImagesContainer} name="Image" />
       <GroupChatTabNavigator.Screen component={LocationContainer} name="Location" />
-      <GroupChatTabNavigator.Screen component={ImageContainer} name="Image" />
       <GroupChatTabNavigator.Screen component={DocumentContainer} name="Document" />
     </GroupChatTabNavigator.Navigator>
   );

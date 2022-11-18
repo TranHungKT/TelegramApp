@@ -12,9 +12,8 @@ export const GroupChatInformationScreen = () => {
         <Text style={styles.phoneTitle}>Phone Number</Text>
         <Text style={styles.phoneNumber}>+375(29)9239003</Text>
       </View>
-      <View style={{ backgroundColor: 'white', justifyContent: 'center' }}>
-        <GroupChatTab />
-      </View>
+
+      <GroupChatTab />
     </SafeAreaView>
   );
 };

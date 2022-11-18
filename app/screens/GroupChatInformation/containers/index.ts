@@ -1,3 +1,3 @@
 export { DocumentContainer } from './DocumentContainer';
-export { ImageContainer } from './ImageContainer';
+export { ImagesContainer } from './ImagesContainer';
 export { LocationContainer } from './LocationContainer';

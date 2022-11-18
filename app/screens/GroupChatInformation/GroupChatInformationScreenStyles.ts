@@ -9,6 +9,7 @@ interface Styles {
   phoneTitle: TextStyle;
   phoneNumber: TextStyle;
   border: TextStyle;
+  fileTabs: ViewStyle;
 }
 
 export const styles = StyleSheet.create<Styles>({
@@ -36,5 +37,10 @@ export const styles = StyleSheet.create<Styles>({
 
   border: {
     width: 100,
+  },
+
+  fileTabs: {
+    backgroundColor: 'white',
+    justifyContent: 'center',
   },
 });
