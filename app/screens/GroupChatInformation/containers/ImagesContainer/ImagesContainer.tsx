@@ -1,4 +1,6 @@
-import { FlatList, Image, View } from 'react-native';
+import { useState } from 'react';
+import { FlatList, Image, View, TouchableOpacity } from 'react-native';
+import ImageView from 'react-native-image-viewing';
 import { useSelector } from 'react-redux';
 
 import { fetchImagesOfGroups } from '@Services/index';
@@ -16,19 +18,32 @@ export const ImagesContainer = () => {
     fetchImagesOfGroups({ token, groupId: currentGroup?._id || '' }),
   );
 
-  const renderItem = ({ item }: { item: { id: string; image: string } }) => {
+  const [currentImage, setCurrentImage] = useState(0);
+
+  const renderItem = ({ item, index }: { item: { id: string; image: string }; index: number }) => {
     return (
-      <Image
-        style={styles.image}
-        source={{
-          uri: item.image,
-        }}
-        resizeMode="cover"
-      />
+      <>
+        <TouchableOpacity
+          onPress={() => {
+            setCurrentImage(index);
+            setIsVisible(true);
+          }}
+        >
+          <Image
+            style={styles.image}
+            source={{
+              uri: item.image,
+            }}
+            resizeMode="cover"
+          />
+        </TouchableOpacity>
+      </>
     );
   };
 
-  if (isFetching) {
+  const [visible, setIsVisible] = useState(false);
+
+  if (isFetching || !data) {
     return <></>;
   }
 
@@ -41,6 +56,12 @@ export const ImagesContainer = () => {
         style={styles.container}
         numColumns={3}
         contentContainerStyle={styles.contentContainerStyle}
+      />
+      <ImageView
+        images={data.map((mes) => ({ uri: mes.image }))}
+        imageIndex={currentImage}
+        visible={visible}
+        onRequestClose={() => setIsVisible(false)}
       />
     </>
   );
