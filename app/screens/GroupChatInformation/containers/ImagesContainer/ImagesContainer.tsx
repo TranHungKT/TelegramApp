@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FlatList, Image, View, TouchableOpacity } from 'react-native';
+import { FlatList, View } from 'react-native';
 import ImageView from 'react-native-image-viewing';
 import { useSelector } from 'react-redux';
 
@@ -8,11 +8,13 @@ import { currentGroupSelector } from '@Stores/groups';
 import { userTokenSelector } from '@Stores/user';
 import { useQuery } from '@tanstack/react-query';
 
+import { RenderListImage } from '../../components';
 import { styles } from './ImagesContainerStyles';
 
 export const ImagesContainer = () => {
   const currentGroup = useSelector(currentGroupSelector);
   const token = useSelector(userTokenSelector);
+
   const { data, isFetching } = useQuery(['getImages', token], () =>
     // TODO: PAGINATION HERE
     fetchImagesOfGroups({ token, groupId: currentGroup?._id || '' }),
@@ -20,25 +22,13 @@ export const ImagesContainer = () => {
 
   const [currentImage, setCurrentImage] = useState(0);
 
+  const handlePressImage = (index: number) => () => {
+    setCurrentImage(index);
+    setIsVisible(true);
+  };
+
   const renderItem = ({ item, index }: { item: { id: string; image: string }; index: number }) => {
-    return (
-      <>
-        <TouchableOpacity
-          onPress={() => {
-            setCurrentImage(index);
-            setIsVisible(true);
-          }}
-        >
-          <Image
-            style={styles.image}
-            source={{
-              uri: item.image,
-            }}
-            resizeMode="cover"
-          />
-        </TouchableOpacity>
-      </>
-    );
+    return <RenderListImage item={item} onPressImage={handlePressImage(index)} />;
   };
 
   const [visible, setIsVisible] = useState(false);
@@ -58,7 +48,7 @@ export const ImagesContainer = () => {
         contentContainerStyle={styles.contentContainerStyle}
       />
       <ImageView
-        images={data.map((mes) => ({ uri: mes.image }))}
+        images={data.map((messsage) => ({ uri: messsage.image }))}
         imageIndex={currentImage}
         visible={visible}
         onRequestClose={() => setIsVisible(false)}

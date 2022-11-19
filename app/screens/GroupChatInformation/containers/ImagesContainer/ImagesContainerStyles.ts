@@ -20,13 +20,6 @@ export const styles = StyleSheet.create<Styles>({
     width: '100%',
   },
 
-  image: {
-    width: 115,
-    height: 115,
-    borderRadius: 30,
-    margin: 5,
-  },
-
   blankView: {
     height: 80,
     backgroundColor: palette.white,
