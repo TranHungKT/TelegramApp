@@ -1,11 +1,10 @@
-import { StyleSheet, ViewStyle, ImageStyle } from 'react-native';
+import { StyleSheet, ViewStyle } from 'react-native';
 
 import { palette } from '@Themes/index';
 
 interface Styles {
   container: ViewStyle;
   contentContainerStyle: ViewStyle;
-  image: ImageStyle;
   blankView: ViewStyle;
 }
 
