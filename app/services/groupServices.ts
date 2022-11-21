@@ -54,3 +54,22 @@ export const fetchListMessages = async ({
     throw new Error(error as string);
   }
 };
+
+export const fetchImagesOfGroups = async ({
+  token,
+  groupId,
+}: {
+  token: string;
+  groupId: string;
+}): Promise<{ id: string; image: string }[]> => {
+  try {
+    const response = await axios.get(`${BASE_URL}get-list-images?groupId=${groupId}`, {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error as string);
+  }
+};
