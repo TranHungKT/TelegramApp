@@ -15,12 +15,12 @@ export const ImagesContainer = () => {
   const currentGroup = useSelector(currentGroupSelector);
   const token = useSelector(userTokenSelector);
 
+  const [currentImage, setCurrentImage] = useState(0);
+  const [visible, setIsVisible] = useState(false);
+
   const { data, isFetching } = useQuery(['getImages', token], () =>
-    // TODO: PAGINATION HERE
     fetchImagesOfGroups({ token, groupId: currentGroup?._id || '' }),
   );
-
-  const [currentImage, setCurrentImage] = useState(0);
 
   const handlePressImage = (index: number) => () => {
     setCurrentImage(index);
@@ -31,11 +31,13 @@ export const ImagesContainer = () => {
     return <RenderListImage item={item} onPressImage={handlePressImage(index)} />;
   };
 
-  const [visible, setIsVisible] = useState(false);
+  const handleCloseImage = () => setIsVisible(false);
 
   if (isFetching || !data) {
     return <></>;
   }
+
+  const imagesData = data.map((messsage) => ({ uri: messsage.image }));
 
   return (
     <>
@@ -48,10 +50,10 @@ export const ImagesContainer = () => {
         contentContainerStyle={styles.contentContainerStyle}
       />
       <ImageView
-        images={data.map((messsage) => ({ uri: messsage.image }))}
+        images={imagesData}
         imageIndex={currentImage}
         visible={visible}
-        onRequestClose={() => setIsVisible(false)}
+        onRequestClose={handleCloseImage}
       />
     </>
   );

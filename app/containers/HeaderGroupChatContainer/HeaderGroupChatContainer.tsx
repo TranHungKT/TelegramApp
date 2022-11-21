@@ -29,7 +29,7 @@ export const HeaderGroupChatContainer = (props: HeaderGroupChatContainerProps) =
   }
 
   return (
-    <TouchableOpacity onPress={onClickHeader} style={styles.container}>
+    <TouchableOpacity onPress={onClickHeader} style={styles.container} disabled={!onClickHeader}>
       <Image
         source={getImageSource(currentGroup.groupAvatar, isMoreThan2Member)}
         style={styles.avatar}

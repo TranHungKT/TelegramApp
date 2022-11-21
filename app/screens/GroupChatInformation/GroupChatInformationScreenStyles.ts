@@ -40,7 +40,7 @@ export const styles = StyleSheet.create<Styles>({
   },
 
   fileTabs: {
-    backgroundColor: 'white',
+    backgroundColor: palette.white,
     justifyContent: 'center',
   },
 });
